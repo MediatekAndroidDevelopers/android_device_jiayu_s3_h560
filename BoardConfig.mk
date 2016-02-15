@@ -146,6 +146,9 @@ TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/recovery.fstab
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBA_8888"
 TARGET_USERIMAGES_USE_EXT4 := true
 
+# Kernel OBJ WorkAround for build
+$(shell mkdir -p $(OUT)/obj/KERNEL_OBJ/usr)
+
 # SELinux
 BOARD_SEPOLICY_DIRS := \
        device/jiayu/s3_h560/sepolicy
