@@ -126,7 +126,10 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
     frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
-    frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml
+    frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
+    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
+    frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
+    frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
 
 # Media	
 PRODUCT_COPY_FILES += \
@@ -146,7 +149,7 @@ PRODUCT_PACKAGES += \
       charger_res_images
 
 # Wifi
- PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
     lib_driver_cmd_mt66xx \
     libwifi-hal-mt66xx \
     wifi_hal \
@@ -198,9 +201,22 @@ PRODUCT_PACKAGES += \
     librs_jni \
     com.android.future.usb.accessory
 
- PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
     libnl_2 \
     libtinyxml
+
+# FMRadio
+PRODUCT_PACKAGES += \
+    FmRadio \
+    libmtkplayer
+
+# NFC
+PRODUCT_PACKAGES += \
+    com.android.nfc_extras \
+    libmtknfc_dynamic_load_jni \
+    libnfc_mt6605_jni \
+    Nfc \
+    Tag
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
