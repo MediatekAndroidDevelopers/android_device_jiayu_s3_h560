@@ -82,7 +82,11 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/init:root/init \
     $(LOCAL_PATH)/rootdir/init.performance.rc:root/init.performance.rc \
     $(LOCAL_PATH)/rootdir/init.storage.rc:root/init.storage.rc \
-    $(LOCAL_PATH)/rootdir/init.cm.rc:root/init.cm.rc \
+    $(LOCAL_PATH)/rootdir/init.cm.rc:root/init.cm.rc
+
+# hack for TWRP
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/recovery/etc/cwm.fstab:recovery/root/etc/cwm.fstab
 
 # Telecom
 PRODUCT_COPY_FILES += \
