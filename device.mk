@@ -226,6 +226,10 @@ PRODUCT_PACKAGES += \
     libwebviewchromium_plat_support \
     libwebviewchromium_loader
 
+# Camera
+PRODUCT_PACKAGES += \
+    Snap
+
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     e2fsck \
