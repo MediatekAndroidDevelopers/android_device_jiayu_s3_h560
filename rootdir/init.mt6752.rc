@@ -1555,6 +1555,8 @@ setprop persist.radio.reset_on_switch true
 setprop rild.mark_switchuser 0
 #end
 
+setprop ro.system.idlp 1
+
 chmod 0644 /system/lib/libzteevdo-ril.so
 chomd 0644 /system/lib/zterilPara
 chown root /system/bin/pppd
