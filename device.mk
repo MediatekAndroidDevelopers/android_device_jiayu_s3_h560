@@ -234,9 +234,6 @@ PRODUCT_PACKAGES += \
     mkfs.f2fs \
     make_ext4fs \
     resize2fs \
-    mount.exfat \
-    fsck.exfat \
-    mkfs.exfat \
     setup_fs
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=8
