@@ -221,6 +221,11 @@ PRODUCT_PACKAGES += \
     Nfc \
     Tag
 
+# prebuilt webview
+PRODUCT_PACKAGES += \
+    libwebviewchromium_plat_support \
+    libwebviewchromium_loader
+
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     e2fsck \
