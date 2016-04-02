@@ -23,10 +23,11 @@ else
 endif
 
 PRODUCT_PACKAGES += \
-   libxlog
+   libxlog \
+   libstlport
 
 PRODUCT_COPY_FILES += \
-   $(LOCAL_KERNEL):prebuilt/kernel
+   $(LOCAL_KERNEL):kernel
 
 # Hack to fix asec on emulated sdcard
 PRODUCT_PACKAGES += \
@@ -42,8 +43,6 @@ PRODUCT_PACKAGES += \
     tinymix \
     libtinyalsa
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
-    $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml \
     $(LOCAL_PATH)/configs/audio_device.xml:system/etc/audio_device.xml \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf
     
@@ -66,7 +65,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/enableswap.sh:root/enableswap.sh \
     $(LOCAL_PATH)/rootdir/factory_init.project.rc:root/factory_init.project.rc \
     $(LOCAL_PATH)/rootdir/factory_init.rc:root/factory_init.rc \
-    $(LOCAL_PATH)/rootdir/fstab.charger:root/fstab.charger\
     $(LOCAL_PATH)/rootdir/fstab.mt6752:root/fstab.mt6752 \
     $(LOCAL_PATH)/rootdir/init.aee.rc:root/init.aee.rc \
     $(LOCAL_PATH)/rootdir/init.modem.rc:root/init.modem.rc \
@@ -79,10 +77,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/meta_init.modem.rc:root/meta_init.modem.rc \
     $(LOCAL_PATH)/rootdir/meta_init.project.rc:root/meta_init.project.rc \
     $(LOCAL_PATH)/rootdir/meta_init.rc:root/meta_init.rc \
-    $(LOCAL_PATH)/rootdir/init:root/init \
     $(LOCAL_PATH)/rootdir/init.performance.rc:root/init.performance.rc \
-    $(LOCAL_PATH)/rootdir/init.storage.rc:root/init.storage.rc \
-    $(LOCAL_PATH)/rootdir/init.cm.rc:root/init.cm.rc
 
 # hack for TWRP
 PRODUCT_COPY_FILES += \
@@ -189,13 +184,10 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
     camera.disable_zsl_mode=1 \
     ro.mount.fs=EXT4 \
     persist.service.acm.enable=0 \
-    persist.sys.usb.config=mtp \
-    persist.sys.timezone=Asia/Shanghai
+    persist.sys.usb.config=mtp
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.kernel.android.checkjni=0 \
-    ro.telephony.ril_class=MediaTekRIL \
-    ro.telephony.ril.config=fakeiccid  \
     persist.call_recording.enabled=true \
     persist.call_recording.src=1 \
     persist.debug.wfd.enable=1

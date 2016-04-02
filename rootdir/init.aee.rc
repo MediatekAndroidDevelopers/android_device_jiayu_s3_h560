@@ -12,4 +12,3 @@ on property:persist.aee.core.dump=enable
 
 on init
     write /proc/self/coredump_filter 39
-    export LD_PRELOAD libsigchain.so:libudf.so 
