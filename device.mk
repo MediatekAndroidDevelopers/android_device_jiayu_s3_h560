@@ -213,11 +213,6 @@ PRODUCT_PACKAGES += \
     Nfc \
     Tag
 
-# prebuilt webview
-PRODUCT_PACKAGES += \
-    libwebviewchromium_plat_support \
-    libwebviewchromium_loader
-
 # Camera
 PRODUCT_PACKAGES += \
     Snap
