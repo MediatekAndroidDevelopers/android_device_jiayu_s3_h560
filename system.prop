@@ -60,15 +60,11 @@ ro.kernel.zio=38,108,105,16
 # Disable dirty region for Mali
 debug.hwui.render_dirty_regions=false
 
-#qinhai change density
 ro.sf.lcd_density=480
 
 # button jack mode & switch
 persist.sys.button_jack_profile=volume
 persist.sys.button_jack_switch=0
-
-# add by qin for runin
-ro.build.device.ninur=64687
 
 persist.tone_relative_volume=100
 ro.mediatek.chip_ver=S01
