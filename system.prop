@@ -72,7 +72,7 @@ ro.build.device.ninur=64687
 
 persist.tone_relative_volume=100
 ro.mediatek.chip_ver=S01
-ro.mediatek.version.release=ALPS.L0.MP6.V3.18_LCSH6795.LWT.L_P154
+ro.mediatek.version.release=ALPS.L1
 ro.mediatek.platform=MT6752
 ro.telephony.sim.count=2
 persist.radio.default.sim=0
