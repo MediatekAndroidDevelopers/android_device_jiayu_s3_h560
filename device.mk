@@ -42,6 +42,7 @@ PRODUCT_PACKAGES += \
     libaudio-resampler \
     tinymix \
     libtinyalsa
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_device.xml:system/etc/audio_device.xml \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf
@@ -170,6 +171,9 @@ PRODUCT_PACKAGES += \
 # STk
 PRODUCT_PACKAGES += \
     Stk
+
+PRODUCT_PACKAGES += \
+    mtkcam
 
 # GPS
 PRODUCT_COPY_FILES += \
