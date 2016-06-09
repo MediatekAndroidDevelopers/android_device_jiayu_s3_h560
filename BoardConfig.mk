@@ -187,7 +187,7 @@ TARGET_USERIMAGES_USE_EXT4 := true
 endif
 
 # Kernel OBJ WorkAround for build
-#$(shell mkdir -p $(OUT)/obj/KERNEL_OBJ/usr)
+$(shell mkdir -p $(OUT)/obj/KERNEL_OBJ/usr)
 
 # SELinux
 BOARD_SEPOLICY_DIRS := \
