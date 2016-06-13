@@ -43,7 +43,7 @@ ro.sys.usb.storage.type=mtp,mass_storage
 ro.sys.usb.bicr=yes
 
 # USB Charge only function
-ro.sys.usb.charging.only=yes
+ro.sys.usb.charging.only=no
 
 # audio
 ro.camera.sound.forced=0
@@ -58,7 +58,7 @@ qemu.hw.mainkeys=1
 ro.kernel.zio=38,108,105,16
 
 # Disable dirty region for Mali
-debug.hwui.render_dirty_regions=false
+debug.hwui.render_dirty_regions=true
 
 ro.sf.lcd_density=480
 
