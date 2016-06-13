@@ -209,16 +209,16 @@ PRODUCT_PACKAGES += \
     libmtkplayer
 
 # NFC
-#PRODUCT_PACKAGES += \
-#    com.android.nfc_extras \
-#    libmtknfc_dynamic_load_jni \
-#    libnfc_mt6605_jni \
-#    Nfc \
-#    Tag
+PRODUCT_PACKAGES += \
+    com.android.nfc_extras \
+    libmtknfc_dynamic_load_jni \
+    libnfc_mt6605_jni \
+    Nfc \
+    Tag
 
 # Camera
-#PRODUCT_PACKAGES += \
-#    Snap
+PRODUCT_PACKAGES += \
+    Snap
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
