@@ -203,6 +203,10 @@ PRODUCT_PACKAGES += \
     libnl_2 \
     libtinyxml
 
+# Browser
+PRODUCT_PACKAGES += \
+    Gello
+
 # FMRadio
 PRODUCT_PACKAGES += \
     FmRadio \
