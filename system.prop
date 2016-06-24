@@ -68,7 +68,7 @@ persist.sys.button_jack_switch=0
 
 persist.tone_relative_volume=100
 ro.mediatek.chip_ver=S01
-ro.mediatek.version.release=ALPS.L1
+ro.mediatek.version.release=ALPS.M
 ro.mediatek.platform=MT6752
 ro.telephony.sim.count=2
 persist.radio.default.sim=0
@@ -93,6 +93,7 @@ persist.mtk.wcn.combo.chipid=-1
 persist.mtk.combo.coredump=no
 drm.service.enabled=true
 fmradio.driver.enable=1
+ro.mtk_fm_short_antenna_support=1
 ril.first.md=1
 ril.flightmode.poweroffMD=1
 ril.telephony.mode=0
@@ -164,7 +165,6 @@ persist.power.useautobrightadj=true
 keyguard.no_require_sim=true
 persist.sys.isUsbOtgEnabled=true
 persist.debug.wfd.enable=1
-#cam_shit
 camera.disable_zsl_mode=0
 ro.mtk_cam_mfb_support=1
 ro.mtk_cam_mav_support=0
