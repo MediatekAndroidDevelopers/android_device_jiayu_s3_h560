@@ -203,10 +203,6 @@ PRODUCT_PACKAGES += \
     libnl_2 \
     libtinyxml
 
-# Browser
-PRODUCT_PACKAGES += \
-    Gello
-
 # FMRadio
 PRODUCT_PACKAGES += \
     FmRadio \
@@ -224,14 +220,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Snap
 
-# MediaTek Engineer Menu
-PRODUCT_PACKAGES += \
-        EngineerMode
-
-# MediaTek XLog, to satisfied Eng.Menu dependencies
-# Plus frameworks base Xlog
-PRODUCT_PACKAGES += \
-        libxlog
+# Sensor Calibration
+PRODUCT_PACKAGES += libem_sensor_jni
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
@@ -245,6 +235,5 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=8
 
-# Dalvik/HWUI
-$(call inherit-product-if-exists, frameworks/native/build/phone-xxhdpi-2048-dalvik-heap.mk)
-$(call inherit-product-if-exists, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk)
+# Dalvik
+$(call inherit-product-if-exists, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
