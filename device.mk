@@ -224,15 +224,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Snap
 
-# MediaTek Engineer Menu
-PRODUCT_PACKAGES += \
-        EngineerMode
-
-# MediaTek XLog, to satisfied Eng.Menu dependencies
-# Plus frameworks base Xlog
-PRODUCT_PACKAGES += \
-        libxlog
-
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     e2fsck \
