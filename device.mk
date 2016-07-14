@@ -221,6 +221,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Snap
 
+# Lights
+PRODUCT_PACKAGES += \
+    lights.mt6752
+
 # Sensor Calibration
 PRODUCT_PACKAGES += libem_sensor_jni
 
