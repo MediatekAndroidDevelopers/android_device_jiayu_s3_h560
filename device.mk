@@ -225,6 +225,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Snap
 
+# Lights
+PRODUCT_PACKAGES += \
+    lights.mt6752
+
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     e2fsck \
