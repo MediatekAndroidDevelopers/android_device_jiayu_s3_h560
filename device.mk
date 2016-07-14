@@ -207,10 +207,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Gello
 
-# messaging
-PRODUCT_PACKAGES += \
-    messaging
-
 # FMRadio
 PRODUCT_PACKAGES += \
     FmRadio \
