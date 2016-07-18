@@ -10,8 +10,8 @@ import /init.${ro.hardware}.rc
 import /init.usb.configfs.rc
 import /init.${ro.zygote}.rc
 import /init.trace.rc
-# Include AICP's extra init file
-import /init.aicp.rc
+# Include CM's extra init file
+import /init.cm.rc
 import /init.performance.rc
 import /init.modem.rc
 
@@ -182,7 +182,6 @@ on init
     chown system system /dev/cpuset/system-background/tasks
 
     # set system-background to 0775 so SurfaceFlinger can touch it
-    chmod 0775 /dev/cpuset/system-background
     chmod 0664 /dev/cpuset/foreground/tasks
     chmod 0664 /dev/cpuset/foreground/boost/tasks
     chmod 0664 /dev/cpuset/background/tasks
