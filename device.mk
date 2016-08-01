@@ -16,18 +16,9 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 # Recovery allowed devices
 TARGET_OTA_ASSERT_DEVICE := h560,s3_h560
 
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-	LOCAL_KERNEL := $(LOCAL_PATH)/prebuilt/kernel
-else
-	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
-
 PRODUCT_PACKAGES += \
    libxlog \
    libstlport
-
-PRODUCT_COPY_FILES += \
-   $(LOCAL_KERNEL):kernel
 
 # Hack to fix asec on emulated sdcard
 PRODUCT_PACKAGES += \
