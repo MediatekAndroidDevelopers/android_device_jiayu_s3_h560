@@ -219,6 +219,10 @@ PRODUCT_PACKAGES += \
 # Lights
 PRODUCT_PACKAGES += \
     lights.mt6752
+    
+# Turbo-Download
+PRODUCT_PACKAGES += \
+    HetComm
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
