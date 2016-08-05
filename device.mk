@@ -41,8 +41,6 @@ PRODUCT_COPY_FILES += \
 # Bluetooth                            
 PRODUCT_PACKAGES += \
     audio.a2dp.default 
-PRODUCT_PACKAGES += \
-    libbt-vendor
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/bt_did.conf:system/etc/bluetooth/bt_did.conf
      
