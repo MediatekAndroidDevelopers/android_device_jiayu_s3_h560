@@ -74,7 +74,7 @@ PRODUCT_COPY_FILES += \
 
 # hack for TWRP
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/recovery/etc/cwm.fstab:recovery/root/etc/cwm.fstab
+    $(LOCAL_PATH)/recovery/etc/twrp.fstab:recovery/root/etc/twrp.fstab
 
 # Telecom
 PRODUCT_COPY_FILES += \
