@@ -97,7 +97,6 @@ persist.mtk.wcn.combo.chipid=-1
 persist.mtk.combo.coredump=no
 drm.service.enabled=true
 fmradio.driver.enable=1
-ro.mtk_fm_short_antenna_support=1
 ril.first.md=1
 ril.flightmode.poweroffMD=1
 ril.telephony.mode=0
