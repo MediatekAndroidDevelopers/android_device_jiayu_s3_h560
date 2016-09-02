@@ -26,10 +26,14 @@ wifi.tethering.interface=ap0
 #
 
 ro.opengles.version=196608
+#For N: 
+#ro.opengles.version=196609
+#ro.kernel.qemu=1
+#ro.kernel.qemu.gles=0
 
 wifi.direct.interface=p2p0
-dalvik.vm.heapgrowthlimit=256m
-dalvik.vm.heapsize=512m
+dalvik.vm.heapgrowthlimit=128m
+dalvik.vm.heapsize=256m
 
 # USB MTP WHQL
 ro.sys.usb.mtp.whql.enable=0
@@ -68,7 +72,7 @@ persist.sys.button_jack_switch=0
 
 persist.tone_relative_volume=100
 ro.mediatek.chip_ver=S01
-ro.mediatek.version.release=ALPS.M
+ro.mediatek.version.release=ALPS.N
 ro.mediatek.platform=MT6752
 ro.telephony.sim.count=2
 persist.radio.default.sim=0
