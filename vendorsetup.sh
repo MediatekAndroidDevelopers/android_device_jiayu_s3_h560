@@ -1,2 +1,2 @@
-add_lunch_combo full_s3plus_n560a-userdebug
-add_lunch_combo full_s3plus_n560a-eng
+add_lunch_combo full_s3_h560-userdebug
+add_lunch_combo full_s3_h560-eng
