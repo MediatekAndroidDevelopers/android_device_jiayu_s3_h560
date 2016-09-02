@@ -194,6 +194,7 @@ PRODUCT_PACKAGES += \
 
 # FMRadio
 PRODUCT_PACKAGES += \
+    libfmjni \
     FMRadio \
     libmtkplayer
 
