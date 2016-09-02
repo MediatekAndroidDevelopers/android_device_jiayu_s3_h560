@@ -4,45 +4,78 @@ import init.aee.rc
 import init.ssd.rc
 
 on init
-    export LD_PRELOAD "libxlog.so"
+    export LD_PRELOAD "libmtk_symbols.so"
 
     # BATTERY proc
     chown shell system /proc/mtk_battery_cmd/current_cmd
     chown shell system /proc/mtk_battery_cmd/discharging_cmd
 
 # Temp Backward compatibility
-   
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/boot /dev/bootimg
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/recovery /dev/recovery
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/secro  /dev/sec_ro
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/kb /dev/kb
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/dkb /dev/dkb
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/seccfg /dev/seccfg
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/proinfo /dev/pro_info
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/nvram /dev/nvram
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/para /dev/misc
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/logo /dev/logo
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/misc2 /dev/misc2
+    symlink /dev/block/platform/mtk-msdc.0/by-name/boot /dev/bootimg
+    symlink /dev/block/platform/mtk-msdc.0/by-name/recovery /dev/recovery
+    symlink /dev/block/platform/mtk-msdc.0/by-name/secro  /dev/sec_ro
+    symlink /dev/block/platform/mtk-msdc.0/by-name/kb /dev/kb
+    symlink /dev/block/platform/mtk-msdc.0/by-name/dkb /dev/dkb
+    symlink /dev/block/platform/mtk-msdc.0/by-name/seccfg /dev/seccfg
+    symlink /dev/block/platform/mtk-msdc.0/by-name/proinfo /dev/pro_info
+    symlink /dev/block/platform/mtk-msdc.0/by-name/nvram /dev/nvram
+    symlink /dev/block/platform/mtk-msdc.0/by-name/para /dev/misc
+    symlink /dev/block/platform/mtk-msdc.0/by-name/logo /dev/logo
+    symlink /dev/block/platform/mtk-msdc.0/by-name/misc2 /dev/misc2
 
     mkdir /protect_f 0771 system system
     mkdir /protect_s 0771 system system
-    #create mountpoint for persist partition
+    # create mountpoint for persist partition
     mkdir /persist 0771 system system
 # Create CIP mount point
     mkdir /custom
 
     mkdir /mnt/cd-rom 0000 system system
 
-# Change ION driver permission
-    chmod 0644 /dev/ion
+    # ion device
+    chmod 0666 /dev/ion
+    chmod 0660 /sys/bus/platform/drivers/gsensor/cpsdata
+    chmod 0660 /sys/bus/platform/drivers/gsensor/cpsrange
+    chmod 0660 /sys/bus/platform/drivers/gsensor/cpsbandwidth
+    chmod 0660 /sys/bus/platform/drivers/gsensor/cpsopmode
+    chmod 0660 /sys/bus/platform/drivers/gsensor/fifo_mode
+    chmod 0660 /sys/bus/platform/drivers/gsensor/fifo_data_frame
+    chmod 0660 /sys/bus/platform/drivers/gsensor/fifo_framecount
+    chown system system /sys/bus/platform/drivers/gsensor/cpsdata
+    chown system system /sys/bus/platform/drivers/gsensor/cpsrange
+    chown system system /sys/bus/platform/drivers/gsensor/cpsbandwidth
+    chown system system /sys/bus/platform/drivers/gsensor/cpsopmode
+    chown system system /sys/bus/platform/drivers/gsensor/fifo_mode
+    chown system system /sys/bus/platform/drivers/gsensor/fifo_data_frame
+    chown system system /sys/bus/platform/drivers/gsensor/fifo_framecount
+    # add for mag 
+    chmod 0660 /sys/bus/platform/drivers/msensor/rawdata 
+    chown system system /sys/bus/platform/drivers/msensor/rawdata 
+    chmod 0660 /sys/bus/platform/drivers/msensor/daemon
+    chown system system /sys/bus/platform/drivers/msensor/daemon
+    # add for gyro 
+    chmod 0660 /sys/bus/platform/drivers/gyroscope/rawdata 
+    chmod 0660 /sys/bus/platform/drivers/gyroscope/datarate 
+    chmod 0660 /sys/bus/platform/drivers/gyroscope/range 
+    chmod 0660 /sys/bus/platform/drivers/gyroscope/powermode 
+    chmod 0660 /sys/bus/platform/drivers/gyroscope/fifo_mode 
+    chmod 0660 /sys/bus/platform/drivers/gyroscope/fifo_data_frame 
+    chmod 0660 /sys/bus/platform/drivers/gyroscope/fifo_framecount 
+    chown system system /sys/bus/platform/drivers/gyroscope/rawdata 
+    chown system system /sys/bus/platform/drivers/gyroscope/datarate 
+    chown system system /sys/bus/platform/drivers/gyroscope/range 
+    chown system system /sys/bus/platform/drivers/gyroscope/powermode 
+    chown system system /sys/bus/platform/drivers/gyroscope/fifo_mode 
+    chown system system /sys/bus/platform/drivers/gyroscope/fifo_data_frame
+    chown system system /sys/bus/platform/drivers/gyroscope/fifo_framecount
 
-# Vanzo:yinjun on: Tue, 31 Mar 2015 19:43:54 +0800
-# add remoteir
- chmod 0664 /dev/remote_ctrl_dev
- chown system system /dev/remote_ctrl_dev
-# End of Vanzo: yinjun
+    # Vanzo:yinjun on: Tue, 31 Mar 2015 19:43:54 +0800
+    # add remoteir
+    chmod 0664 /dev/remote_ctrl_dev
+    chown system system /dev/remote_ctrl_dev
+    # End of Vanzo: yinjun
 
-# change lk_env permission
+    # change lk_env permission
     chown root system /proc/lk_env
     chmod 0660 /proc/lk_env
 
@@ -563,7 +596,7 @@ on post-fs-data
     # device info /proc interface
     mknod /dev/devmap c 196 0;
     chmod 0444 /dev/devmap
-    chown root media /dev/devmap
+    chown system camera /dev/devmap
 
     # bluetooth
     mkdir /data/@btmtk 0770 bluetooth net_bt
@@ -730,9 +763,6 @@ on post-fs-data
 # -----------------------
 
 on boot
-
-    # xlog
-    start xlogboot
 
     write /proc/sys/vm/dirty_writeback_centisecs 300
     chmod 0660 /sys/power/autosleep
@@ -930,9 +960,9 @@ service atcid-daemon-e /system/bin/atcid
     disabled
     oneshot
 
-on property:ro.build.type=eng
-start atci_service
-start atcid-daemon-e
+#on property:ro.build.type=eng
+#start atci_service
+#start atcid-daemon-e
 
 service audio-daemon /system/bin/audiocmdservice_atci
     class main
@@ -994,60 +1024,6 @@ service autokd /system/bin/autokd
 #
 # MTK Wi-Fi related services (End)
 #
-
-
-service dhcpcd_bt-pan /system/bin/dhcpcd -BK -dd
-    class main
-    user dhcp
-    group net_admin net_raw
-    disabled
-    oneshot
-
-service dhcpcd_wlan0 /system/bin/dhcpcd -BK -dd
-    class main
-	user dhcp
-	group net_admin net_raw
-    disabled
-    oneshot
-
-service dhcpcd_p2p /system/bin/dhcpcd -BK -dd
-    class main
-	user dhcp
-	group net_admin net_raw
-    disabled
-    oneshot
-
-service dhcpcd_eth0 /system/bin/dhcpcd -aABDKL
-    class late_start
-    disabled
-    oneshot
-
-service iprenew_wlan0 /system/bin/dhcpcd -n
-    class main
-	user dhcp
-	group net_admin net_raw
-    disabled
-    oneshot
-
-service iprenew_p2p /system/bin/dhcpcd -n
-    class main
-	user dhcp
-	group net_admin net_raw
-    disabled
-    oneshot
-
-service iprenew_eth0 /system/bin/dhcpcd -n
-    class late_start
-    disabled
-    oneshot
-
-service dhcp_inform /system/bin/dhcpcd -s -BK -A
-    class main
-    user dhcp
-    group system radio dhcp
-    disabled
-    oneshot
-
 service dhcpv6_inform /system/bin/dhcp6c -c "/etc/wide-dhcpv6/dhcp6cSIP.conf" -Dfi
     class main
     user dhcp
