@@ -208,16 +208,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Snap
 
-# Messaging
+# Gello
 PRODUCT_PACKAGES += \
-    messaging
-
-# Lights
-PRODUCT_PACKAGES += \
-    lights.mt6752
-
-# Sensor Calibration
-PRODUCT_PACKAGES += libem_sensor_jni
+    Gello
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
