@@ -17,7 +17,7 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 TARGET_OTA_ASSERT_DEVICE := h560,s3_h560
 
 PRODUCT_PACKAGES += \
-   libxlog \
+   libmtk_symbols \
    libstlport
 
 # Hack to fix asec on emulated sdcard
@@ -33,19 +33,18 @@ PRODUCT_PACKAGES += \
     libaudio-resampler \
     tinymix \
     libtinyalsa
-
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_device.xml:system/etc/audio_device.xml \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf
-    
-# Bluetooth                            
+
+# Bluetooth
 PRODUCT_PACKAGES += \
-    audio.a2dp.default 
+    audio.a2dp.default
 PRODUCT_PACKAGES += \
     libbt-vendor
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/bt_did.conf:system/etc/bluetooth/bt_did.conf
-     
+
 # Keyboard layout
 PRODUCT_COPY_FILES += \
      $(LOCAL_PATH)/configs/mtk-kpd.kl:system/usr/keylayout/mtk-kpd.kl \
@@ -65,13 +64,12 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/init.project.rc:root/init.project.rc \
     $(LOCAL_PATH)/rootdir/init.rc:root/init.rc \
     $(LOCAL_PATH)/rootdir/init.ssd.rc:root/init.ssd.rc \
-    $(LOCAL_PATH)/rootdir/init.xlog.rc:root/init.xlog.rc \
+    #$(LOCAL_PATH)/rootdir/init.xlog.rc:root/init.xlog.rc \
     $(LOCAL_PATH)/rootdir/meta_init.modem.rc:root/meta_init.modem.rc \
     $(LOCAL_PATH)/rootdir/meta_init.project.rc:root/meta_init.project.rc \
     $(LOCAL_PATH)/rootdir/meta_init.rc:root/meta_init.rc \
     $(LOCAL_PATH)/rootdir/init.performance.rc:root/init.performance.rc \
-    $(LOCAL_PATH)/rootdir/ueventd.mt6752.rc:root/ueventd.mt6752.rc \
-    $(LOCAL_PATH)/rootdir/init.recovery.mt6752.rc:root/init.recovery.mt6752.rc
+    $(LOCAL_PATH)/rootdir/ueventd.mt6752.rc:root/ueventd.mt6752.rc
 
 # hack for TWRP
 PRODUCT_COPY_FILES += \
@@ -81,14 +79,15 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/apns-conf.xml:system/etc/apns-conf.xml \
     $(LOCAL_PATH)/configs/ecc_list.xml:system/etc/ecc_list.xml \
-    $(LOCAL_PATH)/configs/spn-conf.xml:system/etc/spn-conf.xml 
+    $(LOCAL_PATH)/configs/spn-conf.xml:system/etc/spn-conf.xml
 
 # Thermal
 PRODUCT_COPY_FILES += \
-     $(LOCAL_PATH)/configs/.ht120.mtc:system/etc/.tp/.ht120.mtc \
-     $(LOCAL_PATH)/configs/thermal.conf:system/etc/.tp/thermal.conf \
-     $(LOCAL_PATH)/configs/thermal.off.conf:system/etc/.tp/thermal.off.conf
-    
+     $(LOCAL_PATH)/configs/thermal/.ht120.mtc:system/etc/.tp/.ht120.mtc \
+     $(LOCAL_PATH)/configs/thermal/thermal.conf:system/etc/.tp/thermal.conf \
+     $(LOCAL_PATH)/configs/thermal/thermal.off.conf:system/etc/.tp/thermal.off.conf \
+     $(LOCAL_PATH)/configs/thermal/.thermal_policy_00:system/etc/.tp/.thermal_policy_00
+
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/android.hardware.microphone.xml:system/etc/permissions/android.hardware.microphone.xml \
@@ -114,6 +113,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.hardware.ethernet.xml:system/etc/permissions/android.hardware.ethernet.xml \
+    frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:system/etc/permissions/android.hardware.bluetooth.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
     frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
@@ -123,7 +123,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
     frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
 
-# Media	
+# Media
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
@@ -137,7 +137,7 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 
 # Charger
 PRODUCT_PACKAGES += \
-      charger_res_images
+    charger_res_images
 
 # Wifi
 PRODUCT_PACKAGES += \
@@ -147,10 +147,9 @@ PRODUCT_PACKAGES += \
     libwpa_client \
     hostapd \
     hostapd_cli \
-    dhcpcd.conf \
     wpa_supplicant \
     wpa_supplicant.conf
-    
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/hostapd/hostapd_default.conf:system/etc/hostapd/hostapd_default.conf \
     $(LOCAL_PATH)/configs/hostapd/hostapd.accept:system/etc/hostapd/hostapd.accept \
@@ -163,9 +162,6 @@ PRODUCT_PACKAGES += \
 # STk
 PRODUCT_PACKAGES += \
     Stk
-
-PRODUCT_PACKAGES += \
-    mtkcam
 
 # GPS
 PRODUCT_COPY_FILES += \
@@ -184,6 +180,7 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.kernel.android.checkjni=0 \
+    ro.telephony.ril.config=fakeiccid  \
     persist.call_recording.enabled=true \
     persist.call_recording.src=1 \
     persist.debug.wfd.enable=1
@@ -196,13 +193,10 @@ PRODUCT_PACKAGES += \
     libnl_2 \
     libtinyxml
 
-# Browser
-PRODUCT_PACKAGES += \
-    Gello
-
 # FMRadio
 PRODUCT_PACKAGES += \
-    FmRadio \
+    libfmjni \
+    FMRadio \
     libmtkplayer
 
 # NFC
@@ -217,9 +211,16 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Snap
 
+# Messaging
+PRODUCT_PACKAGES += \
+    messaging
+
 # Lights
 PRODUCT_PACKAGES += \
     lights.mt6752
+
+# Sensor Calibration
+PRODUCT_PACKAGES += libem_sensor_jni
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
@@ -230,12 +231,8 @@ PRODUCT_PACKAGES += \
     make_ext4fs \
     resize2fs \
     setup_fs
-    
-# Sensor Calibration
-PRODUCT_PACKAGES += libem_sensor_jni
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=8
 
 # Dalvik/HWUI
-$(call inherit-product-if-exists, frameworks/native/build/phone-xxhdpi-2048-dalvik-heap.mk)
-$(call inherit-product-if-exists, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk)
+$(call inherit-product-if-exists, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
