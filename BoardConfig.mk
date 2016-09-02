@@ -6,7 +6,6 @@ TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
 USE_CAMERA_STUB := true
 TARGET_PROVIDES_INIT_RC := true
-# inherit from the proprietary version
 
 # Platform
 ARCH_ARM_HAVE_TLS_REGISTER := true
@@ -17,8 +16,6 @@ TARGET_NO_FACTORYIMAGE := true
 
 # MiniJail
 DISABLE_MINIJAIL := true
-
-#TARGET_LDPRELOAD += libxlog.so
 
 # CPU
 TARGET_ARCH := arm64
