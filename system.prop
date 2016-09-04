@@ -160,7 +160,6 @@ ro.mtk_rild_read_imsi=1
 ro.sim_refresh_reset_by_modem=1
 ro.mtk_bg_power_saving_support=1
 ro.mtk_bg_power_saving_ui=1
-ro.have_aee_feature=1
 ro.sim_me_lock_mode=0
 ro.mtk_voice_extension_support=1
 wfd.dummy.enable=1
