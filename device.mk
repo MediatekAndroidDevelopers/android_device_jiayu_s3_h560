@@ -212,6 +212,17 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Gello
 
+# Messaging app
+PRODUCT_PACKAGES += \
+    messaging
+
+# Lights
+PRODUCT_PACKAGES += \
+    lights.mt6752
+
+# Sensor Calibration
+PRODUCT_PACKAGES += libem_sensor_jni
+
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     e2fsck \
