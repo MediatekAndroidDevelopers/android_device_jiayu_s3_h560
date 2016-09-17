@@ -566,7 +566,8 @@ int WifiRequest::create(uint32_t id, int subcmd) {
 
     if (mIface != -1) {
         res = set_iface_id(mIface);
-		ALOGD("WifiRequest::create at set_iface_id res=%d, mIface=%d, subcmd=0x%x", res, mIface, subcmd);
+        ALOGD("WifiRequest::create vendor command to iface %d, vendor_id=0x%x, subcmd=0x%04x, res=%d",
+            mIface, id, subcmd, res);
     }
 
     return res;
@@ -579,7 +580,7 @@ static int no_seq_check(struct nl_msg *msg, void *arg)
 }
 
 int WifiCommand::requestResponse() {
-    int err = create();                 /* create the message */
+    int err = create();
     if (err < 0) {
         return err;
     }
@@ -594,7 +595,8 @@ int WifiCommand::requestResponse(WifiRequest& request) {
     if (!cb)
         goto out;
 
-    err = nl_send_auto_complete(mInfo->cmd_sock, request.getMessage());    /* send message */
+    /* send message */
+    err = nl_send_auto_complete(mInfo->cmd_sock, request.getMessage());
     if (err < 0)
         goto out;
 
@@ -606,15 +608,15 @@ int WifiCommand::requestResponse(WifiRequest& request) {
     nl_cb_set(cb, NL_CB_ACK, NL_CB_CUSTOM, ack_handler, &err);
     nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, response_handler, this);
 
-	ALOGD("WifiCommand::requestResponse err=%d", err);
-
-    while (err > 0) {                   /* wait for reply */
+    /* wait for reply */
+    while (err > 0) {
         int res = nl_recvmsgs(mInfo->cmd_sock, cb);
         if (res) {
-            ALOGE("nl80211: %s->nl_recvmsgs failed: %d", __func__, res);
+            ALOGE("WifiCommand::requestResponse nl_recvmsgs failed: %d", res);
         }
     }
-	ALOGD("WifiCommand::requestResponse after nl_recvmsgs err=%d", err);
+    if (err)
+        ALOGD("WifiCommand::requestResponse err=%d", err);
 out:
     nl_cb_put(cb);
     return err;
@@ -622,24 +624,22 @@ out:
 
 int WifiCommand::requestEvent(int cmd) {
 
-    ALOGD("requesting event %d", cmd);
+    ALOGD("WifiCommand::requestEvent for cmd %d", cmd);
 
     int res = wifi_register_handler(wifiHandle(), cmd, event_handler, this);
     if (res < 0) {
         return res;
     }
 
-    res = create();                                                 /* create the message */
+    res = create();
     if (res < 0)
         goto out;
 
-    ALOGD("waiting for response %d", cmd);
-
-    res = nl_send_auto_complete(mInfo->cmd_sock, mMsg.getMessage());    /* send message */
+    res = nl_send_auto_complete(mInfo->cmd_sock, mMsg.getMessage());
     if (res < 0)
         goto out;
 
-    ALOGD("waiting for event %d", cmd);
+    ALOGD("WifiCommand::requestEvent waiting for event");
     res = mCondition.wait();
     if (res < 0)
         goto out;
@@ -656,11 +656,11 @@ int WifiCommand::requestVendorEvent(uint32_t id, int subcmd) {
         return res;
     }
 
-    res = create();                                                 /* create the message */
+    res = create();
     if (res < 0)
         goto out;
 
-    res = nl_send_auto_complete(mInfo->cmd_sock, mMsg.getMessage());    /* send message */
+    res = nl_send_auto_complete(mInfo->cmd_sock, mMsg.getMessage());
     if (res < 0)
         goto out;
 
@@ -673,7 +673,8 @@ out:
     return res;
 }
 
-/* Event handlers */
+//////////////////////////////////////////////////////////////////////////
+// Event handlers
 int WifiCommand::response_handler(struct nl_msg *msg, void *arg) {
     // ALOGD("response_handler called");
     WifiCommand *cmd = (WifiCommand *)arg;
@@ -703,7 +704,6 @@ int WifiCommand::event_handler(struct nl_msg *msg, void *arg) {
     return res;
 }
 
-/* Other event handlers */
 int WifiCommand::valid_handler(struct nl_msg *msg, void *arg) {
     // ALOGD("valid_handler called");
     int *err = (int *)arg;
@@ -729,6 +729,6 @@ int WifiCommand::error_handler(struct sockaddr_nl *nla, struct nlmsgerr *err, vo
     int *ret = (int *)arg;
     *ret = err->error;
 
-    // ALOGD("error_handler received : %d", err->error);
+    // ALOGD("error_handler called, err->error=%d", err->error);
     return NL_SKIP;
 }
