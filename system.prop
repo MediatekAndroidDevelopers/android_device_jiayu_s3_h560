@@ -25,11 +25,9 @@ mediatek.wlan.ctia=0
 wifi.tethering.interface=ap0
 #
 
-ro.opengles.version=196608
 #For N: 
-#ro.opengles.version=196609
-#ro.kernel.qemu=1
-#ro.kernel.qemu.gles=0
+ro.opengles.version=196609
+ro.kernel.qemu.gles=0
 
 wifi.direct.interface=p2p0
 dalvik.vm.heapgrowthlimit=128m
