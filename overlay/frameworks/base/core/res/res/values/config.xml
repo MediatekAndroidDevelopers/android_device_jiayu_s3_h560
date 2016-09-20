@@ -322,4 +322,7 @@
          For example, a device with Home, Back and Menu keys would set this
          config to 7. -->
     <integer name="config_deviceHardwareKeys">71</integer>
+
+<!-- True if the device supports M.A.D. FastCharge. -->
+    <bool name="config_hasFastCharge">true</bool>
 </resources>
