@@ -323,9 +323,6 @@
          config to 7. -->
     <integer name="config_deviceHardwareKeys">71</integer>
 
-<!-- True if the device supports M.A.D. FastCharge. -->
-    <bool name="config_hasFastCharge">true</bool>
-
    <!-- Enable doze mode
          ComponentName of a dream to show whenever the system would otherwise have gone to sleep. -->
     <string name="config_dozeComponent">com.android.systemui/com.android.systemui.doze.DozeService</string>
