@@ -26,7 +26,7 @@
 
     <!-- Minimum screen brightness setting allowed by the power manager.
          The user is forbidden from setting the brightness below this level. -->
-    <integer name="config_screenBrightnessSettingMinimum">3</integer>
+    <integer name="config_screenBrightnessSettingMinimum">10</integer>
 
     <!-- Screen brightness used to dim the screen when the user activity
         timeout expires.  May be less than the minimum allowed brightness setting
@@ -118,10 +118,13 @@
         <item>16</item>
         <item>32</item>
         <item>50</item>
+        <item>75</item>
         <item>100</item>
         <item>140</item>
         <item>180</item>
+        <item>210</item>
         <item>240</item>
+        <item>270</item>
         <item>300</item>
         <item>600</item>
         <item>1000</item>
