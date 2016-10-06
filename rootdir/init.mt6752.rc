@@ -359,6 +359,105 @@ on post-fs-data
     chown system system /sys/class/misc/m_baro_misc/barodelay
     chown system system /sys/class/misc/m_baro_misc/barobatch
     chown system system /sys/class/misc/m_baro_misc/baroflush
+
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cactive
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cdelay
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cbatch
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cflush
+    chown system system /sys/class/misc/m_step_c_misc/step_cactive
+    chown system system /sys/class/misc/m_step_c_misc/step_cdelay
+    chown system system /sys/class/misc/m_step_c_misc/step_cbatch
+    chown system system /sys/class/misc/m_step_c_misc/step_cflush
+
+    chmod 0660 /sys/class/misc/m_act_misc/actactive
+    chmod 0660 /sys/class/misc/m_act_misc/actdelay
+    chmod 0660 /sys/class/misc/m_act_misc/actbatch
+    chmod 0660 /sys/class/misc/m_act_misc/actflush
+    chown system system /sys/class/misc/m_act_misc/actactive
+    chown system system /sys/class/misc/m_act_misc/actdelay
+    chown system system /sys/class/misc/m_act_misc/actbatch
+    chown system system /sys/class/misc/m_act_misc/actflush
+
+    chmod 0660 /sys/class/misc/m_fdn_misc/fdnactive
+    chmod 0660 /sys/class/misc/m_fdn_misc/fdndelay
+    chmod 0660 /sys/class/misc/m_fdn_misc/fdnbatch
+    chmod 0660 /sys/class/misc/m_fdn_misc/fdnflush
+    chown system system /sys/class/misc/m_fdn_misc/fdnactive
+    chown system system /sys/class/misc/m_fdn_misc/fdndelay
+    chown system system /sys/class/misc/m_fdn_misc/fdnbatch
+    chown system system /sys/class/misc/m_fdn_misc/fdnflush
+
+    chmod 0660 /sys/class/misc/m_inpk_misc/inpkactive
+    chmod 0660 /sys/class/misc/m_inpk_misc/inpkdelay
+    chmod 0660 /sys/class/misc/m_inpk_misc/inpkbatch
+    chmod 0660 /sys/class/misc/m_inpk_misc/inpkflush
+    chown system system /sys/class/misc/m_inpk_misc/inpkactive
+    chown system system /sys/class/misc/m_inpk_misc/inpkdelay
+    chown system system /sys/class/misc/m_inpk_misc/inpkbatch
+    chown system system /sys/class/misc/m_inpk_misc/inpkflush
+
+    chmod 0660 /sys/class/misc/m_pdr_misc/pdractive
+    chmod 0660 /sys/class/misc/m_pdr_misc/pdrdelay
+    chmod 0660 /sys/class/misc/m_pdr_misc/pdrbatch
+    chmod 0660 /sys/class/misc/m_pdr_misc/pdrflush
+    chown system system /sys/class/misc/m_pdr_misc/pdractive
+    chown system system /sys/class/misc/m_pdr_misc/pdrdelay
+    chown system system /sys/class/misc/m_pdr_misc/pdrbatch
+    chown system system /sys/class/misc/m_pdr_misc/pdrflush
+
+    chmod 0660 /sys/class/misc/m_pkup_misc/pkupactive
+    chmod 0660 /sys/class/misc/m_pkup_misc/pkupdelay
+    chmod 0660 /sys/class/misc/m_pkup_misc/pkupbatch
+    chmod 0660 /sys/class/misc/m_pkup_misc/pkupflush
+    chown system system /sys/class/misc/m_pkup_misc/pkupactive
+    chown system system /sys/class/misc/m_pkup_misc/pkupdelay
+    chown system system /sys/class/misc/m_pkup_misc/pkupbatch
+    chown system system /sys/class/misc/m_pkup_misc/pkupflush
+
+    chmod 0660 /sys/class/misc/m_shk_misc/shkactive
+    chmod 0660 /sys/class/misc/m_shk_misc/shkdelay
+    chmod 0660 /sys/class/misc/m_shk_misc/shkbatch
+    chmod 0660 /sys/class/misc/m_shk_misc/shkflush
+    chown system system /sys/class/misc/m_shk_misc/shkactive
+    chown system system /sys/class/misc/m_shk_misc/shkdelay
+    chown system system /sys/class/misc/m_shk_misc/shkbatch
+    chown system system /sys/class/misc/m_shk_misc/shkflush
+
+    chmod 0660 /sys/class/misc/m_hrm_misc/hrmactive
+    chmod 0660 /sys/class/misc/m_hrm_misc/hrmdelay
+    chmod 0660 /sys/class/misc/m_hrm_misc/hrmbatch
+    chmod 0660 /sys/class/misc/m_hrm_misc/hrmflush
+    chown system system /sys/class/misc/m_hrm_misc/hrmactive
+    chown system system /sys/class/misc/m_hrm_misc/hrmdelay
+    chown system system /sys/class/misc/m_hrm_misc/hrmbatch
+    chown system system /sys/class/misc/m_hrm_misc/hrmflush
+
+    chmod 0660 /sys/class/misc/m_tile_misc/tileactive
+    chmod 0660 /sys/class/misc/m_tile_misc/tiledelay
+    chmod 0660 /sys/class/misc/m_tile_misc/tilebatch
+    chmod 0660 /sys/class/misc/m_tile_misc/tileflush
+    chown system system /sys/class/misc/m_tile_misc/tileactive
+    chown system system /sys/class/misc/m_tile_misc/tiledelay
+    chown system system /sys/class/misc/m_tile_misc/tilebatch
+    chown system system /sys/class/misc/m_tile_misc/tileflush
+
+    chmod 0660 /sys/class/misc/m_wag_misc/wagactive
+    chmod 0660 /sys/class/misc/m_wag_misc/wagdelay
+    chmod 0660 /sys/class/misc/m_wag_misc/wagbatch
+    chmod 0660 /sys/class/misc/m_wag_misc/wagflush
+    chown system system /sys/class/misc/m_wag_misc/wagactive
+    chown system system /sys/class/misc/m_wag_misc/wagdelay
+    chown system system /sys/class/misc/m_wag_misc/wagbatch
+    chown system system /sys/class/misc/m_wag_misc/wagflush
+
+    chmod 0660 /sys/class/misc/m_glg_misc/glgactive
+    chmod 0660 /sys/class/misc/m_glg_misc/glgdelay
+    chmod 0660 /sys/class/misc/m_glg_misc/glgbatch
+    chmod 0660 /sys/class/misc/m_glg_misc/glgflush
+    chown system system /sys/class/misc/m_glg_misc/glgactive
+    chown system system /sys/class/misc/m_glg_misc/glgdelay
+    chown system system /sys/class/misc/m_glg_misc/glgbatch
+    chown system system /sys/class/misc/m_glg_misc/glgflush
  
     #sensorhub
     chmod 0660 /dev/shf
@@ -664,9 +763,6 @@ on post-fs-data
 
     # AGPS
     mkdir /data/agps_supl 0771 gps system
-
-    #Thermal
-    mkdir /data/.tp/ 0775 system system
 
     # Recycle stuffs
     exec /system/bin/rm -f /cache/.ipoh.img
