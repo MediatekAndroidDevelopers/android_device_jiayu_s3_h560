@@ -233,7 +233,7 @@ public:
     {
         mIfaceInfo = getIfaceInfo(iface);
         mInfo = getHalInfo(iface);
-        // ALOGD("WifiCommand2 %p created, mInfo=%p, mIfaceInfo=%p, id=%d", this, mInfo, mIfaceInfo, mIfaceInfo->id);
+        // ALOGD("WifiCommand %p created, mInfo = %p, mIfaceInfo = %p", this, mInfo, mIfaceInfo);
     }
 
     virtual ~WifiCommand() {

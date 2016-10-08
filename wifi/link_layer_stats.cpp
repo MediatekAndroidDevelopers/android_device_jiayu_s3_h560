@@ -27,15 +27,11 @@
 #include "cpp_bindings.h"
 
 
-typedef enum {
+enum {
+    NL80211_ATTR_VENDOR_LLSTAT = 2,
     LSTATS_SUBCMD_GET_INFO = ANDROID_NL80211_SUBCMD_LSTATS_RANGE_START,
-} LSTATS_SUB_COMMAND;
+};
 
-typedef enum {
-    LSTATS_ATTRIBUTE_STATS = 2,
-} LSTATS_ATTRIBUTE;
-
-///////////////////////////////////////////////////////////////////////////////////
 class GetLinkStatsCommand : public WifiCommand
 {
     wifi_stats_result_handler mHandler;
@@ -74,10 +70,8 @@ protected:
         int len = reply.get_vendor_data_len();
         wifi_radio_stat *data;
 
-        if(vendor_data->nla_type == LSTATS_ATTRIBUTE_STATS)
+        if(vendor_data->nla_type == NL80211_ATTR_VENDOR_LLSTAT)
             data = (wifi_radio_stat *)nla_data(vendor_data);
-        else
-            return NL_SKIP;
         int num_chan = data->num_channels;
         if (num_chan > 32) {
            ALOGE("Incorrect number of channels = %d", num_chan);
@@ -98,12 +92,7 @@ protected:
 wifi_error wifi_get_link_stats(wifi_request_id id,
         wifi_interface_handle iface, wifi_stats_result_handler handler)
 {
-#if 0
     GetLinkStatsCommand command(iface, handler);
     return (wifi_error) command.requestResponse();
-#else
-    ALOGD("[WIFI HAL]don't support wifi_get_link_stats");
-    return WIFI_ERROR_NOT_SUPPORTED;
-#endif
 }
 
