@@ -56,10 +56,23 @@
         <kctl name="Audio_ADC_1_Switch" value="On" />
         <kctl name="Audio_ADC_2_Switch" value="On" />
         <kctl name="Audio_Preamp1_Switch" value="IN_ADC1" />  
-        <kctl name="Audio_Preamp2_Switch" value="IN_ADC3" />                        
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC1" />                        
     </path>
     <path name="builtin_Mic_Mic1" value="turnoff">   
-        <kctl name="Audio_Preamp1_Switch" value="OPEN" />    
+        <kctl name="Audio_Preamp1_Switch" value="OPEN" />
+        <kctl name="Audio_Preamp2_Switch" value="OPEN" />		
+        <kctl name="Audio_ADC_1_Switch" value="Off" />
+        <kctl name="Audio_ADC_2_Switch" value="Off" />
+    </path>
+    <path name="builtin_Mic_Mic1_Inverse" value="turnon">
+        <kctl name="Audio_MicSource1_Setting" value="ADC1" />
+        <kctl name="Audio_ADC_1_Switch" value="On" />
+        <kctl name="Audio_ADC_2_Switch" value="On" />
+        <kctl name="Audio_Preamp1_Switch" value="IN_ADC3" />  
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC3" />                        
+    </path>
+    <path name="builtin_Mic_Mic1_Inverse" value="turnoff">   
+        <kctl name="Audio_Preamp1_Switch" value="OPEN" />
         <kctl name="Audio_Preamp2_Switch" value="OPEN" />		
         <kctl name="Audio_ADC_1_Switch" value="Off" />
         <kctl name="Audio_ADC_2_Switch" value="Off" />
@@ -69,10 +82,23 @@
         <kctl name="Audio_ADC_1_Switch" value="On" />
         <kctl name="Audio_ADC_2_Switch" value="On" />
         <kctl name="Audio_Preamp1_Switch" value="IN_ADC3" />  
-        <kctl name="Audio_Preamp2_Switch" value="IN_ADC1" />                        
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC3" />                        
     </path>
     <path name="builtin_Mic_Mic2" value="turnoff">   
-        <kctl name="Audio_Preamp1_Switch" value="OPEN" />    
+        <kctl name="Audio_Preamp1_Switch" value="OPEN" /> 
+        <kctl name="Audio_Preamp2_Switch" value="OPEN" />		
+        <kctl name="Audio_ADC_1_Switch" value="Off" />
+        <kctl name="Audio_ADC_2_Switch" value="Off" />
+    </path>
+    <path name="builtin_Mic_Mic2_Inverse" value="turnon">
+        <kctl name="Audio_MicSource1_Setting" value="ADC1" />
+        <kctl name="Audio_ADC_1_Switch" value="On" />
+        <kctl name="Audio_ADC_2_Switch" value="On" />
+        <kctl name="Audio_Preamp1_Switch" value="IN_ADC1" />  
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC1" />                        
+    </path>
+    <path name="builtin_Mic_Mic2_Inverse" value="turnoff">   
+        <kctl name="Audio_Preamp1_Switch" value="OPEN" /> 
         <kctl name="Audio_Preamp2_Switch" value="OPEN" />		
         <kctl name="Audio_ADC_1_Switch" value="Off" />
         <kctl name="Audio_ADC_2_Switch" value="Off" />
@@ -80,22 +106,20 @@
     <path name="builtin_Mic_SingleMic" value="turnon">
         <kctl name="Audio_MicSource1_Setting" value="ADC1" />
         <kctl name="Audio_ADC_1_Switch" value="On" />
-        <kctl name="Audio_ADC_2_Switch" value="On" />
         <kctl name="Audio_Preamp1_Switch" value="IN_ADC1" />  
-        <kctl name="Audio_Preamp2_Switch" value="IN_ADC3" />           
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC1" />           
     </path>
     <path name="builtin_Mic_SingleMic" value="turnoff">
-        <kctl name="Audio_Preamp1_Switch" value="OPEN" />    
+        <kctl name="Audio_Preamp1_Switch" value="OPEN" />
         <kctl name="Audio_Preamp2_Switch" value="OPEN" />
         <kctl name="Audio_ADC_1_Switch" value="Off" />
-        <kctl name="Audio_ADC_2_Switch" value="Off" />
     </path>
     <path name="builtin_Mic_DualMic" value="turnon">
         <kctl name="Audio_MicSource1_Setting" value="ADC1" />
         <kctl name="Audio_ADC_1_Switch" value="On" />
         <kctl name="Audio_ADC_2_Switch" value="On" /> 
         <kctl name="Audio_Preamp1_Switch" value="IN_ADC1" />        
-        <kctl name="Audio_Preamp2_Switch" value="IN_ADC1" />
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC3" />
     </path>
     <path name="builtin_Mic_DualMic" value="turnoff">
         <kctl name="Audio_Preamp1_Switch" value="OPEN" />
@@ -108,14 +132,27 @@
         <kctl name="Audio_ADC_1_Switch" value="On" />
         <kctl name="Audio_ADC_2_Switch" value="On" />
         <kctl name="Audio_Preamp1_Switch" value="IN_ADC3" />
-        <kctl name="Audio_Preamp2_Switch" value="IN_ADC1" />        
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC3" />        
     </path>
     <path name="builtin_Mic_BackMic" value="turnoff">
         <kctl name="Audio_Preamp1_Switch" value="OPEN" />
         <kctl name="Audio_Preamp2_Switch" value="OPEN" />		
         <kctl name="Audio_ADC_1_Switch" value="Off" />
         <kctl name="Audio_ADC_2_Switch" value="Off" />
-    </path>    
+    </path>
+    <path name="builtin_Mic_BackMic_Inverse" value="turnon">
+        <kctl name="Audio_MicSource1_Setting" value="ADC1" />
+        <kctl name="Audio_ADC_1_Switch" value="On" />
+        <kctl name="Audio_ADC_2_Switch" value="On" />
+        <kctl name="Audio_Preamp1_Switch" value="IN_ADC1" />
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC1" />        
+    </path>
+    <path name="builtin_Mic_BackMic_Inverse" value="turnoff">
+        <kctl name="Audio_Preamp1_Switch" value="OPEN" />
+        <kctl name="Audio_Preamp2_Switch" value="OPEN" />		
+        <kctl name="Audio_ADC_1_Switch" value="Off" />
+        <kctl name="Audio_ADC_2_Switch" value="Off" />
+    </path>	
     <path name="headset_mic_input" value="turnon">
         <kctl name="Audio_MicSource1_Setting" value="ADC2" />
         <kctl name="Audio_ADC_1_Switch" value="On" />
@@ -201,10 +238,10 @@
     </path>
     <path name="Mic_Setting_Inverse" value="setting">
         <kctl name="Audio_Preamp1_Switch" value="IN_ADC3" />>
-        <kctl name="Audio_Preamp2_Switch" value="IN_ADC3" />>        
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC1" />>        
     </path>
     <path name="Mic_Setting_NoInverse" value="setting">
         <kctl name="Audio_Preamp1_Switch" value="IN_ADC1" />>
-        <kctl name="Audio_Preamp2_Switch" value="IN_ADC1" />>        
+        <kctl name="Audio_Preamp2_Switch" value="IN_ADC3" />>        
     </path>            
 </mixercontrol>
