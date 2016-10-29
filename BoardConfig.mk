@@ -127,7 +127,7 @@ TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun/file
 
 # Recovery
-#RECOVERY_VARIANT=twrp
+RECOVERY_VARIANT=twrp
 
 # TWRP stuff
 ifeq ($(RECOVERY_VARIANT), twrp)
@@ -165,6 +165,7 @@ TW_MAX_BRIGHTNESS := 255
 TW_NO_USB_STORAGE := true
 BOARD_USE_FRAMEBUFFER_ALPHA_CHANNEL := true
 TARGET_DISABLE_TRIPLE_BUFFERING := false
+TW_USE_TOOLBOX := true
 else
 # CWM
 BOARD_HAS_NO_SELECT_BUTTON := true
