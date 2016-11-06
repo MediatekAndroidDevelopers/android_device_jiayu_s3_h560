@@ -141,7 +141,9 @@ TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
 
 # Enable Minikin text layout engine (will be the default soon)
 USE_MINIKIN := true
-#MALLOC_IMPL := dlmalloc
+
+#Use dlmalloc instead of jemalloc for mallocs
+MALLOC_SVELTE := true
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
