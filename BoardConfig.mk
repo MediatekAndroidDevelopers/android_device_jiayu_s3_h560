@@ -4,9 +4,6 @@ LOCAL_PATH := device/jiayu/s3_h560
 
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
-USE_CAMERA_STUB := true
-TARGET_PROVIDES_INIT_RC := true
-
 # Platform
 ARCH_ARM_HAVE_TLS_REGISTER := true
 TARGET_BOARD_PLATFORM := mt6752
@@ -130,7 +127,7 @@ TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun/file
 
 # Recovery
-RECOVERY_VARIANT=twrp
+RECOVERY_VARIANT := twrp
 
 # TWRP stuff
 ifeq ($(RECOVERY_VARIANT), twrp)
