@@ -219,6 +219,10 @@ on post-fs-data
     mkdir /data/misc/wide-dhcpv6 0770 dhcp wifi
     chown dhcp wifi /data/misc/wide-dhcpv6
 
+    # radvd
+    mkdir /data/misc/radvd 0770 system system
+    chmod 444 /etc/radvd/radvd.conf
+
     # Mali 3D GPU driver
     chmod 666 /dev/mali0
 
