@@ -218,6 +218,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Snap
 
+# WallpaperPicker
+PRODUCT_PACKAGES += \
+     WallpaperPicker
+
 # Messaging app
 PRODUCT_PACKAGES += \
     messaging
