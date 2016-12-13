@@ -3,168 +3,67 @@
 # system.prop for Jiayu S3
 #
 
+# RIL
 rild.libpath=/system/lib64/mtk-ril.so
 rild.libargs=-d /dev/ttyC0
 
-# MTK, Infinity, 20090720 {
+# Wifi
 wifi.interface=wlan0
-# MTK, Infinity, 20090720 }
+wifi.direct.interface=p2p0
 
-# MTK, mtk03034, 20101210 {
-ro.mediatek.wlan.wsc=1
-# MTK, mtk03034 20101210}
-# MTK, mtk03034, 20110318 {
-ro.mediatek.wlan.p2p=1
-# MTK, mtk03034 20110318}
-
-# MTK, mtk03034, 20101213 {
-mediatek.wlan.ctia=0
-# MTK, mtk03034 20101213}
-
-#For N: 
+# OpenGL
 ro.opengles.version=196609
 ro.kernel.qemu.gles=0
 
-wifi.direct.interface=p2p0
+# Dalvik
 dalvik.vm.heapgrowthlimit=128m
 dalvik.vm.heapsize=256m
 
-# USB MTP WHQL
-ro.sys.usb.mtp.whql.enable=0
-
-# Power off opt in IPO
-sys.ipo.pwrdncap=2
-
-ro.sys.usb.storage.type=mtp,mass_storage
-
-# USB BICR function
-ro.sys.usb.bicr=yes
-
-# USB Charge only function
-ro.sys.usb.charging.only=no
-
-# audio
+# Audio
 ro.camera.sound.forced=0
 ro.audio.silent=0
-persist.audio.dirac.speaker=true
 persist.af.audio_patch_fm=1
 
-ro.zygote.preload.enable=0
-
-# temporary enables NAV bar (soft keys)
+# disable soft keys
 qemu.hw.mainkeys=1
 
-ro.kernel.zio=38,108,105,16
-
 # Disable dirty region for Mali
-debug.hwui.render_dirty_regions=true
+debug.hwui.render_dirty_regions=false
 
+# lcd density
 ro.sf.lcd_density=480
 
-# button jack mode & switch
-persist.sys.button_jack_profile=volume
-persist.sys.button_jack_switch=0
-
-persist.tone_relative_volume=100
-ro.mediatek.chip_ver=S01
-ro.mediatek.version.release=ALPS.N
-ro.mediatek.platform=MT6752
+# RIL
 ro.telephony.sim.count=2
-persist.radio.default.sim=0
 persist.radio.multisim.config=dsds
-persist.md.perm.checked=1
-persist.gemini.sim_num=2
-ro.gemini.smart_sim_switch=false
-ril.specific.sm_cause=0
-bgw.current3gband=0
-ril.external.md=0
-ro.mtk_cam_lomo_support=1
-ro.btstack=blueangel
-ro.sf.hwrotation=0
 ril.current.share_modem=2
-curlockscreen=1
-ro.mediatek.gemini_support=true
+ril.external.md=0
+ril.telephony.mode=0
 persist.radio.fd.counter=15
 persist.radio.fd.off.counter=5
 persist.radio.fd.r8.counter=15
 persist.radio.fd.off.r8.counter=5
-persist.mtk.wcn.combo.chipid=-1
-persist.mtk.combo.coredump=no
-drm.service.enabled=true
-fmradio.driver.enable=1
-ril.first.md=1
-ril.flightmode.poweroffMD=1
-ril.telephony.mode=0
-mediatek.wlan.chip=MT6630
-mediatek.wlan.module.postfix=_mt6630
-ril.read.imsi=1
-ril.radiooff.poweroffMD=0
-ro.mediatek.version.branch=L0.MP6
-ro.mediatek.version.sdk=4
 ro.mtk_gemini_support=1
-ro.mtk_lossless_bt_audio=1
-ro.mtk_bessurround_support=1
-ro.mtk_gemini_enhancement=1
-ro.mtk_wapi_support=1
-ro.mtk_bt_support=1
-ro.mtk_wappush_support=1
-ro.mtk_agps_app=1
-ro.mtk_voice_unlock_support=1
-ro.mtk_voice_contact_support=1
-ro.mtk_matv_analog_support=1
-ro.mtk_wlan_support=1
-ro.mtk_gps_support=1
-ro.mtk_omacp_support=1
-ro.mtk_bt_fm_over_bt=1
-ro.mtk_search_db_support=1
-ro.mtk_dialer_search_support=1
-ro.mtk_dhcpv6c_wifi=1
-ro.have_aacencode_feature=1
-ro.mtk_oma_drm_support=1
-ro.mtk_widevine_drm_support=1
-ro.mtk_eap_sim_aka=1
-ro.mtk_fm_recording_support=1
-ro.mtk_audio_ape_support=1
-ro.mtk_flv_playback_support=1
-ro.mtk_send_rr_support=1
-ro.mtk_emmc_support=1
-ro.mtk_tetheringipv6_support=1
-ro.mtk_phone_number_geo=1
-ro.mtk_shared_sdcard=1
 ro.mtk_enable_md1=1
 ro.mtk_flight_mode_power_off_md=1
-ro.mtk_aal_support=1
-ro.mtk_ultra_dimming_support=1
-ro.mtk_wfd_support=1
-ro.mtk_wfd_sink_support=1
-ro.mtk_wfd_sink_uibc_support=1
-ro.mtk_wifi_mcc_support=1
 ro.mtk_sim_hot_swap=1
-ro.mtk_thumbnail_play_support=1
-ro.mtk_bip_scws=1
-ro.mtk_cmcc_ft_precheck_support=1
 ro.mtk_world_phone=1
-ro.mtk_perfservice_support=1
-ro.mtk_owner_sdcard_support=1
 ro.mtk_cta_set=1
-ro.mtk_antibricking_level=2
-ro.mtk_zsdhdr_support=1
 ro.mtk_lte_support=1
-ro.mtk_umts_tdd128_mode=1
 ro.mtk_rild_read_imsi=1
-ro.sim_refresh_reset_by_modem=1
-ro.mtk_bg_power_saving_support=1
-ro.mtk_bg_power_saving_ui=1
-ro.sim_me_lock_mode=0
-ro.mtk_voice_extension_support=1
+persist.md.perm.checked=1
+
+# other things
+ro.mediatek.chip_ver=S01
+ro.mediatek.version.release=ALPS.N
+ro.mediatek.platform=MT6752
+bgw.current3gband=0
+ro.sf.hwrotation=0
+persist.mtk.wcn.combo.chipid=-1
+drm.service.enabled=true
 wfd.dummy.enable=1
-persist.power.useautobrightadj=true
+persist.sys.display.clearMotion=1
+ro.mtk_clearmotion_support=1
 keyguard.no_require_sim=true
-persist.sys.isUsbOtgEnabled=true
+camera.disable_zsl_mode=1
 persist.debug.wfd.enable=1
-camera.disable_zsl_mode=0
-ro.mtk_cam_mfb_support=1
-ro.mtk_cam_mav_support=0
-ro.mtk_cam_vfb=0
-ro.mtk_live_photo_support=0
-ro.mtk_slidevideo_support=0

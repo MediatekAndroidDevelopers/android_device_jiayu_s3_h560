@@ -13,7 +13,6 @@ on init
     mkdir /protect_f 0771 system system
     mkdir /protect_s 0771 system system
     mkdir /persist   0771 system system
-    mkdir /nvdata    0771 system system
 
     chown root system /dev/kmsg
     chmod 0660 /dev/kmsg
@@ -40,14 +39,6 @@ on post-fs
 
     chown system system /protect_s
     chmod 0770 /protect_s
-
-    mkdir /nvdata/APCFG 0770 system camera
-    mkdir /nvdata/APCFG/APRDCL 0770 system camera
-    mkdir /nvdata/APCFG/APRDEB 0770 system camera
-    mkdir /nvdata/md     0770 system radio
-    mkdir /nvdata/md_cmn 0770 system radio
-    mkdir /nvdata/media  0770 media audio
-    restorecon_recursive /nvdata
 
     # Workaround for old nvram blobs
     mkdir /dev/block/platform/mtk-msdc.0/by-name 0755 root system
@@ -85,13 +76,9 @@ on post-fs
     chown gps gps /dev/stpgps
 
 on post-fs-data
-    chown root system /nvdata
-    chmod 0771 /nvdata
-    symlink /nvdata /data/nvram
-    mkdir /nvdata/media 0771 media audio
+    mkdir /data/nvram 0770 system camera
 
-    # Set SELinux security contexts on upgrade or policy update.
-    restorecon_recursive /nvdata
+    restorecon_recursive /data/nvram
 
     # rfkill
     chmod 0660 /dev/rfkill
@@ -660,6 +647,12 @@ service wpa_supplicant /system/bin/wpa_supplicant \
     disabled
     oneshot
 
+# For WiFi High Speed calibration		
+service autokd /system/bin/autokd
+    class core
+    user system
+    group system
+
 #
 # MTK Wi-Fi related services (End)
 #
@@ -744,16 +737,23 @@ service thermal_manager /system/bin/thermal_manager
     group system
     oneshot
 
-service wmtLoader /system/bin/wmt_loader
+service wmt_loader /system/bin/wmt_loader
+    class core
     user root
     group root
-    class core
     oneshot
 
-service conn_launcher /system/bin/6620_launcher -p /system/etc/firmware/
+service 66xx_launcher /system/bin/6620_launcher -m 4 -p /system/etc/firmware/
     user system
     group system
     class core
 
 service kpoc_charger /system/bin/kpoc_charger
     class charger
+
+# workaround for nvram permission problems
+on property:dev.bootcomplete=1
+    chown system camera /data/nvram
+    chown system camera /data/nvram/APCFG
+    chown system camera /data/nvram/APCFG/APRDCL
+    chown system camera /data/nvram/APCFG/APRDEB
