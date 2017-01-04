@@ -1,0 +1,17 @@
+type autokd, domain;
+type autokd_exec, exec_type, file_type;
+
+init_daemon_domain(autokd)
+
+allow autokd init:unix_stream_socket connectto;
+allow autokd property_socket:sock_file write;
+allow autokd self:netlink_kobject_uevent_socket { read bind create setopt };
+allow autokd self:tcp_socket create;
+allow autokd shell_exec:file { read execute open execute_no_trans };
+
+allow autokd sysfs:file { open read write };
+allow autokd system_data_file:dir { read write open add_name remove_name };
+allow autokd system_data_file:file { open };
+allow autokd system_file:file execute_no_trans;
+allow autokd nvdata_file:dir { search read write getattr add_name remove_name };
+allow autokd nvdata_file:file { read write getattr create open };

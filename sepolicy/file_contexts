@@ -1,2 +1,5 @@
+# Services
+/system/bin/autokd                                              u:object_r:autokd_exec:s0
+
 # Sysfs nodes
-/sys/devices/bus.2/11008000.I2C1/i2c-1/1-0020/gesture           u:object_r:smartwake_sysfs:s0
+/sys/devices/bus.2/11007000.I2C0/i2c-0/0-0020/gesture           u:object_r:smartwake_sysfs:s0
