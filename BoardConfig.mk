@@ -69,6 +69,14 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 # LightHAL
 TARGET_PROVIDES_LIBLIGHT := true
 
+#ril
+BOARD_RIL_CLASS := ../../../device/jiayu/s3_h560/ril
+BOARD_CONNECTIVITY_MODULE := conn_soc
+
+SIM_COUNT := 2
+PRODUCT_PROPERTY_OVERRIDES += ro.telephony.sim.count=$(SIM_COUNT)
+
+
 # Recovery
 BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/recovery.fstab
