@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+
+  <remove-project name="LineageOS/android_system_core" />
+  <remove-project name="LineageOS/android_frameworks_opt_telephony" />
+  <remove-project name="LineageOS/android_system_netd" />
+  <remove-project name="LineageOS/android_frameworks_native" />
+  <remove-project name="LineageOS/android_frameworks_av" />
+  <remove-project name="LineageOS/android_system_sepolicy" />
+
+  <project path="system/core" name="sandstranger/android_system_core_mtk" groups="pdk" />
+  <project path="system/core" name="sandstranger/android_system_sepolicy" groups="pdk" />
+  <project path="frameworks/av" name="sandstranger/android_frameworks_av_mtk" groups="pdk" />
+  <project path="frameworks/native" name="sandstranger/android_frameworks_native_mtk" groups="pdk" />
+  <project path="frameworks/opt/telephony" name="sandstranger/android_frameworks_opt_telephony_mtk" groups="pdk" />
+  <project path="system/netd" name="sandstranger/android_system_netd_mtk" groups="pdk" />
+  <!-- vim:set ai et ts=2 sw=2 sts=2 fenc=utf-8: -->
+</manifest>
