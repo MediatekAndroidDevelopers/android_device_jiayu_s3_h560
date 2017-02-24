@@ -13,9 +13,12 @@ PRODUCT_PACKAGES += \
    libmtk_symbols \
    libstlport
 
-# Lights
+
 PRODUCT_PACKAGES += \
-    lights.mt6752
+    EngineerMode
+
+PRODUCT_PACKAGES += \
+    gralloc_extra
 
 # Audio
 PRODUCT_COPY_FILES += \
@@ -27,10 +30,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
 	$(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
-
-# Bluetooth
-PRODUCT_PACKAGES += \
-    libbt-vendor
 
 # Ramdisk
 PRODUCT_COPY_FILES += \
