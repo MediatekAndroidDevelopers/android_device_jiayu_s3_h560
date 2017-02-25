@@ -7,7 +7,9 @@
   <remove-project name="LineageOS/android_frameworks_native" />
   <remove-project name="LineageOS/android_frameworks_av" />
   <remove-project name="LineageOS/android_system_sepolicy" />
+  <remove-project name="LineageOS/android_bionic" />
 
+  <project path="bionic" name="sandstranger/android_bionic_mtk" groups="pdk" />
   <project path="frameworks/base" name="sandstranger/android_frameworks_base" />
   <project path="system/core" name="sandstranger/android_system_core_mtk" groups="pdk" />
   <project path="system/sepolicy" name="sandstranger/android_system_sepolicy" groups="pdk" />
