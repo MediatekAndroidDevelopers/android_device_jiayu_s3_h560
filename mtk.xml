@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <remove-project name="LineageOS/android_frameworks_base" />
   <remove-project name="LineageOS/android_system_core" />
   <remove-project name="LineageOS/android_frameworks_opt_telephony" />
   <remove-project name="LineageOS/android_system_netd" />
@@ -10,7 +9,6 @@
   <remove-project name="LineageOS/android_bionic" />
 
   <project path="bionic" name="sandstranger/android_bionic_mtk" groups="pdk" />
-  <project path="frameworks/base" name="sandstranger/android_frameworks_base" />
   <project path="system/core" name="sandstranger/android_system_core_mtk" groups="pdk" />
   <project path="system/sepolicy" name="sandstranger/android_system_sepolicy" groups="pdk" />
   <project path="frameworks/av" name="sandstranger/android_frameworks_av_mtk" groups="pdk" />
