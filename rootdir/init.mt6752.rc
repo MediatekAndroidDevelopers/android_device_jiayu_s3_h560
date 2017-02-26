@@ -112,9 +112,6 @@ on post-fs-data
     # Mali 3D GPU driver
     chmod 666 /dev/mali0
     
-    # Change ION driver permission
-    chmod 0666 /dev/ion
-    
     # watch dog kicker
     write /proc/wdk "0 20 30"
 
@@ -420,6 +417,8 @@ on post-fs-data
     # SMI
     chmod 0660 /dev/MTK_SMI
     chown system media /dev/MTK_SMI
+    
+    chown system camera /dev/MTK_SMI
     
     chown system camera /sys/bus/platform/drivers/mem_bw_ctrl/concurrency_scenario
     chmod 0660 /sys/bus/platform/drivers/mem_bw_ctrl/concurrency_scenario
