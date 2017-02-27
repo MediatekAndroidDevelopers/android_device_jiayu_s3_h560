@@ -8,6 +8,8 @@
   <remove-project name="LineageOS/android_system_sepolicy" />
   <remove-project name="LineageOS/android_bionic" />
 
+  <project path="external/stlport" name="LineageOS/android_external_stlport" revision="cm-14.1" />
+  <project path="packages/resources/devicesettings" name="LineageOS/android_packages_resources_devicesettings" revision="cm-14.1" />
   <project path="bionic" name="sandstranger/android_bionic_mtk" groups="pdk" />
   <project path="system/core" name="sandstranger/android_system_core_mtk" groups="pdk" />
   <project path="system/sepolicy" name="sandstranger/android_system_sepolicy" groups="pdk" />
