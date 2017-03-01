@@ -22,6 +22,9 @@ on charger
     symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/logo /dev/block/platform/mtk-msdc.0/by-name/logo
 
     mount ext4 /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/system /system ro wait
+    chmod 0666 /dev/kmsg
+    exec /system/bin/setprop sys.usb.config adb
+    start fuelgauged
     start kpoc_charger
     start servicemanager
 
@@ -734,6 +737,12 @@ service thermal_manager /system/bin/thermal_manager
     group system
     oneshot
 
+service fuelgauged /system/bin/fuelgauged
+    class main
+    user system
+    group system
+    
+    
 service wmt_loader /system/bin/wmt_loader
     class core
     user root
