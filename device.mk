@@ -23,7 +23,10 @@ PRODUCT_PACKAGES += \
    libmtk_symbols \
    libstlport
 
-
+# Browser
+PRODUCT_PACKAGES += \
+    Gello
+    
 PRODUCT_PACKAGES += \
     EngineerMode
 
@@ -98,6 +101,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     fs_config_files
 
+# Power
+PRODUCT_PACKAGES += \
+    power.default \
+    power.mt6752
+    
 # Dalvik/HWUI
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 
