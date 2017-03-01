@@ -3,7 +3,7 @@ import init.modem.rc
 import init.performance.rc
 
 on init
-    export LD_PRELOAD "libmtk_symbols.so"
+    export LD_PRELOAD "libxlog.so:libmtk_symbols.so"
 
     # BATTERY proc
     chown shell system /proc/mtk_battery_cmd/current_cmd

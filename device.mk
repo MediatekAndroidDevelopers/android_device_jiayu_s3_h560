@@ -105,7 +105,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     power.default \
     power.mt6752
-    
+
+# xlog
+PRODUCT_PACKAGES += \
+    libxlog 
+
 # Dalvik/HWUI
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 
