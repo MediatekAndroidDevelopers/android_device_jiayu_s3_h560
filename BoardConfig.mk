@@ -83,8 +83,6 @@ BOARD_CONNECTIVITY_MODULE := conn_soc
 SIM_COUNT := 2
 PRODUCT_PROPERTY_OVERRIDES += ro.telephony.sim.count=$(SIM_COUNT)
 
-# CM hardware
-BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/cmhw
 
 # Recovery
 BOARD_HAS_NO_SELECT_BUTTON := true
