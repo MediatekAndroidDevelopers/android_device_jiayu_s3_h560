@@ -13,11 +13,11 @@
   <project path="packages/resources/devicesettings" name="LineageOS/android_packages_resources_devicesettings" revision="cm-14.1" />
   <project path="packages/apps/Snap" name="sandstranger/android_packages_apps_Snap-1" groups="pdk" />
   <project path="bionic" name="sandstranger/android_bionic_mtk" groups="pdk" />
-  <project path="system/core" name="sandstranger/android_system_core_mtk" revision="nougat" />
-  <project path="system/sepolicy" name="sandstranger/android_system_sepolicy" revision="nougat"  />
-  <project path="frameworks/av" name="sandstranger/android_frameworks_av_mtk" revision="nougat"  />
+  <project path="system/core" name="sandstranger/android_system_core_mtk"  groups="pdk" revision="nougat" />
+  <project path="system/sepolicy" name="sandstranger/android_system_sepolicy" groups="pdk" revision="nougat"  />
+  <project path="frameworks/av" name="sandstranger/android_frameworks_av_mtk" groups="pdk" revision="nougat"  />
   <project path="frameworks/opt/telephony" name="sandstranger/android_frameworks_opt_telephony_mtk" groups="pdk" />
-  <project path="frameworks/native" name="sandstranger/android_frameworks_native_mtk" revision="nougat"  />
+  <project path="frameworks/native" name="sandstranger/android_frameworks_native_mtk" groups="pdk" revision="nougat"  />
   <project path="system/netd" name="sandstranger/android_system_netd_mtk" groups="pdk" />
   <!-- vim:set ai et ts=2 sw=2 sts=2 fenc=utf-8: -->
 </manifest>
