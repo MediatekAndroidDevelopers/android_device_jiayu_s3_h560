@@ -31,7 +31,7 @@ PRODUCT_PACKAGES += \
     EngineerMode
 
 PRODUCT_PACKAGES += \
-    gralloc_extra
+    libbt-vendor
 
 # Audio
 PRODUCT_COPY_FILES += \
