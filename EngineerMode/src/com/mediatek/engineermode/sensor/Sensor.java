@@ -64,6 +64,7 @@ public class Sensor extends Activity implements OnItemClickListener {
         if (!FeatureSupport.isSupported(FeatureSupport.FK_MTK_WEARABLE_PLATFORM)) {
             items.add(getString(R.string.sensor_ps));
         }
+        items.add("Sensors Calibration");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
@@ -77,6 +78,10 @@ public class Sensor extends Activity implements OnItemClickListener {
             this.startActivity(intent);
         } else if (1 == arg2) {
             intent.setClass(this, PSensor.class);
+            this.startActivity(intent);
+        }
+        else if (2 == arg) {
+            intent.setClass(this, SensorCalibration.class);
             this.startActivity(intent);
         }
     }
