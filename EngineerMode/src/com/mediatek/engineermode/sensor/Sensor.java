@@ -80,7 +80,7 @@ public class Sensor extends Activity implements OnItemClickListener {
             intent.setClass(this, PSensor.class);
             this.startActivity(intent);
         }
-        else if (2 == arg) {
+        else if (2 == arg2) {
             intent.setClass(this, SensorCalibration.class);
             this.startActivity(intent);
         }
