@@ -81,7 +81,7 @@ public class Sensor extends Activity implements OnItemClickListener {
             this.startActivity(intent);
         }
         else if (2 == arg2) {
-            intent.setClass(this, SensorCalibration.class);
+            intent.setClass(this, SensorCalibrationSelect.class);
             this.startActivity(intent);
         }
     }
