@@ -73,6 +73,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.mount.fs=EXT4
 
+# Doze
+PRODUCT_PACKAGES += \
+    MeizuDoze
+    
 # NFC
 PRODUCT_PACKAGES += \
     com.android.nfc_extras \
