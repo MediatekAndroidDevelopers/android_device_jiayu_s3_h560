@@ -37,6 +37,9 @@ PRODUCT_PACKAGES += \
     lights.mt6752
 
 PRODUCT_PACKAGES += \
+    gps.mt6752
+
+PRODUCT_PACKAGES += \
      libccci_util
 
 # Audio
