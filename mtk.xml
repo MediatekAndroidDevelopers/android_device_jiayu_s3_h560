@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <remove-project name="LineageOS/android_packages_apps_Snap" />
   <remove-project name="LineageOS/android_system_core" />
   <remove-project name="LineageOS/android_frameworks_opt_telephony" />
   <remove-project name="LineageOS/android_system_netd" />
@@ -11,7 +10,6 @@
 
   <project path="external/stlport" name="LineageOS/android_external_stlport" revision="cm-14.1" />
   <project path="packages/resources/devicesettings" name="LineageOS/android_packages_resources_devicesettings" revision="cm-14.1" />
-  <project path="packages/apps/Snap" name="sandstranger/android_packages_apps_Snap-1" groups="pdk" />
   <project path="bionic" name="sandstranger/android_bionic_mtk" groups="pdk" />
   <project path="system/core" name="sandstranger/android_system_core_mtk" groups="pdk" />
   <project path="system/sepolicy" name="sandstranger/android_system_sepolicy" groups="pdk" />
