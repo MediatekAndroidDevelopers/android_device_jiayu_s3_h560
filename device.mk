@@ -33,6 +33,15 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libbt-vendor
 
+PRODUCT_PACKAGES += \
+    lights.mt6752
+
+PRODUCT_PACKAGES += \
+    gps.mt6752
+
+PRODUCT_PACKAGES += \
+     libccci_util
+
 # Audio
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio/audio_device.xml:system/etc/audio_device.xml \
@@ -73,6 +82,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.mount.fs=EXT4
 
+# Doze
+PRODUCT_PACKAGES += \
+    MeizuDoze
+    
 # NFC
 PRODUCT_PACKAGES += \
     com.android.nfc_extras \
