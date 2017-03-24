@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <remove-project name="system_core" />
-  <remove-project name="LineageOS/android_system_netd" />
-  <remove-project name="frameworks_native" />
-  <remove-project name="frameworks_av" />
-  <remove-project name="android_system_sepolicy" />
+  <remove-project name="LineageOS/android_packages_apps_Snap" />
+  <remove-project name="LineageOS/android_system_core" />
   <remove-project name="LineageOS/android_frameworks_opt_telephony" />
+  <remove-project name="LineageOS/android_system_netd" />
+  <remove-project name="LineageOS/android_frameworks_native" />
+  <remove-project name="LineageOS/android_frameworks_av" />
+  <remove-project name="LineageOS/android_system_sepolicy" />
   <remove-project name="LineageOS/android_bionic" />
 
   <project path="external/stlport" name="LineageOS/android_external_stlport" revision="cm-14.1" />
   <project path="packages/resources/devicesettings" name="LineageOS/android_packages_resources_devicesettings" revision="cm-14.1" />
+  <project path="packages/apps/Snap" name="sandstranger/android_packages_apps_Snap-1" groups="pdk" />
   <project path="bionic" name="sandstranger/android_bionic_mtk" groups="pdk" />
-  <project path="system/core" name="sandstranger/android_system_core_mtk"  groups="pdk" revision="nougat" />
-  <project path="system/sepolicy" name="sandstranger/android_system_sepolicy" groups="pdk" revision="nougat"  />
-  <project path="frameworks/av" name="sandstranger/android_frameworks_av_mtk" groups="pdk" revision="nougat"  />
+  <project path="system/core" name="sandstranger/android_system_core_mtk" groups="pdk" />
+  <project path="system/sepolicy" name="sandstranger/android_system_sepolicy" groups="pdk" />
+  <project path="frameworks/av" name="sandstranger/android_frameworks_av_mtk" groups="pdk" />
+  <project path="frameworks/native" name="sandstranger/android_frameworks_native_mtk" groups="pdk" />
   <project path="frameworks/opt/telephony" name="sandstranger/android_frameworks_opt_telephony_mtk" groups="pdk" />
-  <project path="frameworks/native" name="sandstranger/android_frameworks_native_mtk" groups="pdk" revision="nougat"  />
   <project path="system/netd" name="sandstranger/android_system_netd_mtk" groups="pdk" />
   <!-- vim:set ai et ts=2 sw=2 sts=2 fenc=utf-8: -->
 </manifest>
