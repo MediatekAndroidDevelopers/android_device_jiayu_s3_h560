@@ -38,6 +38,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     gps.mt6752 \
+    libcurl \
     YGPS
 
 PRODUCT_PACKAGES += \
