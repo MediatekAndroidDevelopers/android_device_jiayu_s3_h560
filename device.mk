@@ -37,7 +37,8 @@ PRODUCT_PACKAGES += \
     lights.mt6752
 
 PRODUCT_PACKAGES += \
-    gps.mt6752
+    gps.mt6752 \
+    YGPS
 
 PRODUCT_PACKAGES += \
      libccci_util
