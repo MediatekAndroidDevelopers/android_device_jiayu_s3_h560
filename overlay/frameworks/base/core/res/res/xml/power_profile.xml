@@ -93,7 +93,7 @@
   <!-- Current when CPU is idle -->
   <item name="cpu.idle">6</item>
   <!-- This is the battery capacity in mAh (measured at nominal voltage) -->
-  <item name="battery.capacity">3000</item>
+  <item name="battery.capacity">3060</item>
       <!--
       Battery capacity is 3000 mAH (at 3.8 Volts)
       -->
