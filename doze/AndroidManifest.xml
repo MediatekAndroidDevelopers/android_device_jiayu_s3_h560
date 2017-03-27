@@ -9,12 +9,14 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="cyanogenmod.permission.MANAGE_REMOTE_PREFERENCES" />
 
+    <protected-broadcast android:name="com.android.systemui.doze.pulse" />
+
     <uses-sdk
         android:minSdkVersion="24"
         android:targetSdkVersion="24"/>
 
     <application
-        android:label="MeizuDoze"
+        android:label="@string/device_settings_app_name"
         android:persistent="true">
 
         <receiver android:name="com.cyanogenmod.settings.doze.DozeReceiver">
@@ -26,7 +28,7 @@
         </receiver>
 
         <service android:name="com.cyanogenmod.settings.doze.DozeService"
-                 android:permission="MeizuDozeService">
+                 android:permission="OneplusDozeService">
         </service>
 
         <activity

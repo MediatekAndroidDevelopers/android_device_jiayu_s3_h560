@@ -84,7 +84,7 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 
 # Doze
 PRODUCT_PACKAGES += \
-    MeizuDoze
+     OneplusDoze
     
 # NFC
 PRODUCT_PACKAGES += \
