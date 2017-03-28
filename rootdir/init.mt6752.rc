@@ -7,8 +7,6 @@ on early-init
     write /sys/class/leds/lcd-backlight/trigger "backlight"
 
 on init
-    export LD_PRELOAD "libmtk_symbols.so"
-
     # BATTERY proc
     chown shell system /proc/mtk_battery_cmd/current_cmd
     chown shell system /proc/mtk_battery_cmd/discharging_cmd
@@ -409,7 +407,7 @@ on post-fs-data
     # SMI
     chmod 0660 /dev/MTK_SMI
     chown system media /dev/MTK_SMI
-    
+
     chown system camera /sys/bus/platform/drivers/mem_bw_ctrl/concurrency_scenario
     chmod 0660 /sys/bus/platform/drivers/mem_bw_ctrl/concurrency_scenario
 
@@ -461,7 +459,7 @@ on post-fs-data
     # AGPS
     mkdir /data/agps_supl 0771 gps system
 
-    # Thermal	
+    # Thermal
     mkdir /data/.tp/ 0775 system system
 
     chmod 0660 /dev/ttyC2
@@ -643,7 +641,7 @@ service wpa_supplicant /system/bin/wpa_supplicant \
     disabled
     oneshot
 
-# For WiFi High Speed calibration		
+# For WiFi High Speed calibration
 service autokd /system/bin/autokd
     class core
     user system
