@@ -126,9 +126,6 @@
         <item>255</item>
     </integer-array>
 
-    <!-- Boolean indicating whether the wifi chipset has dual frequency band support -->
-     <bool translatable="false" name="config_wifi_dual_band_support">true</bool>
-
     <!-- Jiayu S3 Auto-brightness Misc overlays -->
     <!-- Screen brightness used to dim the screen while dozing in a very low power state.
          May be less than the minimum allowed brightness setting
