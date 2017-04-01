@@ -124,9 +124,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libxlog 
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sys.fw.bg_apps_limits=5
-    
 # Dalvik/HWUI
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 
