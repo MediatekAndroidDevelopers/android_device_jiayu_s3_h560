@@ -235,6 +235,8 @@ public class PrefsFragment extends PreferenceFragment {
             removePreference(screen, "bluetooth");
         }
 
+        removePreference(screen, "audio");
+
         // wifi is not ready if MTK_WLAN_SUPPORT isn't defined
         if (!ChipSupport.isFeatureSupported(ChipSupport.MTK_WLAN_SUPPORT)) {
             removePreference(screen, "wifi");

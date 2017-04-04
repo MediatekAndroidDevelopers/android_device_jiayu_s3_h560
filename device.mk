@@ -38,6 +38,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     gps.mt6752 \
+    libcurl \
     YGPS
 
 PRODUCT_PACKAGES += \
@@ -85,7 +86,7 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 
 # Doze
 PRODUCT_PACKAGES += \
-    MeizuDoze
+     OneplusDoze
     
 # NFC
 PRODUCT_PACKAGES += \
