@@ -92,6 +92,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
      ThemesProvider \
      ThemeChooser
+
+# file manager
+PRODUCT_PACKAGES += \
+       FileManager
     
 # NFC
 PRODUCT_PACKAGES += \
