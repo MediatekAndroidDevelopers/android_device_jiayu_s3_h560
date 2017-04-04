@@ -87,6 +87,10 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 # Doze
 PRODUCT_PACKAGES += \
      OneplusDoze
+
+# Themes
+PRODUCT_PACKAGES += \
+     ThemesProvider
     
 # NFC
 PRODUCT_PACKAGES += \
