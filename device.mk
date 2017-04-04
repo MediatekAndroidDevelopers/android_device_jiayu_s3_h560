@@ -90,7 +90,8 @@ PRODUCT_PACKAGES += \
 
 # Themes
 PRODUCT_PACKAGES += \
-     ThemesProvider
+     ThemesProvider \
+     ThemeChooser
     
 # NFC
 PRODUCT_PACKAGES += \
