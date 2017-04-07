@@ -137,6 +137,8 @@ public class PrefsFragment extends PreferenceFragment {
             removePreference(screen, "dualtalk_bandmode");
         }
 
+        removePreference(screen, "audio");
+
         // Duplicate with Network Selecting, remove them
         removePreference(screen, "digital_standard");
 
