@@ -31,9 +31,6 @@ PRODUCT_PACKAGES += \
     EngineerMode
 
 PRODUCT_PACKAGES += \
-    libbt-vendor
-
-PRODUCT_PACKAGES += \
     lights.mt6752
 
 PRODUCT_PACKAGES += \
