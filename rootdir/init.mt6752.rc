@@ -14,11 +14,10 @@ on init
     chown shell system /proc/mtk_battery_cmd/discharging_cmd
 
     # mount points
-    mkdir /protect_s/properties 0770 system system
     mkdir /protect_f 0771 system system
     mkdir /protect_s 0771 system system
     mkdir /persist   0771 system system
-
+    mkdir /protect_s/properties 0770 system system
     chown root system /dev/kmsg
     chmod 0660 /dev/kmsg
 
