@@ -3,3 +3,4 @@
 
 # Sysfs nodes
 /sys/devices/bus.2/11007000.I2C0/i2c-0/0-0020/gesture           u:object_r:smartwake_sysfs:s0
+/protect_s/properties(/.*)?                                     u:object_r:persist_property_file:s0 
