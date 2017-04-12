@@ -106,6 +106,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     media.stagefright.legacyencoder=true \
     media.stagefright.less-secure=true
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.sys.fw.bg_apps_limits=5
+
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.kernel.android.checkjni=0 \
