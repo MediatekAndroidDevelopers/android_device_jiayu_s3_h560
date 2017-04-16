@@ -101,10 +101,6 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
     frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
 
-# Camera
-PRODUCT_PROPERTY_OVERRIDES += \
-    media.stagefright.legacyencoder=true \
-    media.stagefright.less-secure=true
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sys.fw.bg_apps_limits=5
@@ -115,9 +111,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.ril_class=MT6753 \
     ro.telephony.ril.config=fakeiccid \
     ro.com.android.mobiledata=false
-
-PRODUCT_PACKAGES += \
-    fs_config_files
 
 # Power
 PRODUCT_PACKAGES += \
