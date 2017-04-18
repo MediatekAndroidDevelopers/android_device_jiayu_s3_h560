@@ -12,7 +12,6 @@
 /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/para      0660    root    system
 /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/logo      0660    root    system
 /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/frp       0660    root    system
-
 # OTP
 /dev/otp                  0660  system      system
 
@@ -101,3 +100,7 @@
 
 # MTK In-House TEE
 /dev/ttyACM0		      0660   radio	    radio
+
+#alarm
+/dev/alarm                0666   system     radio
+

@@ -2,6 +2,10 @@ import init.mt6752.usb.rc
 import init.modem.rc
 import init.performance.rc
 
+on early-init
+    # Turn off backlight on blank
+    write /sys/class/leds/lcd-backlight/trigger "backlight"
+
 on init
     export LD_PRELOAD "libxlog.so:libmtk_symbols.so"
 
@@ -13,23 +17,10 @@ on init
     mkdir /protect_f 0771 system system
     mkdir /protect_s 0771 system system
     mkdir /persist   0771 system system
-
+    mkdir /protect_s/properties 0770 system system
     chown root system /dev/kmsg
     chmod 0660 /dev/kmsg
 
-on charger
-    mkdir /dev/block/platform/mtk-msdc.0/by-name 0755 root system
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/logo /dev/block/platform/mtk-msdc.0/by-name/logo
-
-    mount ext4 /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/system /system ro wait
-    chmod 0666 /dev/kmsg
-    exec /system/bin/setprop sys.usb.config adb
-    start fuelgauged
-    start kpoc_charger
-    start servicemanager
-
-    # disable USB
-    write /sys/devices/platform/mt_usb/cmode 0
 
 on fs
     mount_all /fstab.mt6752
@@ -754,5 +745,8 @@ service 66xx_launcher /system/bin/6620_launcher -m 4 -p /system/etc/firmware/
     group system
     class core
 
-service kpoc_charger /system/bin/kpoc_charger
+# Charger
+service charger /sbin/healthd -c
     class charger
+    critical
+    seclabel u:r:healthd:s0
