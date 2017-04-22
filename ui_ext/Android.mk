@@ -6,7 +6,7 @@
 # Without the prior written permission of MediaTek inc. and/or its licensors,
 # any reproduction, modification, use or disclosure of MediaTek Software,
 # and information contained herein, in whole or in part, shall be strictly prohibited.
-#
+
 # MediaTek Inc. (C) 2010. All rights reserved.
 #
 # BY OPENING THIS FILE, RECEIVER HEREBY UNEQUIVOCALLY ACKNOWLEDGES AND AGREES
@@ -32,58 +32,6 @@
 # have been modified by MediaTek Inc. All revisions are subject to any receiver's
 # applicable license agreements with MediaTek Inc.
 
-#
-# libgui_extra.so
-# modified by daniel_hk(https://github.com/daniel_hk)
 
-LOCAL_PATH:= $(call my-dir)
-
-include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES:= \
-    IGuiExtService.cpp \
-    GuiExtService.cpp \
-    GuiExtClient.cpp \
-    GuiExtClientProducer.cpp \
-    GuiExtClientConsumer.cpp \
-    GuiExtImpl.cpp
-
-MTK_HWC_CHIP = $(shell echo $(MTK_PLATFORM) | tr A-Z a-z )
-
-LOCAL_C_INCLUDES:= \
-    $(TOP)/frameworks/base/include/ \
-    $(TOP)/gui_ext/inc \
-    $(TOP)/ui_ext/inc \
-    $(TOP)/gralloc_extra/include
-
-LOCAL_SHARED_LIBRARIES := \
-    libutils \
-    libcutils \
-    libbinder \
-    libhardware \
-    libhardware_legacy \
-    libgui \
-    libui \
-    libdl \
-    libion \
-    libion_mtk \
-    libgralloc_extra \
-    libui_ext
-
-# for bring up, please unmark this line
-# LOCAL_CFLAGS += -DMTK_DO_NOT_USE_GUI_EXT
-
-ifneq ($(strip $(TARGET_BUILD_VARIANT)), eng)
-LOCAL_CFLAGS += -DMTK_USER_BUILD
-endif
-
-ifeq ($(MTK_MIRAVISION_SUPPORT),yes)
-LOCAL_CFLAGS += -DCONFIG_FOR_SOURCE_PQ
-endif
-
-LOCAL_MODULE := libgui_ext
-
-LOCAL_MODULE_TAGS := optional
-
-include $(BUILD_SHARED_LIBRARY)
+include $(call all-subdir-makefiles)
 
