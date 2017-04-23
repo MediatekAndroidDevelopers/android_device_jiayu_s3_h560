@@ -85,7 +85,7 @@ on post-fs-data
     mkdir /data/nvram/APCFG/APRDEB 0770 system camera
 
     restorecon_recursive /data/nvram
-
+    chown root:net_bt_stack /data/nvram/APCFG/APRDEB/BT_Addr
     # rfkill
     chmod 0660 /dev/rfkill
 
