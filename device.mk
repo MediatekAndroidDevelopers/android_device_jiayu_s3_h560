@@ -23,6 +23,11 @@ PRODUCT_PACKAGES += \
    libmtk_symbols \
    libstlport
 
+# Camera
+PRODUCT_PACKAGES += \
+     Snap \
+     libcamera_parameters_ext
+
 # Browser
 PRODUCT_PACKAGES += \
     Gello
