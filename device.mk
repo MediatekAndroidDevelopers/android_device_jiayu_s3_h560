@@ -93,11 +93,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
      OneplusDoze
 
-# Themes
-PRODUCT_PACKAGES += \
-     ThemesProvider \
-     ThemeChooser
-
 # file manager
 PRODUCT_PACKAGES += \
        FileManager
