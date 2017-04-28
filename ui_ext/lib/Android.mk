@@ -48,8 +48,8 @@ LOCAL_SRC_FILES:= \
 	RefBaseDump.cpp
 
 LOCAL_C_INCLUDES:= \
-	ui_ext/inc \
-	gralloc_extra/include \
+	device/jiayu/s3_h560/ui_ext/inc \
+	device/jiayu/s3_h560/gralloc_extra/include \
 	external/libpng \
 	external/zlib \
 	external/skia/src/images \

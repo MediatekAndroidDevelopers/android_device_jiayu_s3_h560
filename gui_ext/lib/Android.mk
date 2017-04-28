@@ -52,9 +52,9 @@ MTK_HWC_CHIP = $(shell echo $(MTK_PLATFORM) | tr A-Z a-z )
 
 LOCAL_C_INCLUDES:= \
     $(TOP)/frameworks/base/include/ \
-    $(TOP)/gui_ext/inc \
-    $(TOP)/ui_ext/inc \
-    $(TOP)/gralloc_extra/include
+    device/jiayu/s3_h560/gui_ext/inc \
+    device/jiayu/s3_h560/ui_ext/inc \
+    device/jiayu/s3_h560/gralloc_extra/include
 
 LOCAL_SHARED_LIBRARIES := \
     libutils \
