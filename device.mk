@@ -10,10 +10,6 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 TARGET_OTA_ASSERT_DEVICE := JY-S3_ADV,h560,s3_h560,32_h560,s3_32_h560,JY-S3_ADV_32
 
 PRODUCT_PACKAGES += \
-    libmtkshim_log \
-    libmtkshim_ui \
-    libmtkshim_audio \
-    libmtkshim_omx \
     libstlport
 
 # Lights
