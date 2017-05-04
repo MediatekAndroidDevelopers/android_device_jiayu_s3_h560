@@ -9,6 +9,7 @@
   <remove-project name="LineageOS/android_frameworks_av" />
   <remove-project name="LineageOS/android_system_sepolicy" />
   <remove-project name="LineageOS/android_bionic" />
+  <remove-project name="LineageOS/android_packages_apps_Nfc"/>
 
 
   <project path="external/stlport" name="LineageOS/android_external_stlport" revision="cm-14.1" />
