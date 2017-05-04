@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
+
+  <remove-project name="LineageOS/android_frameworks_base" />
   <remove-project name="LineageOS/android_system_core" />
   <remove-project name="LineageOS/android_frameworks_opt_telephony" />
   <remove-project name="LineageOS/android_system_netd" />
@@ -18,5 +20,6 @@
   <project path="frameworks/native" name="sandstranger/android_frameworks_native_mtk" groups="pdk" />
   <project path="frameworks/opt/telephony" name="sandstranger/android_frameworks_opt_telephony_mtk" groups="pdk" />
   <project path="system/netd" name="sandstranger/android_system_netd_mtk" groups="pdk" />
+  <project path="frameworks/base" name="sandstranger/android_frameworks_base" groups="pdk" revision="cm-14.1" />
   <!-- vim:set ai et ts=2 sw=2 sts=2 fenc=utf-8: -->
 </manifest>
