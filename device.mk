@@ -91,7 +91,7 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 
 # Doze
 PRODUCT_PACKAGES += \
-     OneplusDoze
+     MeizuDoze
 
 # file manager
 PRODUCT_PACKAGES += \
