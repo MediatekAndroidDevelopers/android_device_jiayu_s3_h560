@@ -1,4 +1,5 @@
 LOCAL_PATH := $(call my-dir)
+ifneq ($(filter aio_otfp, $(TARGET_DEVICE)),)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
@@ -16,4 +17,4 @@ LOCAL_SHARED_LIBRARIES := \
 LOCAL_MODULE := libgralloc_extra
 
 include $(BUILD_SHARED_LIBRARY)
-
+endif
