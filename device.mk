@@ -105,13 +105,6 @@ PRODUCT_PACKAGES += \
     Nfc \
     Tag
 
-# mtk_blobs
-PRODUCT_PACKAGES += \
-        libmrdump \
-        libgralloc_extra \
-        libgui_ext \
-        libui_ext
-
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
     frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
