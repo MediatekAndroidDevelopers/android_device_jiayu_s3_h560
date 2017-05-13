@@ -754,5 +754,10 @@ service 66xx_launcher /system/bin/6620_launcher -m 4 -p /system/etc/firmware/
     group system
     class core
 
+service spm_script /system/bin/spm_loader
+    class core
+    user root
+    group root 
+
 service kpoc_charger /system/bin/kpoc_charger
     class charger
