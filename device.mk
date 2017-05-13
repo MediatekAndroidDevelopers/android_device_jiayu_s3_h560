@@ -27,10 +27,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
      Snap \
      libcamera_parameters_ext
-
-# Browser
-PRODUCT_PACKAGES += \
-    Gello
     
 PRODUCT_PACKAGES += \
     EngineerMode
