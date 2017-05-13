@@ -4,7 +4,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
     mtk_gui.cpp \
     mtk_ui.cpp \
-    mtk_omx.cpp \
     ssl.c \
     icu53.c \
 
