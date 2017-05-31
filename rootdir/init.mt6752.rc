@@ -387,21 +387,31 @@ on post-fs-data
     chown system media /dev/uibc
     chmod 0660 /dev/uibc
 
-    # Camera
+    #Camera
+    chmod 0660 /dev/camera-sysram
     chmod 0660 /dev/camera-isp
     chmod 0660 /dev/camera-fdvt
+    chmod 0660 /dev/camera-pipemgr
     chmod 0660 /dev/kd_camera_hw
     chmod 0660 /dev/kd_camera_flashlight
     chmod 0660 /dev/kd_camera_hw_bus2
     chmod 0660 /dev/FM50AF
+    chmod 0660 /dev/DW9714AF
+    chmod 0660 /dev/BU6424AF
+    chmod 0660 /dev/DW9718AF
     chmod 0660 /dev/CAM_CAL_DRV
 
+    chown system camera /dev/camera-sysram
     chown system camera /dev/camera-isp
     chown system camera /dev/camera-fdvt
+    chown system camera /dev/camera-pipemgr
     chown system camera /dev/kd_camera_hw
     chown system camera /dev/kd_camera_flashlight
     chown system camera /dev/kd_camera_hw_bus2
     chown system camera /dev/FM50AF
+    chown system camera /dev/DW9714AF
+    chown system camera /dev/BU6424AF
+    chown system camera /dev/DW9718AF
     chown system camera /dev/CAM_CAL_DRV
 
     # SMI
