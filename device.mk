@@ -8,8 +8,7 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
 # Recovery allowed devices
 TARGET_OTA_ASSERT_DEVICE := JY-S3_ADV,h560,s3_h560,32_h560,s3_32_h560,JY-S3_ADV_32
-#dt2w
-TARGET_TAP_TO_WAKE_NODE := /sys/devices/bus.2/11007000.I2C0/i2c-0/0-0020/gesture
+
 
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 	LOCAL_KERNEL := $(LOCAL_PATH)/prebuilt/kernel
@@ -31,6 +30,9 @@ PRODUCT_PACKAGES += \
     
 PRODUCT_PACKAGES += \
     EngineerMode
+
+PRODUCT_PACKAGES += \
+    libbt-vendor
 
 PRODUCT_PACKAGES += \
     lights.mt6752
