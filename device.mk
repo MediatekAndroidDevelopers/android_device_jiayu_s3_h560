@@ -23,9 +23,10 @@ PRODUCT_PACKAGES += \
    libmtk_symbols \
    libstlport
 
-# Browser
+# Camera
 PRODUCT_PACKAGES += \
-    Gello
+     Snap \
+     libcamera_parameters_ext
     
 PRODUCT_PACKAGES += \
     EngineerMode
@@ -86,7 +87,11 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 
 # Doze
 PRODUCT_PACKAGES += \
-     OneplusDoze
+     MeizuDoze
+
+# file manager
+PRODUCT_PACKAGES += \
+       FileManager
     
 # NFC
 PRODUCT_PACKAGES += \
@@ -105,9 +110,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     media.stagefright.legacyencoder=true \
     media.stagefright.less-secure=true
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sys.fw.bg_apps_limits=5
 
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \

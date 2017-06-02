@@ -6,6 +6,7 @@ LOCAL_SRC_FILES := \
     mtk_ui.cpp \
     mtk_omx.cpp \
     ssl.c \
+    icu53.c \
 
 # only for 32bit libraries
 LOCAL_SRC_FILES_32 := mtk_string.cpp

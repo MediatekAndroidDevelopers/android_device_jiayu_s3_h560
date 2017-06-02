@@ -21,6 +21,9 @@ on post-fs-data
 
     setprop vold.post_fs_data_done 1
 
+ # Clear the sim switch flag
+    setprop persist.radio.simswitch ""
+
 service gsm0710muxd /system/bin/gsm0710muxd -s /dev/ttyC0 -f 512 -n 8 -m basic
     class core
     user root

@@ -16,7 +16,7 @@
         android:targetSdkVersion="24"/>
 
     <application
-        android:label="@string/device_settings_app_name"
+        android:label="MeizuDoze"
         android:persistent="true">
 
         <receiver android:name="com.cyanogenmod.settings.doze.DozeReceiver">
@@ -28,7 +28,7 @@
         </receiver>
 
         <service android:name="com.cyanogenmod.settings.doze.DozeService"
-                 android:permission="OneplusDozeService">
+                 android:permission="MeizuDozeService">
         </service>
 
         <activity
