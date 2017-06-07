@@ -72,6 +72,9 @@ ro.mtk_gps_support=1
 persist.md.perm.checked=1
 persist.debug.xlog.enable=1
 
+# SD
+ro.sys.sdcardfs=true
+
 # other things
 ro.mediatek.chip_ver=S01
 ro.mediatek.version.release=ALPS.N
@@ -86,7 +89,6 @@ ro.mtk_clearmotion_support=1
 keyguard.no_require_sim=true
 camera.disable_zsl_mode=1
 persist.debug.wfd.enable=1
-
 ro.ril.disable.power.collapse=1
 pm.sleep_mode=1
 wifi.supplicant_scan_interval=360
