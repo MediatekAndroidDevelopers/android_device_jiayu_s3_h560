@@ -66,4 +66,7 @@ persist.sys.display.clearMotion=1
 ro.mtk_clearmotion_support=1
 keyguard.no_require_sim=true
 camera.disable_zsl_mode=1
+ro.mtk_cam_mfb_support=3
+ro.mtk_cam_mav_support=1
+ro.mtk_cam_lomo_support=1
 persist.debug.wfd.enable=1
