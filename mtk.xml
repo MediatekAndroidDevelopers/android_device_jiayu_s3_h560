@@ -10,8 +10,10 @@
   <remove-project name="LineageOS/android_system_sepolicy" />
   <remove-project name="LineageOS/android_bionic" />
   <remove-project name="LineageOS/android_packages_apps_Nfc"/>
+  <remove-project name="LineageOS/android_external_wpa_supplicant_8" />
 
 
+  <project path="external/wpa_supplicant_8" name="sandstranger/android_external_wpa_supplicant_8-mtk"  />
   <project path="external/stlport" name="LineageOS/android_external_stlport" revision="cm-14.1" />
   <project path="packages/resources/devicesettings" name="LineageOS/android_packages_resources_devicesettings" revision="cm-14.1" />
   <project path="bionic" name="sandstranger/android_bionic_mtk" groups="pdk" />
