@@ -81,10 +81,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal/thermal.conf:system/etc/.tp/thermal.conf \
     $(LOCAL_PATH)/configs/thermal/thermal.off.conf:system/etc/.tp/thermal.off.conf
 
-# Charger
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    ro.mount.fs=EXT4
-
 # Doze
 PRODUCT_PACKAGES += \
      MeizuDoze
