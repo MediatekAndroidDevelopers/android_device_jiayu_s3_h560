@@ -73,7 +73,7 @@ persist.md.perm.checked=1
 persist.debug.xlog.enable=1
 
 # SD
-ro.sys.sdcardfs=true
+ro.sys.sdcardfs=false
 
 # other things
 ro.mediatek.chip_ver=S01
