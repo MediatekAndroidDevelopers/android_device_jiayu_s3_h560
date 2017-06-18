@@ -11,6 +11,7 @@
   <remove-project name="LineageOS/android_bionic" />
   <remove-project name="LineageOS/android_packages_apps_Nfc"/>
   <remove-project name="LineageOS/android_external_wpa_supplicant_8" />
+  <remove-project name="LineageOS/android_system_bt" />
 
 
   <project path="external/wpa_supplicant_8" name="sandstranger/android_external_wpa_supplicant_8-mtk"  />
@@ -24,5 +25,6 @@
   <project path="frameworks/opt/telephony" name="sandstranger/android_frameworks_opt_telephony_mtk" groups="pdk" />
   <project path="system/netd" name="sandstranger/android_system_netd_mtk" groups="pdk" />
   <project path="frameworks/base" name="sandstranger/android_frameworks_base" groups="pdk" revision="cm-14.1" />
+    <project path="system/bt" name="sandstranger/android_system_bt-1" groups="pdk" />
   <!-- vim:set ai et ts=2 sw=2 sts=2 fenc=utf-8: -->
 </manifest>
