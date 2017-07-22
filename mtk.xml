@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
 
-  <remove-project name="LineageOS/android_frameworks_base" />
+<remote name = "uber"
+          revision = "master"
+          fetch = "https://github.com/UBERROMS" />
+
+  <remote name = "bb"
+          revision = "master"
+          fetch = "https://bitbucket.org/" />
+
+  <remote name = "gh"
+          fetch = "https://github.com/" />
+
+  
+
+
+ <remove-project name="LineageOS/android_art" />
+ <remove-project name="LineageOS/android_frameworks_base" />
   <remove-project name="LineageOS/android_system_core" />
   <remove-project name="LineageOS/android_frameworks_opt_telephony" />
   <remove-project name="LineageOS/android_system_netd" />
@@ -9,11 +24,14 @@
   <remove-project name="LineageOS/android_frameworks_av" />
   <remove-project name="LineageOS/android_system_sepolicy" />
   <remove-project name="LineageOS/android_bionic" />
-  <remove-project name="LineageOS/android_packages_apps_Nfc"/>
   <remove-project name="LineageOS/android_external_wpa_supplicant_8" />
   <remove-project name="LineageOS/android_system_bt" />
+  <remove-project name="LineageOS/android_build" />
+  <project path="build" name="sandstranger/android_build_mtk" groups="pdk" >
+    <copyfile src="core/root.mk" dest="Makefile" />
+  </project>
 
-
+  <project path="art" name="sandstranger/android_art" groups="pdk" />
   <project path="external/wpa_supplicant_8" name="sandstranger/android_external_wpa_supplicant_8-mtk"  />
   <project path="external/stlport" name="LineageOS/android_external_stlport" revision="cm-14.1" />
   <project path="packages/resources/devicesettings" name="LineageOS/android_packages_resources_devicesettings" revision="cm-14.1" />
@@ -26,5 +44,6 @@
   <project path="system/netd" name="sandstranger/android_system_netd_mtk" groups="pdk" />
   <project path="frameworks/base" name="sandstranger/android_frameworks_base" groups="pdk" revision="cm-14.1" />
     <project path="system/bt" name="sandstranger/android_system_bt-1" groups="pdk" />
+
   <!-- vim:set ai et ts=2 sw=2 sts=2 fenc=utf-8: -->
 </manifest>
