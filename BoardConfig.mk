@@ -121,10 +121,6 @@ endif
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
 
-#dexpreopt
-WITH_DEXPREOPT := true
-WITH_DEXPREOPT_PIC := true
-
 # SELinux
 BOARD_SEPOLICY_DIRS += $(LOCAL_PATH)/sepolicy
 WITH_ROOT_METHOD = magisk
