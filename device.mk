@@ -53,6 +53,7 @@ PRODUCT_COPY_FILES += \
 
 # Media
 PRODUCT_COPY_FILES += \
+        $(LOCAL_PATH)/camera/camerasize.xml:system/etc/camerasize.xml \
 	$(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
 	$(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
 
@@ -77,13 +78,11 @@ PRODUCT_COPY_FILES += \
 
 # Thermal
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/thermal/.ht120.mtc:system/etc/.tp/.ht120.mtc \
-    $(LOCAL_PATH)/configs/thermal/thermal.conf:system/etc/.tp/thermal.conf \
-    $(LOCAL_PATH)/configs/thermal/thermal.off.conf:system/etc/.tp/thermal.off.conf
-
-# Charger
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    ro.mount.fs=EXT4
+	$(LOCAL_PATH)/configs/.ht120.mtc:system/etc/.tp/.ht120.mtc \
+	$(LOCAL_PATH)/configs/thermal.conf:system/etc/.tp/thermal.conf \
+	$(LOCAL_PATH)/configs/.thermal_policy_00:system/etc/.tp/.thermal_policy_00 \
+	$(LOCAL_PATH)/configs/.thermal_policy_01:system/etc/.tp/.thermal_policy_01 \
+	$(LOCAL_PATH)/configs/thermal.off.conf:system/etc/.tp/thermal.off.conf
 
 # Doze
 PRODUCT_PACKAGES += \
