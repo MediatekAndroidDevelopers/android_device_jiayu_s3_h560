@@ -33,6 +33,9 @@ debug.hwui.render_dirty_regions=false
 # lcd density
 ro.sf.lcd_density=480
 
+display: Disable EGL buffer_age extension support
+debug.hwui.use_buffer_age=false
+
 # RIL
 ro.telephony.sim.count=2
 persist.radio.multisim.config=dsds
