@@ -34,7 +34,7 @@
     <copyfile src="core/root.mk" dest="Makefile" />
   </project>
 
-  <project path="hardware/libhardware_legacy" name="sandstranger/android_hardware_libhardware_mtk" groups="pdk" />
+  <project path="hardware/libhardware" name="sandstranger/android_hardware_libhardware_mtk" groups="pdk" />
   <project path="packages/apps/Dialer" name="sandstranger/packages_apps_Dialer_mtk" groups="pdk" />
   <project path="packages/services/Telephony" name="sandstranger/packages_services_Telephony_mtk" groups="pdk" />
   <project path="art" name="sandstranger/android_art" groups="pdk" />
