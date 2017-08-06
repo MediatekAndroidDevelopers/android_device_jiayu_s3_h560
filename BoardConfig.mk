@@ -102,6 +102,8 @@ PRODUCT_PROPERTY_OVERRIDES += ro.telephony.sim.count=$(SIM_COUNT)
 #dt2w
 TARGET_TAP_TO_WAKE_NODE := /sys/devices/bus.2/11007000.I2C0/i2c-0/0-0020/gesture
 
+TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
+
 # Recovery
 BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/recovery.fstab
