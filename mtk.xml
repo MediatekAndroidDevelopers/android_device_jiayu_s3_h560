@@ -27,10 +27,16 @@
   <remove-project name="LineageOS/android_external_wpa_supplicant_8" />
   <remove-project name="LineageOS/android_system_bt" />
   <remove-project name="LineageOS/android_build" />
+  <remove-project name="LineageOS/android_hardware_libhardware" />
+  <remove-project name="LineageOS/android_packages_apps_Dialer" />
+  <remove-project name="LineageOS/android_packages_services_Telephony" />
   <project path="build" name="sandstranger/android_build_mtk" groups="pdk" >
     <copyfile src="core/root.mk" dest="Makefile" />
   </project>
 
+  <project path="hardware/libhardware_legacy" name="sandstranger/android_hardware_libhardware_mtk" groups="pdk" />
+  <project path="packages/apps/Dialer" name="sandstranger/packages_apps_Dialer_mtk" groups="pdk" />
+  <project path="packages/services/Telephony" name="sandstranger/packages_services_Telephony_mtk" groups="pdk" />
   <project path="art" name="sandstranger/android_art" groups="pdk" />
   <project path="external/wpa_supplicant_8" name="sandstranger/android_external_wpa_supplicant_8-mtk"  />
   <project path="external/stlport" name="LineageOS/android_external_stlport" revision="cm-14.1" />
