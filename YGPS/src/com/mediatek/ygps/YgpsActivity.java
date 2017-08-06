@@ -39,9 +39,11 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Resources.NotFoundException;
 import android.location.GpsSatellite;
@@ -53,10 +55,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -69,12 +74,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Spinner;
-import android.util.Log;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -85,6 +90,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Activity for YGPS main view.
+ *
+ */
 public class YgpsActivity extends TabActivity {
 
     private static final String TAG = "YGPS/Activity";
@@ -127,6 +136,8 @@ public class YgpsActivity extends TabActivity {
     private static final int HANDLE_REQUEST_UPDATE = 1202;
     private static final int HANDLE_DELETE_DATA = 1203;
     private static final int HANDLE_ENABLE_BUTTON = 1204;
+    private static final int MSG_WORKER_SAVE_NMEA_LOG = 2001;
+    private static final int MSG_WORKER_CLOSE_NMEA_LOG = 2002;
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat(
             "yyyyMMddhhmmss");
@@ -226,12 +237,70 @@ public class YgpsActivity extends TabActivity {
     private SatelliteInfoManager mSatelInfoManager = null;
     private NmeaParser mNmeaParser = null;
     private NmeaParser.NmeaUpdateViewListener mNmeaUpdateListener = null;
-    private boolean mRestarted = false;
+    private boolean mRestarting = false;
     private boolean mNmeaFixed = false;
     private volatile boolean mIsForceStopGpsTest = false;
+    private HandlerThread mWorkerThread = null;
+    private Handler mWorkerHandler = null;
+    private Intent mServiceIntent = null;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName component, IBinder service) {
+            Log.d("@M_" + TAG, "YGPS onServiceConnected");
+            mYgpsService = ((YgpsService.LocalYgpsBinder) service).getServiceInstance();
+            if (mYgpsService == null) {
+                throw new RuntimeException("fail to get bound YgpsService from connection");
+            }
+            if (mYgpsService.isForeground()) {
+                mYgpsService.dismissForeground();
+            }
+        }
+
+        public void onServiceDisconnected(ComponentName component) {
+            Log.d("@M_" + TAG, "YGPS onServiceDisconnected");
+            mYgpsService = null;
+        }
+    };
+    private YgpsService mYgpsService = null;
+    private Button mBtnGpsEpo = null;
 
     /**
-     * Convert Integer array to string with specified length
+     *  the worker handler. used to handle msg on worker thread.
+     * @author mtk81238
+     *
+     */
+    private class WorkerHandler extends Handler {
+        /**
+         * constructor with looper.
+         * @param looper
+         */
+        public WorkerHandler(Looper looper) {
+            super(looper);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+            case MSG_WORKER_SAVE_NMEA_LOG:
+                if (msg.obj != null) {
+                    String nmea = (String) msg.obj;
+                    saveNMEALog(nmea);
+                } else {
+                    Log.d("@M_" + TAG, "INVALID msg obj. nmea log was needed");
+                }
+                break;
+            case MSG_WORKER_CLOSE_NMEA_LOG:
+                removeMessages(MSG_WORKER_SAVE_NMEA_LOG);
+                finishSavingNMEALog();
+                break;
+            default:
+                Log.d("@M_" + TAG, "Unhandled msg:" + msg.what);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Convert Integer array to string with specified length.
      *
      * @param array
      *            Integer array
@@ -251,7 +320,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Convert Float array to string with specified length
+     * Convert Float array to string with specified length.
      *
      * @param array
      *            Float array
@@ -270,20 +339,23 @@ public class YgpsActivity extends TabActivity {
         return strBuilder.toString();
     }
 
+    private boolean isGpsRestarting() {
+        return mRestarting;
+    }
+
     /**
-     * Store satellite status
+     * Store satellite status.
      *
-     * @param list
-     *            The list contains satellite status
+     * @param adapter The list contains satellite status
      */
-    public void setSatelliteStatus(SatelliteInfoAdapter adapter) {
-        Log.v(TAG, "Enter setSatelliteStatus function");
+    public void setSatelliteStatus(NmeaSatelliteAdapter adapter) {
+        Log.v("@M_" + TAG, "Enter setSatelliteStatus function");
         if (null == adapter) {
             mSatelInfoManager.clearSatelInfos();
         } else {
             mSatelInfoManager.updateSatelliteInfo(adapter);
         }
-        Log.v(TAG, mSatelInfoManager.toString());
+        Log.v("@M_" + TAG, mSatelInfoManager.toString());
         mNmeaFixed = mSatelInfoManager.isUsedInFix(SatelliteInfoManager.PRN_ANY);
         if (!mNmeaFixed) {
             clearLayout();
@@ -293,14 +365,14 @@ public class YgpsActivity extends TabActivity {
         }
         TextView tvStatus = (TextView) findViewById(R.id.tv_status);
         tvStatus.setText(mStatus);
-        Log.d(TAG, "setSatelliteStatus: status:" + mStatus);
+        Log.d("@M_" + TAG, "setSatelliteStatus: status:" + mStatus);
 
         mSatelliteView.requestUpdate(mSatelInfoManager);
         mSignalView.requestUpdate(mSatelInfoManager);
     }
 
     /**
-     * Component initial
+     * Component initial.
      */
     private void setLayout() {
         mSatelliteView = (SatelLocationView) findViewById(R.id.sky_view);
@@ -359,24 +431,24 @@ public class YgpsActivity extends TabActivity {
         mBtnNmeaSave.setVisibility(View.GONE);
         mBtnNmeaClear.setVisibility(View.GONE);
         mTestSpinner = (Spinner) findViewById(R.id.start_type_Spinner);
-        ArrayAdapter<String> TestAdapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> testAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item);
-        TestAdapter
+        testAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         for (int i = 0; i < mType.length; i++) {
-            TestAdapter.add(mType[i]);
+            testAdapter.add(mType[i]);
         }
-        mTestSpinner.setAdapter(TestAdapter);
+        mTestSpinner.setAdapter(testAdapter);
         mTestSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                     int arg2, long arg3) {
                 mTestType = arg2;
-                Log.i(TAG, "The mTestType is : " + arg2);
+                Log.i("@M_" + TAG, "The mTestType is : " + arg2);
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {
-                Log.v(TAG, "onNothingSelected");
+                Log.v("@M_" + TAG, "onNothingSelected");
             }
         });
         // Update buttons status
@@ -448,10 +520,32 @@ public class YgpsActivity extends TabActivity {
                         .setText((R.string.btn_name_dbg2gpsdoctor_disable));
             }
         }
+        mBtnGpsEpo = (Button) findViewById(R.id.btn_gps_epo);
+        mBtnGpsEpo.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Button btn = (Button) view;
+                if (btn.getText().equals(YgpsActivity.this.getString(R.string.enable_gps_epo))) {
+                    GpsMnlSetting.setMnlProp(GpsMnlSetting.KEY_GPS_EPO,
+                            GpsMnlSetting.PROP_VALUE_1);
+                    btn.setText(R.string.disable_gps_epo);
+                } else {
+                    GpsMnlSetting.setMnlProp(GpsMnlSetting.KEY_GPS_EPO,
+                            GpsMnlSetting.PROP_VALUE_0);
+                    btn.setText(R.string.enable_gps_epo);
+                }
+            }
+        });
+        ss = GpsMnlSetting.getMnlProp(GpsMnlSetting.KEY_GPS_EPO,
+                GpsMnlSetting.PROP_VALUE_1);
+        if (ss.equals(GpsMnlSetting.PROP_VALUE_1)) {
+            mBtnGpsEpo.setText((R.string.disable_gps_epo));
+        } else {
+            mBtnGpsEpo.setText((R.string.enable_gps_epo));
+        }
     }
 
     /**
-     * Clear location information
+     * Clear location information.
      */
     private void clearLayout() {
         // clear all information in layout
@@ -475,16 +569,16 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Create file to record nmea log
+     * Create file to record nmea log.
      *
      * @return True if create file success, or false
      */
     private boolean createFileForSavingNMEALog() {
-        Log.v(TAG, "Enter startSavingNMEALog function");
+        Log.v("@M_" + TAG, "Enter startSavingNMEALog function");
         if (NMEALOG_SD) {
             if (!(Environment.getExternalStorageState()
                     .equals(Environment.MEDIA_MOUNTED))) {
-                Log.v(TAG, "saveNMEALog function: No SD card");
+                Log.v("@M_" + TAG, "saveNMEALog function: No SD card");
                 Toast.makeText(this, R.string.no_sdcard, Toast.LENGTH_LONG)
                         .show();
                 return false;
@@ -508,7 +602,7 @@ public class YgpsActivity extends TabActivity {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                Log.w(TAG, "create new file failed!");
+                Log.w("@M_" + TAG, "create new file failed!");
                 Toast.makeText(this, R.string.toast_create_file_failed,
                         Toast.LENGTH_LONG).show();
                 return false;
@@ -517,7 +611,7 @@ public class YgpsActivity extends TabActivity {
         try {
             mOutputNMEALog = new FileOutputStream(file);
         } catch (FileNotFoundException e1) {
-            Log.w(TAG, "output stream FileNotFoundException: "
+            Log.w("@M_" + TAG, "output stream FileNotFoundException: "
                     + e1.getMessage());
             return false;
         }
@@ -526,8 +620,15 @@ public class YgpsActivity extends TabActivity {
         return true;
     }
 
+    private void requestSaveNmeaLog(String nmea) {
+        Message msg = Message.obtain();
+        msg.what = MSG_WORKER_SAVE_NMEA_LOG;
+        msg.obj = nmea;
+        mWorkerHandler.sendMessage(msg);
+    }
+
     /**
-     * Record nmea log to output file
+     * Record nmea log to output file.
      *
      * @param nmea
      *            The nmea log to save
@@ -539,7 +640,7 @@ public class YgpsActivity extends TabActivity {
             mOutputNMEALog.flush();
         } catch (IOException e) {
             bSaved = false;
-            Log.v(TAG, "write NMEA log to file failed!");
+            Log.v("@M_" + TAG, "write NMEA log to file failed! error:" + e.getMessage());
         } finally {
             if (!bSaved) {
                 finishSavingNMEALog();
@@ -550,34 +651,41 @@ public class YgpsActivity extends TabActivity {
 
     }
 
+    private void requestCloseNmeaLog() {
+        mWorkerHandler.sendEmptyMessage(MSG_WORKER_CLOSE_NMEA_LOG);
+    }
+
     /**
-     * Finish record nmea log
+     * Finish record nmea log.
      */
     private void finishSavingNMEALog() {
         try {
-            mStartNmeaRecord = false;
-            mBtnNMEAStop.setEnabled(false);
-            mBtnNmeaStart.setEnabled(true);
-
-            mTVNMEAHint.setText(R.string.empty);
-            mTvNmeaLog.setText(R.string.empty);
-
             mOutputNMEALog.close();
             mOutputNMEALog = null;
-            Toast.makeText(
-                    this,
-                    String.format(getString(R.string.toast_nmealog_save_at),
-                            NMEALOG_SD ? Environment
-                                    .getExternalStorageDirectory()
-                                    .getAbsolutePath() : NMEALOG_PATH),
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    mBtnNMEAStop.setEnabled(false);
+                    mBtnNmeaStart.setEnabled(true);
+
+                    mTVNMEAHint.setText(R.string.empty);
+                    mTvNmeaLog.setText(R.string.empty);
+                    Toast.makeText(
+                            YgpsActivity.this,
+                            String.format(getString(R.string.toast_nmealog_save_at),
+                                    NMEALOG_SD ? Environment
+                                            .getExternalStorageDirectory()
+                                            .getAbsolutePath() : NMEALOG_PATH),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
         } catch (IOException e) {
-            Log.w(TAG, "Close file failed!");
+            Log.w("@M_" + TAG, "Close file failed!");
         }
     }
 
     /**
-     * Save NMEA log to file
+     * Save NMEA log to file.
      */
     private void saveNMEALog() {
         if (NMEALOG_SD) {
@@ -608,25 +716,25 @@ public class YgpsActivity extends TabActivity {
                     fileOutputStream.flush();
                     fileOutputStream.close();
                 } catch (NotFoundException e) {
-                    Log.v(TAG, "Save nmealog NotFoundException: "
+                    Log.v("@M_" + TAG, "Save nmealog NotFoundException: "
                             + e.getMessage());
                     flag = false;
                 } catch (IOException e) {
-                    Log.v(TAG, "Save nmealog IOException: " + e.getMessage());
+                    Log.v("@M_" + TAG, "Save nmealog IOException: " + e.getMessage());
                     flag = false;
                 } finally {
                     if (null != fileOutputStream) {
                         try {
                             fileOutputStream.close();
                         } catch (IOException e) {
-                            Log.v(TAG, "Save nmealog exception in finally: "
+                            Log.v("@M_" + TAG, "Save nmealog exception in finally: "
                                     + e.getMessage());
                             flag = false;
                         }
                     }
                 }
                 if (flag) {
-                    Log.v(TAG, "Save Nmealog to file Finished");
+                    Log.v("@M_" + TAG, "Save Nmealog to file Finished");
                     Toast.makeText(
                                     this,
                                     String
@@ -637,12 +745,12 @@ public class YgpsActivity extends TabActivity {
                                                             .getAbsolutePath()),
                                     Toast.LENGTH_LONG).show();
                 } else {
-                    Log.w(TAG, "Save Nmealog Failed");
+                    Log.w("@M_" + TAG, "Save Nmealog Failed");
                     Toast.makeText(this, R.string.toast_save_log_failed,
                             Toast.LENGTH_LONG).show();
                 }
             } else {
-                Log.v(TAG, "saveNMEALog function: No SD card");
+                Log.v("@M_" + TAG, "saveNMEALog function: No SD card");
                 Toast.makeText(this, (R.string.no_sdcard), Toast.LENGTH_LONG)
                         .show();
             }
@@ -671,21 +779,21 @@ public class YgpsActivity extends TabActivity {
                     outs.write(nmea.getBytes(), 0, nmea.getBytes().length);
                     outs.flush();
                 } catch (IOException e) {
-                    Log.v(TAG, "Save nmealog IOException: " + e.getMessage());
+                    Log.v("@M_" + TAG, "Save nmealog IOException: " + e.getMessage());
                     flag = false;
                 } finally {
                     if (null != outs) {
                         try {
                             outs.close();
                         } catch (IOException e) {
-                            Log.v(TAG, "Save nmealog exception in finally: "
+                            Log.v("@M_" + TAG, "Save nmealog exception in finally: "
                                     + e.getMessage());
                             flag = false;
                         }
                     }
                 }
                 if (flag) {
-                    Log.v(TAG, "Save Nmealog to file Finished");
+                    Log.v("@M_" + TAG, "Save Nmealog to file Finished");
                     Toast
                             .makeText(
                                     this,
@@ -695,7 +803,7 @@ public class YgpsActivity extends TabActivity {
                                                     NMEALOG_PATH),
                                     Toast.LENGTH_LONG).show();
                 } else {
-                    Log.w(TAG, "Save NmeaLog failed!");
+                    Log.w("@M_" + TAG, "Save NmeaLog failed!");
                     Toast.makeText(this, R.string.toast_save_log_failed,
                             Toast.LENGTH_LONG).show();
                 }
@@ -708,7 +816,7 @@ public class YgpsActivity extends TabActivity {
     // when start button is pressed, views excepts mBtnGPSTestStop must be
     // disabled
     /**
-     * Refresh GPS auto test UI to initial status
+     * Refresh GPS auto test UI to initial status.
      */
     private void setViewToStartState() {
         mBtnGpsTestStart.setFocusableInTouchMode(false);
@@ -737,7 +845,7 @@ public class YgpsActivity extends TabActivity {
     // when start button is pressed, views excepts mBtnGPSTestStop must be
     // disabled
     /**
-     * Refresh GPS auto test UI to running status
+     * Refresh GPS auto test UI to running status.
      */
     private void setViewToStopState() {
 
@@ -762,7 +870,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Start GPS auto test
+     * Start GPS auto test.
      */
     private void startGPSAutoTest() {
         // check Times
@@ -831,11 +939,11 @@ public class YgpsActivity extends TabActivity {
                 }
                 mAutoTestThread.start();
             } else {
-                Log.w(TAG, "new matThread failed");
+                Log.w("@M_" + TAG, "new matThread failed");
             }
 
         } else {
-            Log.w(TAG, "start button has been pushed.");
+            Log.w("@M_" + TAG, "start button has been pushed.");
             mBtnGpsTestStart.refreshDrawableState();
             mBtnGpsTestStart.setEnabled(false);
         }
@@ -843,7 +951,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Stop GPS auto test
+     * Stop GPS auto test.
      */
     private void stopGPSAutoTest() {
         resetTestParam();
@@ -880,7 +988,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Reset GPS auto test UI
+     * Reset GPS auto test UI.
      */
     private void resetTestView() {
         // ((TextView)YGPSActivity.this.findViewById(R.id.tv_CurrentTimes)).setText("");
@@ -892,7 +1000,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Calculate mean TTFF value
+     * Calculate mean TTFF value.
      *
      * @param n
      *            Test times
@@ -903,7 +1011,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Update GPS auto test UI
+     * Update GPS auto test UI.
      */
     private Handler mAutoTestHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -937,12 +1045,7 @@ public class YgpsActivity extends TabActivity {
                         .setText(Float.valueOf(mMeanTTFF).toString());
                 break;
             case HANDLE_SET_PARAM_RECONNECT:
-                Bundle extras = new Bundle();
-                extras.putBoolean(GPS_EXTRA_EPHEMERIS, true);
-                //resetParam(extras, false);
-                enableBtns(false);
                 finishSavingAutoTestLog();
-                resetParamForRestart(extras);
                 if (!mBtnGpsTestStart.isEnabled()) {
                     setStartButtonEnable(true);
                     removeDialog(DIALOG_WAITING_FOR_STOP);
@@ -958,7 +1061,7 @@ public class YgpsActivity extends TabActivity {
     };
 
     /**
-     * GPS auto test thread
+     * GPS auto test thread.
      *
      * @author mtk54046
      *
@@ -979,10 +1082,10 @@ public class YgpsActivity extends TabActivity {
         }
     }
     private boolean createFileForSavingAutoTestLog() {
-        Log.v(TAG, "Enter createFileForSavingAutoTestLog function");
+        Log.v("@M_" + TAG, "Enter createFileForSavingAutoTestLog function");
         if (!(Environment.getExternalStorageState()
                     .equals(Environment.MEDIA_MOUNTED))) {
-                Log.v(TAG, "saveAutoTestLog function: No SD card");
+                Log.v("@M_" + TAG, "saveAutoTestLog function: No SD card");
                 Toast.makeText(this, R.string.no_sdcard, Toast.LENGTH_LONG)
                         .show();
                 return false;
@@ -996,7 +1099,7 @@ public class YgpsActivity extends TabActivity {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                Log.w(TAG, "create new file failed!");
+                Log.w("@M_" + TAG, "create new file failed!");
                 Toast.makeText(this, R.string.toast_create_file_failed,
                         Toast.LENGTH_LONG).show();
                 return false;
@@ -1005,7 +1108,7 @@ public class YgpsActivity extends TabActivity {
         try {
             mOutputTestLog = new FileOutputStream(file);
         } catch (FileNotFoundException e1) {
-            Log.w(TAG, "output stream FileNotFoundException: "
+            Log.w("@M_" + TAG, "output stream FileNotFoundException: "
                     + e1.getMessage());
             return false;
         }
@@ -1014,14 +1117,15 @@ public class YgpsActivity extends TabActivity {
 
     private void saveAutoTestLog(String nmea) {
         boolean bSaved = true;
-        if (mIsTestRunning == false || mOutputTestLog == null)
+        if (mIsTestRunning == false || mOutputTestLog == null) {
             return;
+        }
         try {
             mOutputTestLog.write(nmea.getBytes(), 0, nmea.getBytes().length);
             mOutputTestLog.flush();
         } catch (IOException e) {
             bSaved = false;
-            Log.v(TAG, "write autotest log to file failed!");
+            Log.v("@M_" + TAG, "write autotest log to file failed!");
         } finally {
             if (!bSaved) {
                 finishSavingAutoTestLog();
@@ -1032,10 +1136,10 @@ public class YgpsActivity extends TabActivity {
 
     }
     /**
-     * Finish record nmea log
+     * Finish record nmea log.
      */
     private void finishSavingAutoTestLog() {
-        Log.v(TAG, "finishSavingAutoTestLog");
+        Log.v("@M_" + TAG, "finishSavingAutoTestLog");
         if (mOutputTestLog == null) {
             return;
         }
@@ -1050,7 +1154,7 @@ public class YgpsActivity extends TabActivity {
                                     .getAbsolutePath()),
                     Toast.LENGTH_LONG).show();
         } catch (IOException e) {
-            Log.w(TAG, "Close file failed!");
+            Log.w("@M_" + TAG, "Close file failed!");
         }
     }
 
@@ -1069,7 +1173,7 @@ public class YgpsActivity extends TabActivity {
                 Thread.sleep(ONE_SECOND / 2);
             }
         } catch (InterruptedException e) {
-            Log.d(TAG, "waitAutoTestInterval InterruptedException: " + e.getMessage());
+            Log.d("@M_" + TAG, "waitAutoTestInterval InterruptedException: " + e.getMessage());
         }
     }
     private void wait3DFix() {
@@ -1090,17 +1194,17 @@ public class YgpsActivity extends TabActivity {
         }
         if (bExceed) {
             //break;
-            Log.d(TAG, "wait3DFix , Exceed period");
+            Log.d("@M_" + TAG, "wait3DFix , Exceed period");
         }  else {
             try {
                 Thread.sleep(ONE_SECOND / 2); // wait ttff and lat,longitude to file.
             } catch (InterruptedException e) {
-               Log.w(TAG, "wait3DFix interrupted: " + e.getMessage());
+               Log.w("@M_" + TAG, "wait3DFix interrupted: " + e.getMessage());
             }
         }
     }
     /**
-     * GPS re-connect test
+     * GPS re-connect test.
      */
     private void reconnectTest() {
         Bundle extras = new Bundle();
@@ -1130,7 +1234,7 @@ public class YgpsActivity extends TabActivity {
             for (int i = 1; i <= mTotalTimes && mIsTestRunning; ++i) {
                 saveAutoTestLog("\n" + Integer.toString(i) + " ");
                 mCurrentTimes = i;
-                Log.v(TAG, "reconnectTest function: "
+                Log.v("@M_" + TAG, "reconnectTest function: "
                         + Integer.valueOf(mCurrentTimes).toString());
                 setCurrentTimes(i);
                 //mShowFirstFixLocate = true;
@@ -1157,14 +1261,14 @@ public class YgpsActivity extends TabActivity {
                 stopGPSAutoTest();
             }
         } catch (InterruptedException e) {
-            Log.w(TAG, "GPS auto test thread interrupted: " + e.getMessage());
+            Log.w("@M_" + TAG, "GPS auto test thread interrupted: " + e.getMessage());
             Toast.makeText(YgpsActivity.this, R.string.toast_test_interrupted,
                     Toast.LENGTH_LONG).show();
         }
     }
 
     /**
-     * Set test parameters
+     * Set test parameters.
      */
     private void setTestParam() {
         Message msg = mAutoTestHandler
@@ -1173,7 +1277,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Refresh auto test UI
+     * Refresh auto test UI.
      *
      * @param bEnable
      *            Auto test start or not
@@ -1186,7 +1290,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Update current test time
+     * Update current test time.
      *
      * @param nTimes
      *            Current test time
@@ -1199,7 +1303,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Update test time count down
+     * Update test time count down.
      *
      * @param num
      *            Count down number
@@ -1212,7 +1316,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Show exceed period
+     * Show exceed period.
      *
      * @param period
      *            Time period
@@ -1227,7 +1331,7 @@ public class YgpsActivity extends TabActivity {
     private long mLastTimestamp = -1;
 
     /**
-     * NmeaListener implementation, to receive NMEA log
+     * NmeaListener implementation, to receive NMEA log.
      *
      * @author mtk54046
      *
@@ -1243,7 +1347,7 @@ public class YgpsActivity extends TabActivity {
                 }
             }
             if (mStartNmeaRecord) {
-                saveNMEALog(nmea);
+                requestSaveNmeaLog(nmea);
                 mTvNmeaLog.setText(nmea);
             }
             NmeaParser.getNMEAParser().parse(nmea);
@@ -1252,20 +1356,15 @@ public class YgpsActivity extends TabActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "Enter onCreate  function of Main Activity");
+        Log.v("@M_" + TAG, "Enter onCreate  function of Main Activity");
         super.onCreate(savedInstanceState);
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-        // .detectDiskReads()
-                // .detectDiskWrites()
-                .detectNetwork() // or .detectAll() for all detectable problems
-                // .penaltyLog()
+                .detectNetwork()
                 .build());
-        // StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-        // .detectLeakedSqlLiteObjects()
-        // .detectLeakedClosableObjects()
-        // .penaltyLog()
-        // .penaltyDeath()
-        // .build());
+
+        mWorkerThread = new HandlerThread("YgpsWorkerThread");
+        mWorkerThread.start();
+        mWorkerHandler = new WorkerHandler(mWorkerThread.getLooper());
         TabHost tabHost = getTabHost();
         LayoutInflater.from(this).inflate(R.layout.layout_tabs,
                 tabHost.getTabContentView(), true);
@@ -1291,13 +1390,11 @@ public class YgpsActivity extends TabActivity {
 
         tabHost.setOnTabChangedListener(new OnTabChangeListener() {
             public void onTabChanged(String tabId) {
-                Log.v(TAG, "Select: " + tabId);
+                Log.v("@M_" + TAG, "Select: " + tabId);
             }
         });
         setLayout();
-        //Intent it = new Intent(YgpsService.SERVICE_START_ACTION);
-        //startService(it);
-        //Log.v(TAG, "START service");
+
         mYgpsWakeLock = new YgpsWakeLock();
         mYgpsWakeLock.acquireScreenWakeLock(this);
         mYgpsWakeLock.acquireCpuWakeLock(this);
@@ -1321,14 +1418,14 @@ public class YgpsActivity extends TabActivity {
                 }
                 mStatus = getString(R.string.gps_status_unknown);
             } else {
-                Log.w(TAG, "new mLocationManager failed");
+                Log.w("@M_" + TAG, "new mLocationManager failed");
             }
         } catch (SecurityException e) {
             Toast.makeText(this, "security exception", Toast.LENGTH_LONG)
                     .show();
-            Log.w(TAG, "Exception: " + e.getMessage());
+            Log.w("@M_" + TAG, "Exception: " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            Log.w(TAG, "Exception: " + e.getMessage());
+            Log.w("@M_" + TAG, "Exception: " + e.getMessage());
         }
         mHandler.sendEmptyMessage(HANDLE_COUNTER);
         final SharedPreferences preferences = this.getSharedPreferences(
@@ -1344,12 +1441,13 @@ public class YgpsActivity extends TabActivity {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.v(TAG, "onReceive, receive SCREEN_OFF event");
+                Log.v("@M_" + TAG, "onReceive, receive SCREEN_OFF event");
                 // finish();
             }
         };
         registerReceiver(mPowerKeyReceiver, mPowerKeyFilter);
-        Log.v(TAG, "registerReceiver powerKeyReceiver");
+        Log.v("@M_" + TAG, "registerReceiver powerKeyReceiver");
+
         mSocketClient = new ClientSocket(this);
         mHandler.sendEmptyMessage(HANDLE_CHECK_SATEREPORT);
         mSatelInfoManager = new SatelliteInfoManager();
@@ -1359,12 +1457,16 @@ public class YgpsActivity extends TabActivity {
         mNmeaUpdateListener = new NmeaParser.NmeaUpdateViewListener() {
             @Override
             public void onViewupdateNotify() {
-                Log.d(TAG, "NmeaParser onViewupdateNotify");
+                Log.d("@M_" + TAG, "NmeaParser onViewupdateNotify");
                 mSateReportTimeOut = 0;
                 setSatelliteStatus(new NmeaSatelliteAdapter(mNmeaParser.getSatelliteList()));
             }
         };
         mNmeaParser.addSVUpdateListener(mNmeaUpdateListener);
+        if (mIsRunInBg) {
+            mServiceIntent = new Intent(this, YgpsService.class);
+            startService(mServiceIntent);
+        }
     }
 
     @Override
@@ -1415,12 +1517,12 @@ public class YgpsActivity extends TabActivity {
                 item.setTitle(R.string.menu_run_bg_enable);
                 preferences.edit().putBoolean(SHARED_PREF_KEY_BG, false)
                         .commit();
-                Log.v(TAG_BG, "now should *not* be in bg.");
+                Log.v("@M_" + TAG_BG, "now should *not* be in bg.");
             } else {
                 item.setTitle(R.string.menu_run_bg_disable);
                 preferences.edit().putBoolean(SHARED_PREF_KEY_BG, true)
                         .commit();
-                Log.v(TAG_BG, "now should be in bg.");
+                Log.v("@M_" + TAG_BG, "now should be in bg.");
             }
             return true;
         default:
@@ -1450,8 +1552,8 @@ public class YgpsActivity extends TabActivity {
     @Override
     public void onPause() {
         super.onPause();
-        Log.v(TAG, "Enter onPause function");
-        // Log.v(TAG_BG, "mbRunInBG " + mbRunInBG);
+        Log.v("@M_" + TAG, "Enter onPause function");
+        // Log.v("@M_" + TAG_BG, "mbRunInBG " + mbRunInBG);
         // if (!mbRunInBG) {
         // mLocationManager.removeUpdates(mLocListener);
         // mLocationManager.removeGpsStatusListener(mGpsListener);
@@ -1464,7 +1566,7 @@ public class YgpsActivity extends TabActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "Enter onResume function");
+        Log.v("@M_" + TAG, "Enter onResume function");
         TextView tvProvider = (TextView) findViewById(R.id.tv_provider);
         tvProvider.setText(mProvider);
         TextView tvStatus = (TextView) findViewById(R.id.tv_status);
@@ -1472,10 +1574,10 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Show GPS version
+     * Show GPS version.
      */
     private void showVersion() {
-        Log.v(TAG, "Enter show version");
+        Log.v("@M_" + TAG, "Enter show version");
         if (mIsExit) {
             return;
         }
@@ -1487,7 +1589,7 @@ public class YgpsActivity extends TabActivity {
         // if (null != txt_mnl_version) {
         // txt_mnl_version.setText(FWVersion.getMNLVersion());
         // } else {
-        // Log.v(TAG, "txt_mnl_version is null");
+        // Log.v("@M_" + TAG, "txt_mnl_version is null");
         // }
         sendCommand("PMTK605");
 
@@ -1519,22 +1621,35 @@ public class YgpsActivity extends TabActivity {
     }
 
     private void removeNmeaParser() {
-        Log.d(TAG, "removeNmeaParser()");
+        Log.d("@M_" + TAG, "removeNmeaParser()");
         mNmeaParser.removeSVUpdateListener(mNmeaUpdateListener);
         mNmeaParser.clearSatelliteList();
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (mIsRunInBg) {
+            bindService(mServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        Log.v(TAG, "Enter onStop function");
-        Log.v(TAG_BG, "mbRunInBG " + mIsRunInBg);
+        Log.v("@M_" + TAG, "Enter onStop function");
+        Log.v("@M_" + TAG_BG, "mbRunInBG " + mIsRunInBg);
         if (!mIsRunInBg) {
             forceStopGpsAutoTest();
             mLocationManager.removeUpdates(mLocListener);
             mLocationManager.removeGpsStatusListener(mGpsListener);
             mYgpsWakeLock.releaseCpuWakeLock();
             removeNmeaParser();
+        } else {
+            if (mYgpsService != null) {
+                mYgpsService.requestForeground(YgpsActivity.class);
+            }
+            unbindService(mServiceConnection);
         }
         mYgpsWakeLock.releaseScreenWakeLock();
         if (mPrompt != null) {
@@ -1548,8 +1663,8 @@ public class YgpsActivity extends TabActivity {
 
     @Override
     protected void onRestart() {
-        Log.v(TAG, "Enter onRestart function");
-        Log.v(TAG_BG, "mbRunInBG " + mIsRunInBg);
+        Log.v("@M_" + TAG, "Enter onRestart function");
+        Log.v("@M_" + TAG_BG, "mbRunInBG " + mIsRunInBg);
         if (!mIsRunInBg) {
             mFirstFix = false;
             if (mLocationManager
@@ -1583,14 +1698,14 @@ public class YgpsActivity extends TabActivity {
             mYgpsWakeLock.acquireScreenWakeLock(this);
             mYgpsWakeLock.acquireCpuWakeLock(this);
         } else {
-            Log.d(TAG, "mYGPSWakeLock is null");
+            Log.d("@M_" + TAG, "mYGPSWakeLock is null");
         }
         super.onRestart();
     }
 
     @Override
     protected void onDestroy() {
-        Log.v(TAG, "enter onDestroy function");
+        Log.v("@M_" + TAG, "enter onDestroy function");
         forceStopGpsAutoTest();
         mLocationManager.removeUpdates(mLocListener);
         mLocationManager.removeGpsStatusListener(mGpsListener);
@@ -1600,17 +1715,21 @@ public class YgpsActivity extends TabActivity {
         mHandler.removeMessages(HANDLE_COUNTER);
         mHandler.removeMessages(HANDLE_CHECK_SATEREPORT);
         mIsExit = true;
-        if (mOutputNMEALog != null) {
-            finishSavingNMEALog();
+        if (mStartNmeaRecord) {
+            mStartNmeaRecord = false;
+            requestCloseNmeaLog();
         }
         if (mOutputTestLog != null) {
             finishSavingAutoTestLog();
         }
+        if (mServiceIntent != null) {
+            stopService(mServiceIntent);
+        }
         //Intent it = new Intent(YgpsService.SERVICE_START_ACTION);
         //getBaseContext().stopService(it);
-        //Log.v(TAG, "STOP service");
+        //Xlog.v(TAG, "STOP service");
         unregisterReceiver(mPowerKeyReceiver);
-        Log.v(TAG, "unregisterReceiver powerKeyReceiver");
+        Log.v("@M_" + TAG, "unregisterReceiver powerKeyReceiver");
         mSocketClient.endClient();
         final SharedPreferences preferences = this.getSharedPreferences(
                 FIRST_TIME, android.content.Context.MODE_PRIVATE);
@@ -1620,6 +1739,9 @@ public class YgpsActivity extends TabActivity {
                     GpsMnlSetting.PROP_VALUE_0);
         }
         mYgpsWakeLock.releaseCpuWakeLock();
+        if (mWorkerThread != null) {
+            mWorkerThread.quitSafely();
+        }
         super.onDestroy();
     }
 
@@ -1627,9 +1749,9 @@ public class YgpsActivity extends TabActivity {
 
         // @Override
         public void onLocationChanged(Location location) {
-            Log.v(TAG, "Enter onLocationChanged function");
+            Log.v("@M_" + TAG, "Enter onLocationChanged function");
             if (!mFirstFix) {
-                Log.w(TAG, "mFirstFix is false, onLocationChanged");
+                Log.w("@M_" + TAG, "mFirstFix is false, onLocationChanged");
             }
             if (mShowLoc) {
                 String str = null;
@@ -1659,11 +1781,11 @@ public class YgpsActivity extends TabActivity {
                 da = null;
             }
             Date d = new Date(location.getTime());
-            String date = String.format("%s %+02d %04d/%02d/%02d", "GMT", d
-                    .getTimezoneOffset(), d.getYear() + YEAR_START, d
-                    .getMonth() + 1, d.getDate());
-            String time = String.format("%02d:%02d:%02d", d.getHours(), d
-                    .getMinutes(), d.getSeconds());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("z yyyy/MM/dd");
+            String date = dateFormat.format(d);
+
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+            String time = timeFormat.format(d);
 
             TextView tvTime = (TextView) findViewById(R.id.tv_time);
             if (tvTime != null) {
@@ -1700,8 +1822,8 @@ public class YgpsActivity extends TabActivity {
                         .distanceTo(mLastLocation)));
             }
 
-            TextView tvTtff = (TextView) findViewById(R.id.tv_ttff);
-            tvTtff.setText(mTtffValue + getString(R.string.time_unit_ms));
+//            TextView tvTtff = (TextView) findViewById(R.id.tv_ttff);
+//            tvTtff.setText(mTtffValue + getString(R.string.time_unit_ms));
 
             // TextView txt_test_ttff =
             // (TextView)findViewById(R.id.txt_test_ttff);
@@ -1718,7 +1840,7 @@ public class YgpsActivity extends TabActivity {
 
         // @Override
         public void onProviderDisabled(String provider) {
-            Log.v(TAG, "Enter onProviderDisabled function");
+            Log.v("@M_" + TAG, "Enter onProviderDisabled function");
             mProvider = String.format(getString(R.string.provider_status_disabled,
                     LocationManager.GPS_PROVIDER));
             TextView tvProvider = (TextView) findViewById(R.id.tv_provider);
@@ -1727,7 +1849,7 @@ public class YgpsActivity extends TabActivity {
 
         // @Override
         public void onProviderEnabled(String provider) {
-            Log.v(TAG, "Enter onProviderEnabled function");
+            Log.v("@M_" + TAG, "Enter onProviderEnabled function");
             mProvider = String.format(getString(R.string.provider_status_enabled,
                     LocationManager.GPS_PROVIDER));
             TextView tvProvider = (TextView) findViewById(R.id.tv_provider);
@@ -1737,21 +1859,22 @@ public class YgpsActivity extends TabActivity {
 
         // @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.v(TAG, "Enter onStatusChanged function");
+            Log.v("@M_" + TAG, "Enter onStatusChanged function");
         }
     };
 
     public final GpsStatus.Listener mGpsListener = new GpsStatus.Listener() {
         private void onFirstFix(int ttff) {
-            Log.v(TAG, "Enter onFirstFix function: ttff = " + ttff);
+            Log.v("@M_" + TAG, "Enter onFirstFix function: ttff = " + ttff);
             int currentTimes = mCurrentTimes;
             mHandler.removeMessages(HANDLE_COUNTER);
             mTtffValue = ttff;
             if (ttff != mTtffValue) {
-                Log.w(TAG, "ttff != mTTFF");
+                Log.w("@M_" + TAG, "ttff != mTTFF");
                 mTtffValue = ttff;
             }
             mFirstFix = true;
+            Log.v("@M_" + TAG, "mFirstFix = true");
             Toast.makeText(
                     YgpsActivity.this,
                     String.format(getString(R.string.toast_first_fix), ttff,
@@ -1759,6 +1882,7 @@ public class YgpsActivity extends TabActivity {
                     Toast.LENGTH_LONG).show();
             TextView tvTtff = (TextView) findViewById(R.id.tv_ttff);
             tvTtff.setText(mTtffValue + getString(R.string.time_unit_ms));
+            Log.v("@M_" + TAG, "show tvTtff = " + mTtffValue);
             if (mIsTestRunning) {
                 TextView tvLastTtff = (TextView) findViewById(R.id.tv_last_ttff);
                 tvLastTtff.setText(mTtffValue
@@ -1773,7 +1897,7 @@ public class YgpsActivity extends TabActivity {
         }
 
         private void onPreFix(int ttff) {
-            Log.v(TAG, "Enter onPreFix function: ttff = " + ttff);
+            Log.v("@M_" + TAG, "Enter onPreFix function: ttff = " + ttff);
             int currentTimes = mCurrentTimes;
             mHandler.removeMessages(HANDLE_COUNTER);
             mTtffValue = ttff;
@@ -1796,7 +1920,7 @@ public class YgpsActivity extends TabActivity {
         }
 
         public void onGpsStatusChanged(int event) {
-            Log.v(TAG, "Enter onGpsStatusChanged function");
+            Log.v("@M_" + TAG, "Enter onGpsStatusChanged function");
             GpsStatus status = mLocationManager.getGpsStatus(null);
             switch (event) {
             case GpsStatus.GPS_EVENT_STARTED:
@@ -1806,15 +1930,24 @@ public class YgpsActivity extends TabActivity {
                 mStatus = getString(R.string.gps_status_stopped);
                 break;
             case GpsStatus.GPS_EVENT_FIRST_FIX:
+                if (isGpsRestarting()) {
+                    Log.v("@M_" + TAG, "Restarting GPS, ignore the FIRST_FIX event");
+                    return;
+                }
                 onFirstFix(status.getTimeToFirstFix());
                 mStatus = getString(R.string.gps_status_first_fix);
                 break;
             case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                //mSateReportTimeOut = 0;
-                //setSatelliteStatus(new GpsSatelliteAdapter(status.getSatellites()));
 
-                if (mNmeaFixed && !mFirstFix && !mRestarted) {
-                    onPreFix(status.getTimeToFirstFix());
+                if (mNmeaFixed) {
+                    if (!mFirstFix) {
+                        onPreFix(status.getTimeToFirstFix());
+                    }
+                } else {
+                    mFirstFix = false;
+                    if (!mHandler.hasMessages(HANDLE_COUNTER)) {
+                        mHandler.sendEmptyMessage(HANDLE_COUNTER);
+                    }
                 }
                 if (!mIsShowVersion) {
                     showVersion();
@@ -1825,20 +1958,20 @@ public class YgpsActivity extends TabActivity {
             }
             TextView tvStatus = (TextView) findViewById(R.id.tv_status);
             tvStatus.setText(mStatus);
-            Log.v(TAG, "onGpsStatusChanged:" + event + " Status:" + mStatus);
+            Log.v("@M_" + TAG, "onGpsStatusChanged:" + event + " Status:" + mStatus);
         }
     };
     /**
-     * only for hot/warm/cold/full/restart button
+     * only for hot/warm/cold/full/restart button.
      * order is stop->restart->start
      * the button should be enabled after the 3 steps is finished
      */
     private void resetParamForRestart(Bundle extras) {
-        Log.v(TAG, "Enter resetParamForRestart function");
+        Log.v("@M_" + TAG, "Enter resetParamForRestart function");
         /* Below code come from HANDLE_REMOVE_UPDATE
          * Avoid HANDLE_REMOVE_UPDATE->onLocationChanged(previous)
          */
-        mRestarted = true;
+        mRestarting = true;
         mLocationManager.removeUpdates(mLocListener);
         mHandler.sendEmptyMessage(HANDLE_REMOVE_UPDATE);  // stop
 
@@ -1859,12 +1992,12 @@ public class YgpsActivity extends TabActivity {
     }
 
      /**
-     * only for Auto GPS test start button
+     * only for Auto GPS test start button.
      * order is stop->restart->start
      * the button should be enabled after the 3 steps is finished
      */
     private void resetParamForAutoTest(Bundle extras) {
-        Log.v(TAG, "Enter resetParamForAutoTest function");
+        Log.v("@M_" + TAG, "Enter resetParamForAutoTest function");
         mLocationManager.removeUpdates(mLocListener);
         mHandler.sendEmptyMessage(HANDLE_REMOVE_UPDATE);  // stop
 
@@ -1878,7 +2011,7 @@ public class YgpsActivity extends TabActivity {
         //mHandler.sendEmptyMessageDelayed(HANDLE_ENABLE_BUTTON, HANDLE_MSG_DELAY_300*3);
     }
     /**
-     * Set reset parameters to GPS driver
+     * Set reset parameters to GPS driver.
      *
      * @param extras
      *            Data need to reset
@@ -1886,12 +2019,12 @@ public class YgpsActivity extends TabActivity {
      *            Whether auto test testing
      */
     private void resetParam(Bundle extras, boolean bAutoConnectTest) {
-        Log.v(TAG, "Enter resetParam function");
+        Log.v("@M_" + TAG, "Enter resetParam function");
         mLocationManager.removeUpdates(mLocListener);
         try {
             Thread.sleep(ONE_SECOND / 2);  // wait for stop gps done.
         } catch (InterruptedException e) {
-            Log.d(TAG, "resetParam InterruptedException: " + e.getMessage());
+            Log.d("@M_" + TAG, "resetParam InterruptedException: " + e.getMessage());
         }
         if (!bAutoConnectTest) {
             mLocationManager.sendExtraCommand(LocationManager.GPS_PROVIDER,
@@ -1920,7 +2053,7 @@ public class YgpsActivity extends TabActivity {
                 Thread.sleep(ONE_SECOND / 2);
             }
         } catch (InterruptedException e) {
-            Log.d(TAG, "resetParam InterruptedException: " + e.getMessage());
+            Log.d("@M_" + TAG, "resetParam InterruptedException: " + e.getMessage());
         }
         if (!mIsExit) {
             mLocationManager.requestLocationUpdates(
@@ -1939,7 +2072,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Get GPS test status
+     * Get GPS test status.
      *
      * @return Whether gps auto test is running
      */
@@ -1963,7 +2096,7 @@ public class YgpsActivity extends TabActivity {
             if (v == (View) mBtnGpsTestStart) {
                 mBtnGpsTestStart.refreshDrawableState();
                 mBtnGpsTestStart.setEnabled(false);
-                Log.v(TAG, "GPSTest Start button is pressed");
+                Log.v("@M_" + TAG, "GPSTest Start button is pressed");
                 mHandler.sendEmptyMessageDelayed(HANDLE_CLEAR, HANDLE_MSG_DELAY);
                 startGPSAutoTest();
             } else if (v == (View) mBtnGpsTestStop) {
@@ -1983,7 +2116,7 @@ public class YgpsActivity extends TabActivity {
                     showDialog(DIALOG_WAITING_FOR_STOP);
                     mIsTestRunning = false;
                 } else {
-                    Log.v(TAG, "stop has been clicked.");
+                    Log.v("@M_" + TAG, "stop has been clicked.");
                 }
             } else if (v == (View) mBtnHotStart) {
                 if (gpsTestRunning()) {
@@ -1991,7 +2124,7 @@ public class YgpsActivity extends TabActivity {
                 }
                 enableBtns(false);
                 // nothing should be put
-                Log.v(TAG, "Hot Start button is pressed");
+                Log.v("@M_" + TAG, "Hot Start button is pressed");
                 extras.putBoolean(GPS_EXTRA_RTI, true);
                 resetParamForRestart(extras);
             } else if (v == (View) mBtnWarmStart) {
@@ -1999,7 +2132,7 @@ public class YgpsActivity extends TabActivity {
                     return;
                 }
                 enableBtns(false);
-                Log.v(TAG, "Warm Start button is pressed");
+                Log.v("@M_" + TAG, "Warm Start button is pressed");
                 extras.putBoolean(GPS_EXTRA_EPHEMERIS, true);
                 resetParamForRestart(extras);
             } else if (v == (View) mBtnColdStart) {
@@ -2007,7 +2140,7 @@ public class YgpsActivity extends TabActivity {
                     return;
                 }
                 enableBtns(false);
-                Log.v(TAG, "Cold Start button is pressed");
+                Log.v("@M_" + TAG, "Cold Start button is pressed");
                 extras.putBoolean(GPS_EXTRA_EPHEMERIS, true);
                 extras.putBoolean(GPS_EXTRA_POSITION, true);
                 extras.putBoolean(GPS_EXTRA_TIME, true);
@@ -2020,7 +2153,7 @@ public class YgpsActivity extends TabActivity {
                     return;
                 }
                 enableBtns(false);
-                Log.v(TAG, "Full Start button is pressed");
+                Log.v("@M_" + TAG, "Full Start button is pressed");
                 extras.putBoolean(GPS_EXTRA_ALL, true);
                 resetParamForRestart(extras);
             } else if (v == (View) mBtnReStart) {
@@ -2028,7 +2161,7 @@ public class YgpsActivity extends TabActivity {
                     return;
                 }
                 enableBtns(false);
-                Log.v(TAG, "Restart button is pressed");
+                Log.v("@M_" + TAG, "Restart button is pressed");
                 extras.putBoolean(GPS_EXTRA_EPHEMERIS, true);
                 extras.putBoolean(GPS_EXTRA_A1LMANAC, true);
                 extras.putBoolean(GPS_EXTRA_POSITION, true);
@@ -2037,21 +2170,20 @@ public class YgpsActivity extends TabActivity {
                 extras.putBoolean(GPS_EXTRA_UTC, true);
                 resetParamForRestart(extras);
             } else if (v == (View) mBtnNmeaStart) {
-                Log.v(TAG, "NMEA Start button is pressed");
+                Log.v("@M_" + TAG, "NMEA Start button is pressed");
                 if (!createFileForSavingNMEALog()) {
-                    Log.i(TAG, "createFileForSavingNMEALog return false");
+                    Log.i("@M_" + TAG, "createFileForSavingNMEALog return false");
                     return;
                 }
                 mStartNmeaRecord = true;
                 mBtnNmeaStart.setEnabled(false);
                 mBtnNMEAStop.setEnabled(true);
             } else if (v == (View) mBtnNMEAStop) {
-                Log.v(TAG, "NMEA Stop button is pressed");
+                Log.v("@M_" + TAG, "NMEA Stop button is pressed");
                 mStartNmeaRecord = false;
-                finishSavingNMEALog();
-
+                requestCloseNmeaLog();
             } else if (v == (View) mBtnNMEADbgDbg) {
-                Log.v(TAG, "NMEA DbgDbg is pressed");
+                Log.v("@M_" + TAG, "NMEA DbgDbg is pressed");
                 String ss = GpsMnlSetting.getMnlProp(
                         GpsMnlSetting.KEY_DEBUG_DBG2SOCKET,
                         GpsMnlSetting.PROP_VALUE_0);
@@ -2069,7 +2201,7 @@ public class YgpsActivity extends TabActivity {
                 }
 
             } else if (v == (View) mBtnNmeaDbgNmea) {
-                Log.v(TAG, "NMEA DbgNmea button is pressed");
+                Log.v("@M_" + TAG, "NMEA DbgNmea button is pressed");
                 String ss = GpsMnlSetting.getMnlProp(
                         GpsMnlSetting.KEY_DEBUG_NMEA2SOCKET,
                         GpsMnlSetting.PROP_VALUE_0);
@@ -2087,7 +2219,7 @@ public class YgpsActivity extends TabActivity {
                             GpsMnlSetting.PROP_VALUE_0);
                 }
             } else if (v == (View) mBtnNmeaDbgDbgFile) {
-                Log.v(TAG, "NMEA DbgDbgFile is pressed");
+                Log.v("@M_" + TAG, "NMEA DbgDbgFile is pressed");
                 String ss = GpsMnlSetting.getMnlProp(
                         GpsMnlSetting.KEY_DEBUG_DBG2FILE,
                         GpsMnlSetting.PROP_VALUE_0);
@@ -2104,7 +2236,7 @@ public class YgpsActivity extends TabActivity {
                 }
 
             } else if (v == (View) mBtnNmeaDbgNmeaDdms) {
-                Log.v(TAG, "NMEA debug2ddms button is pressed");
+                Log.v("@M_" + TAG, "NMEA debug2ddms button is pressed");
                 String ss = GpsMnlSetting.getMnlProp(
                         GpsMnlSetting.KEY_DEBUG_DEBUG_NMEA,
                         GpsMnlSetting.PROP_VALUE_1);
@@ -2122,7 +2254,7 @@ public class YgpsActivity extends TabActivity {
                             GpsMnlSetting.PROP_VALUE_1);
                 }
             } else if (v == (View) mBtnHotStill) {
-                Log.v(TAG, "Hot still button is pressed");
+                Log.v("@M_" + TAG, "Hot still button is pressed");
                 String ss = GpsMnlSetting.getMnlProp(
                         GpsMnlSetting.KEY_BEE_ENABLED,
                         GpsMnlSetting.PROP_VALUE_1);
@@ -2136,7 +2268,7 @@ public class YgpsActivity extends TabActivity {
                             GpsMnlSetting.PROP_VALUE_1);
                 }
             } else if (v == (View) mBtnSuplLog) {
-                Log.v(TAG, "supllog button is pressed");
+                Log.v("@M_" + TAG, "supllog button is pressed");
                 String ss = GpsMnlSetting.getMnlProp(
                         GpsMnlSetting.KEY_SUPLLOG_ENABLED,
                         GpsMnlSetting.PROP_VALUE_0);
@@ -2150,16 +2282,16 @@ public class YgpsActivity extends TabActivity {
                             GpsMnlSetting.PROP_VALUE_1);
                 }
             }  else if (v == (View) mBtnNmeaClear) {
-                Log.v(TAG, "NMEA Clear button is pressed");
+                Log.v("@M_" + TAG, "NMEA Clear button is pressed");
                 mTvNmeaLog.setText(R.string.empty);
             } else if (v == (View) mBtnNmeaSave) {
-                Log.v(TAG, "NMEA Save button is pressed");
+                Log.v("@M_" + TAG, "NMEA Save button is pressed");
                 saveNMEALog();
             } else if (v == (View) mBtnGpsHwTest) {
-                Log.v(TAG, "mBtnGPSHwTest Button is pressed");
+                Log.v("@M_" + TAG, "mBtnGPSHwTest Button is pressed");
                 onGpsHwTestClicked();
             } else if (v == (View) mBtnGpsJamming) {
-                Log.v(TAG, "mBtnGPSJamming Button is pressed");
+                Log.v("@M_" + TAG, "mBtnGPSJamming Button is pressed");
                 onGpsJammingScanClicked();
             } else {
                 return;
@@ -2168,13 +2300,13 @@ public class YgpsActivity extends TabActivity {
     };
 
     /**
-     * Send command to MNL server
+     * Send command to MNL server.
      *
      * @param command
      *            PMTK command to be send
      */
     private void sendCommand(String command) {
-        Log.v(TAG, "GPS Command is " + command);
+        Log.v("@M_" + TAG, "GPS Command is " + command);
         if (null == command || command.trim().length() == 0) {
             Toast.makeText(this, R.string.command_error, Toast.LENGTH_LONG)
                     .show();
@@ -2199,13 +2331,13 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Invoked when get GPS server respond
+     * Invoked when get GPS server respond.
      *
      * @param res
      *            Response message
      */
     public void onResponse(String res) {
-        Log.v(TAG, "Enter getResponse: " + res);
+        Log.v("@M_" + TAG, "Enter getResponse: " + res);
         if (null == res || res.isEmpty()) {
             return;
         }
@@ -2222,7 +2354,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Invoked when GPS HW test button clicked
+     * Invoked when GPS HW test button clicked.
      */
     private void onGpsHwTestClicked() {
         String ss = GpsMnlSetting.getMnlProp(GpsMnlSetting.KEY_TEST_MODE,
@@ -2246,7 +2378,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Invoked when GPS Jamming Scan test button clicked
+     * Invoked when GPS Jamming Scan test button clicked.
      */
     private void onGpsJammingScanClicked() {
         if (0 == mEtGpsJammingTimes.getText().length()) {
@@ -2267,7 +2399,7 @@ public class YgpsActivity extends TabActivity {
     }
 
     /**
-     * Refresh button status
+     * Refresh button status.
      *
      * @param bEnable
      *            Set button status
@@ -2287,10 +2419,12 @@ public class YgpsActivity extends TabActivity {
             case HANDLE_COUNTER:
                 if (!mFirstFix) {
                     mTtffValue += COUNT_PRECISION;
+                    Log.v("@M_" + TAG, "mTtffValue in handle is " + mTtffValue);
                     TextView tvTtff = (TextView) findViewById(R.id.tv_ttff);
 //                    tvTtff.setText(mTtffValue
 //                            + getString(R.string.time_unit_ms));
                     tvTtff.setText(mTtffValue % 1000 == 0 ? "Counting" : "");
+                    Log.v("@M_" + TAG, "tvTtff.setText");
                     this.sendEmptyMessageDelayed(HANDLE_COUNTER,
                             COUNT_PRECISION);
                 }
@@ -2305,7 +2439,7 @@ public class YgpsActivity extends TabActivity {
                                 Toast.LENGTH_LONG).show();
                     }
                     break;
-                case HANDLE_COMMAND_GETVERSION:
+               case HANDLE_COMMAND_GETVERSION:
                     if (response.startsWith("$PMTK705")) {
                         String[] strA = response.split(",");
                         if (strA.length >= RESPONSE_ARRAY_LENGTH) {
@@ -2318,7 +2452,7 @@ public class YgpsActivity extends TabActivity {
                                     mIsShowVersion = true;
                                 }
                             } else {
-                                Log.v(TAG, "txt_mnl_version is null");
+                                Log.v("@M_" + TAG, "txt_mnl_version is null");
                             }
                         }
                     }
@@ -2330,7 +2464,7 @@ public class YgpsActivity extends TabActivity {
                 }
                 break;
             case HANDLE_CLEAR:
-                Log.v(TAG, "handleClear-msg");
+                Log.v("@M_" + TAG, "handleClear-msg");
                 setSatelliteStatus(null);
                 clearLayout();
                 break;
@@ -2343,15 +2477,16 @@ public class YgpsActivity extends TabActivity {
                 sendEmptyMessageDelayed(HANDLE_CHECK_SATEREPORT, ONE_SECOND);
                 break;
             case HANDLE_ENABLE_BUTTON:
-                Log.v(TAG, "handleEnableButton-msg");
+                Log.v("@M_" + TAG, "handleEnableButton-msg");
                 enableBtns(true); // avoid continue press button
                 break;
             case HANDLE_REMOVE_UPDATE:
-                Log.v(TAG, "removeUpdates-msg");
+                Log.v("@M_" + TAG, "removeUpdates-msg");
                 removeNmeaParser();
                 //mLocationManager.removeUpdates(mLocListener);
                 mFirstFix = false;
                 mTtffValue = 0;
+                mNmeaFixed = false;
                 mShowFirstFixLocate = true;
                 setSatelliteStatus(null);
                 clearLayout();
@@ -2360,7 +2495,7 @@ public class YgpsActivity extends TabActivity {
                 }
                 break;
             case HANDLE_DELETE_DATA:
-                Log.v(TAG, "delete_aiding_data-msg");
+                Log.v("@M_" + TAG, "delete_aiding_data-msg");
                 Bundle b = msg.getData();
                 mLocationManager.sendExtraCommand(LocationManager.GPS_PROVIDER,
                     "delete_aiding_data", b);
@@ -2369,7 +2504,8 @@ public class YgpsActivity extends TabActivity {
                 mLocationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
                 mNmeaParser.addSVUpdateListener(mNmeaUpdateListener);
-                Log.v(TAG, "requestLocationUpdates-msg");
+                mRestarting = false;
+                Log.v("@M_" + TAG, "requestLocationUpdates-msg");
                 break;
             default:
                 break;
@@ -2378,18 +2514,22 @@ public class YgpsActivity extends TabActivity {
         }
     };
 
+    /**
+     * Class for controlling wakelock.
+     *
+     */
     class YgpsWakeLock {
         private PowerManager.WakeLock mScreenWakeLock = null;
         private PowerManager.WakeLock mCpuWakeLock = null;
 
         /**
-         * Acquire CPU wake lock
+         * Acquire CPU wake lock.
          *
          * @param context
          *            Getting lock context
          */
         void acquireCpuWakeLock(Context context) {
-            Log.v(TAG, "Acquiring cpu wake lock");
+            Log.v("@M_" + TAG, "Acquiring cpu wake lock");
             if (mCpuWakeLock != null) {
                 return;
             }
@@ -2404,13 +2544,13 @@ public class YgpsActivity extends TabActivity {
         }
 
         /**
-         * Acquire screen wake lock
+         * Acquire screen wake lock.
          *
          * @param context
          *            Getting lock context
          */
         void acquireScreenWakeLock(Context context) {
-            Log.v(TAG, "Acquiring screen wake lock");
+            Log.v("@M_" + TAG, "Acquiring screen wake lock");
             if (mScreenWakeLock != null) {
                 return;
             }
@@ -2425,10 +2565,10 @@ public class YgpsActivity extends TabActivity {
         }
 
         /**
-         * Release wake locks
+         * Release wake locks.
          */
         void releaseScreenWakeLock() {
-            Log.v(TAG, "Releasing wake lock");
+            Log.v("@M_" + TAG, "Releasing wake lock");
 
             if (mScreenWakeLock != null) {
                 mScreenWakeLock.release();
@@ -2437,7 +2577,7 @@ public class YgpsActivity extends TabActivity {
         }
 
         void releaseCpuWakeLock() {
-            Log.v(TAG, "Releasing cpu wake lock");
+            Log.v("@M_" + TAG, "Releasing cpu wake lock");
             if (mCpuWakeLock != null) {
                 mCpuWakeLock.release();
                 mCpuWakeLock = null;

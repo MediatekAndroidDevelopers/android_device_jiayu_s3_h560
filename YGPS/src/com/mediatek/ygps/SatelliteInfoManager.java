@@ -40,19 +40,25 @@ import java.util.List;
 
 
 
+/**
+ * Class for satellites list information management.
+ *
+ */
 public class SatelliteInfoManager {
 
-    private static final String TAG = "SatelliteInfoManager";
     public static final int PRN_ANY = -1;
     public static final int PRN_ALL = -2;
 
     List<SatelliteInfo> mSatelInfoList;
 
+    /**
+     * Construction function.
+     */
     public SatelliteInfoManager() {
         mSatelInfoList = new ArrayList<SatelliteInfo>();
     }
 
-    public void updateSatelliteInfo(SatelliteInfoAdapter adapter) {
+    void updateSatelliteInfo(NmeaSatelliteAdapter adapter) {
         if (mSatelInfoList != null) {
             mSatelInfoList.clear();
         } else {
@@ -67,15 +73,16 @@ public class SatelliteInfoManager {
         return mSatelInfoList;
     }
 
-    public SatelliteInfo getSatelliteInfo(int prn) {
+    SatelliteInfo getSatelliteInfo(int prn) {
         for (SatelliteInfo si : mSatelInfoList) {
-            if (si.prn == prn) {
+            if (si.mPrn == prn) {
                 return si;
             }
         }
         return null;
     }
 
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("{Satellite Count:").append(mSatelInfoList.size());
@@ -86,28 +93,28 @@ public class SatelliteInfoManager {
         return builder.toString();
     }
 
-    public void clearSatelInfos() {
+    void clearSatelInfos() {
         mSatelInfoList.clear();
     }
 
-    public boolean isUsedInFix(int prn) {
+    boolean isUsedInFix(int prn) {
         boolean result = false;
         if (prn == PRN_ALL && mSatelInfoList.size() > 0) {
             result = true;
         }
         for (SatelliteInfo si : mSatelInfoList) {
             if (prn == PRN_ALL) {
-                if (!si.usedInFix) {
+                if (!si.mUsedInFix) {
                     result = false;
                     break;
                 }
             } else if (prn == PRN_ANY) {
-                if (si.usedInFix) {
+                if (si.mUsedInFix) {
                     result = true;
                     break;
                 }
-            } else if (prn == si.prn) {
-                result = si.usedInFix;
+            } else if (prn == si.mPrn) {
+                result = si.mUsedInFix;
                 break;
             }
         }
