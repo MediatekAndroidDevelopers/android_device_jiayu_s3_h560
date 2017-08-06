@@ -8,7 +8,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="23" />
+        android:targetSdkVersion="25" />
     
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
@@ -76,6 +76,7 @@
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
 
     <application android:label="@string/app_name" 
+    android:icon="@drawable/icon"
 	android:theme="@android:style/Theme.Holo">
         <activity
             android:name=".EngineerMode"
@@ -1001,7 +1002,7 @@
             android:name=".modemdebug.ModemDebug"
             android:label="@string/modem_reset_debug"
             android:screenOrientation="portrait" >
-        </activity> 
+        </activity>
 
 	    <!-- <receiver
             android:name=".wifi.WifiStateReceiver"
