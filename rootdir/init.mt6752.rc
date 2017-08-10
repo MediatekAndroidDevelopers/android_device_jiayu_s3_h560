@@ -76,6 +76,18 @@ on post-fs
     chmod 0660 /dev/stpgps
     chown gps gps /dev/stpgps
 
+    #change permission for engineer mode
+    chown radio system /proc/clkmgr/pll_test
+    chown radio system /proc/clkmgr/pll_fsel
+    chmod 0664 /proc/clkmgr/pll_test
+    chmod 0664 /proc/clkmgr/pll_fsel
+    #change permission for engineer mode
+    chown radio system /proc/freqhopping/dramc
+    chown radio system /proc/freqhopping/dumpregs
+    chown radio system /proc/freqhopping/freqhopping_debug
+    chown radio system /proc/freqhopping/status
+    chown radio system /proc/freqhopping/userdef
+
 on post-fs-data
     mkdir /data/nvram 0771 system camera
     mkdir /data/nvram/APCFG 0770 system camera
