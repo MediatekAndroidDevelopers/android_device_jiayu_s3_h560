@@ -97,25 +97,9 @@ PRODUCT_COPY_FILES += \
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.kernel.android.checkjni=0 \
-    ro.telephony.ril_class=MT6753 \
+    ro.telephony.ril_class=MediaTekRIL \
     ro.telephony.ril.config=fakeiccid \
     ro.com.android.mobiledata=false \
-    ro.adb.secure=0 \
-    ro.secure=0 \
-    ro.allow.mock.location=0 \
-    ro.debuggable=1 \
-    persist.service.acm.enable=0 \
-    ro.config.low_ram=false
-
-PRODUCT_PROPERTY_OVERRIDES += \
-  service.adb.root=1 \
-  persist.service.adb.enable=1 \
-  persist.service.debuggable=1 \
-  persist.sys.root_access=0 \
-  persist.sys.usb.config=mtp,adb
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	persist.sys.usb.config=mtp
 
 
 # Power
@@ -150,16 +134,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.kernel.android.checkjni=0
-
-#Fingerprint HAL
-PRODUCT_PACKAGES += \
-    fingerprintd
-
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.fingerprint.xml:system/etc/permissions/android.hardware.fingerprint.xml
-
-PRODUCT_PACKAGES += \
-    fingerprint.default
 
 PRODUCT_PACKAGES += \
     charger \
