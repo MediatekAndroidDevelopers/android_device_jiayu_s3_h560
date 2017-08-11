@@ -169,6 +169,10 @@ ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
 ADDITIONAL_DEFAULT_PROPERTIES += persist.service.adb.enable=1
 
 
+PRODUCT_PACKAGES += \
+    fs_config_files
+
+
 # Add for ANT+
 ifeq ($(strip $(MTK_ANT_SUPPORT)), yes)
 
