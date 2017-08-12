@@ -35,21 +35,26 @@
 
 package com.mediatek.ygps;
 
+/**
+ * A class for satellite information.
+ *
+ */
 public class SatelliteInfo {
-    int prn;
-    float snr;
-    float elevation;
-    float azimuth;
-    boolean usedInFix;
-    int color;
+    int mPrn;
+    float mSnr;
+    float mElevation;
+    float mAzimuth;
+    boolean mUsedInFix;
+    int mColor;
 
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("[").append(prn).append(", ");
-        builder.append(snr).append(", ");
-        builder.append(elevation).append(", ");
-        builder.append(azimuth).append(", ");
-        builder.append(usedInFix).append("]");
+        builder.append("[").append(mPrn).append(", ");
+        builder.append(mSnr).append(", ");
+        builder.append(mElevation).append(", ");
+        builder.append(mAzimuth).append(", ");
+        builder.append(mUsedInFix).append("]");
         return builder.toString();
     }
 }

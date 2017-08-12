@@ -181,4 +181,7 @@
     <string name="toast_autotestlog_save_at">AutoTest log saved at %1$s</string>
     <string name="title_clock_type">Clock type</string>
     <string name="title_clock_buffer">Clock buffer</string>
+    <string name="gps_epo">Undried</string>
+    <string name="enable_gps_epo">Enable EPO [Need Restart]</string>
+    <string name="disable_gps_epo">Disable EPO [Need Restart]</string>
 </resources>

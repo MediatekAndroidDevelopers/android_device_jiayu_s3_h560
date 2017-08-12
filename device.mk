@@ -45,17 +45,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
      libccci_util
 
-# Audio
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/audio/audio_device.xml:system/etc/audio_device.xml \
-    $(LOCAL_PATH)/configs/audio/audio_policy_configuration.xml:system/etc/audio_policy_configuration.xml \
-    $(LOCAL_PATH)/configs/audio/a2dp_audio_policy_configuration.xml:/system/etc/a2dp_audio_policy_configuration.xml
-
 # Media
 PRODUCT_COPY_FILES += \
         $(LOCAL_PATH)/camera/camerasize.xml:system/etc/camerasize.xml \
-	$(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
-	$(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
 
 # Ramdisk
 PRODUCT_COPY_FILES += \
@@ -95,9 +87,6 @@ PRODUCT_PACKAGES += \
 # NFC
 PRODUCT_PACKAGES += \
     com.android.nfc_extras \
-    libmtknfc_dynamic_load_jni \
-    libnfc_mt6605_jni \
-    Nfc \
     Tag
 
 PRODUCT_COPY_FILES += \
@@ -113,21 +102,96 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.kernel.android.checkjni=0 \
-    ro.telephony.ril_class=MT6753 \
+    ro.telephony.ril_class=MediaTekRIL \
     ro.telephony.ril.config=fakeiccid \
-    ro.com.android.mobiledata=false
+    ro.com.android.mobiledata=false \
 
-PRODUCT_PACKAGES += \
-    fs_config_files
 
 # Power
 PRODUCT_PACKAGES += \
     power.default \
     power.mt6752
 
+# Filesystem management tools
+PRODUCT_PACKAGES += \
+    e2fsck \
+    fibmap.f2fs \
+    fsck.f2fs \
+    mkfs.f2fs \
+    make_ext4fs \
+    resize2fs \
+    setup_fs \
+    mount.exfat \
+    fsck.exfat \
+    mkfs.exfat \
+    fsck.ntfs \
+    mkfs.ntfs \
+    mount.ntfs
+
+# Storage
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.sys.sdcardfs=true
+
+# Media
+PRODUCT_PROPERTY_OVERRIDES += \
+    media.stagefright.legacyencoder=0
+ 
+# RIL
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.kernel.android.checkjni=0
+
+PRODUCT_PACKAGES += \
+    charger \
+    charger_res_images \
+    libnl_2 \
+    libion
+
 # xlog
 PRODUCT_PACKAGES += \
     libxlog 
+
+# IO Scheduler
+PRODUCT_PROPERTY_OVERRIDES += \
+    sys.io.scheduler=zen
+
+# Properties
+	PRODUCT_PROPERTY_OVERRIDES += \
+	    ro.sys.fw.dex2oat_thread_count=4
+
+#Dex2oat Limits
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.boot-dex2oat-threads=8 \
+    dalvik.vm.dex2oat-threads=6 \
+    dalvik.vm.image-dex2oat-threads=8
+
+ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=0
+ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
+ADDITIONAL_DEFAULT_PROPERTIES += persist.service.adb.enable=1
+
+
+PRODUCT_PACKAGES += \
+    fs_config_files
+
+
+# Add for ANT+
+ifeq ($(strip $(MTK_ANT_SUPPORT)), yes)
+
+BOARD_ANT_WIRELESS_DEVICE :="vfs-prerelease"
+
+      PRODUCT_PACKAGES += com.dsi.ant.antradio_library \
+                          AntHalService \
+                          ANT_RAM_CODE_E1.BIN \
+                          ANT_RAM_CODE_E2.BIN
+                          
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/ANT/prebuild/libantradio32.so:system/lib/libantradio.so \
+    $(LOCAL_PATH)/ANT/prebuild/libantradio64.so:system/lib64/libantradio.so \
+    $(LOCAL_PATH)/ANT/prebuild/antradio_app:system/xbin/antradio_app
+
+PRODUCT_COPY_FILES += \
+    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:system/etc/permissions/com.dsi.ant.antradio_library.xml
+
+endif
 
 # Dalvik/HWUI
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)

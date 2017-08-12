@@ -35,8 +35,6 @@
 
 package com.mediatek.ygps;
 
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -45,18 +43,28 @@ import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
-
 import android.util.Log;
 
+import java.util.List;
+
+
+/**
+ * The view to show satellites information in circle view.
+ *
+ */
 public class SatelLocationView extends SatelliteBaseView {
 
+    /**
+     * A class to record coordinator for a point.
+     *
+     */
     private static class Point {
-        float x;
-        float y;
+        float mCoX;
+        float mCoY;
         Point() {}
         Point(float x1, float y1) {
-            x = x1;
-            y = y1;
+            mCoX = x1;
+            mCoY = y1;
         }
     }
 
@@ -74,14 +82,30 @@ public class SatelLocationView extends SatelliteBaseView {
     private Bitmap mUsedInFixBmp = null;
     private Bitmap mUnusedInFixBmp = null;
 
+    /**
+     * Constructor function.
+     * @param context Context for view running in
+     */
     public SatelLocationView(Context context) {
         this(context, null, 0);
     }
 
+    /**
+     * Constructor function.
+     * @param context Context for view running in
+     * @param attrs The attributes of the XML tag that is inflating the view
+     */
     public SatelLocationView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
+    /**
+     * Constructor function.
+     * @param context Context for view running in
+     * @param attrs The attributes of the XML tag that is inflating the view
+     * @param defStyle An attribute in the current theme that contains a reference to
+     *          a style resource that supplies default values for the view
+     */
     public SatelLocationView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         onCreateView();
@@ -119,11 +143,11 @@ public class SatelLocationView extends SatelliteBaseView {
 
     private Point computeViewPostion(SatelliteInfo si, Point origin, float baseRadius) {
         Point targPt = new Point();
-        float project = baseRadius * (RIGHT_ANGLE - si.elevation) / RIGHT_ANGLE;
-        float alpha = si.azimuth;
+        float project = baseRadius * (RIGHT_ANGLE - si.mElevation) / RIGHT_ANGLE;
+        float alpha = si.mAzimuth;
         float radian = (float) (alpha * Math.PI / STRAIGHT_ANGLE);
-        targPt.x = origin.x + (float) (project * Math.sin(radian));
-        targPt.y = origin.y - (float) (project * Math.cos(radian));
+        targPt.mCoX = origin.mCoX + (float) (project * Math.sin(radian));
+        targPt.mCoY = origin.mCoY - (float) (project * Math.cos(radian));
         return targPt;
     }
 
@@ -133,48 +157,53 @@ public class SatelLocationView extends SatelliteBaseView {
         float viewWidth = getWidth();
         float viewHeight = getHeight();
         Point origin = new Point(viewWidth / 2, viewHeight / 2);
-        int maxRadius = (int) Math.floor(origin.y - MARGIN);
+        int maxRadius = (int) Math.floor(origin.mCoY - MARGIN);
 
         canvas.drawPaint(mBgPaint);
         float[] radiusArr = {maxRadius >> 2, maxRadius >> 1, maxRadius * PERCENT_75, maxRadius};
         for (int i = 0; i < radiusArr.length; i++) {
-            canvas.drawCircle(origin.x, origin.y, radiusArr[i], mGraphicPaint);
+            canvas.drawCircle(origin.mCoX, origin.mCoY, radiusArr[i], mGraphicPaint);
         }
-        canvas.drawLine(origin.x - maxRadius, origin.y, origin.x - (maxRadius >> 2), origin.y, mGraphicPaint);
-        canvas.drawLine(origin.x + maxRadius, origin.y, origin.x + (maxRadius >> 2), origin.y, mGraphicPaint);
-        canvas.drawLine(origin.x, origin.y - maxRadius, origin.x, origin.y - (maxRadius >> 2), mGraphicPaint);
-        canvas.drawLine(origin.x, origin.y + maxRadius, origin.x, origin.y + (maxRadius >> 2), mGraphicPaint);
+        canvas.drawLine(origin.mCoX - maxRadius, origin.mCoY, origin.mCoX - (maxRadius >> 2),
+                origin.mCoY, mGraphicPaint);
+        canvas.drawLine(origin.mCoX + maxRadius, origin.mCoY, origin.mCoX + (maxRadius >> 2),
+                origin.mCoY, mGraphicPaint);
+        canvas.drawLine(origin.mCoX, origin.mCoY - maxRadius, origin.mCoX,
+                origin.mCoY - (maxRadius >> 2), mGraphicPaint);
+        canvas.drawLine(origin.mCoX, origin.mCoY + maxRadius, origin.mCoX,
+                origin.mCoY + (maxRadius >> 2), mGraphicPaint);
 
         SatelliteInfoManager simgr = getSatelliteInfoManager();
         if (simgr != null) {
             List<SatelliteInfo> siList = simgr.getSatelInfoList();
             for (SatelliteInfo si : siList) {
-                //Log.d(TAG, "handle " + si.toString());
-                if (si.prn <= 0 || si.elevation <= 0
-                        || si.azimuth < 0) {
-                    Log.d(TAG, "invalid parameter; discard drawing; prn:" + si.prn
-                            + " elevation:" + si.elevation + " azimuth:" + si.azimuth);
+                //Xlog.d(TAG, "handle " + si.toString());
+                if (si.mPrn <= 0 || si.mElevation <= 0
+                        || si.mAzimuth < 0) {
+                    Log.d("@M_" + TAG, "invalid parameter; discard drawing; prn:" + si.mPrn
+                            + " elevation:" + si.mElevation + " azimuth:" + si.mAzimuth);
                     continue;
                 }
                 Point targPt = computeViewPostion(si, origin, maxRadius);
                 Bitmap drawnBmp = null;
-                if (!simgr.isUsedInFix(SatelliteInfoManager.PRN_ANY) || si.snr <= 0) {
+                if (!simgr.isUsedInFix(SatelliteInfoManager.PRN_ANY) || si.mSnr <= 0) {
                     drawnBmp = mUnfixedBmp;
                 } else {
-                    if (simgr.isUsedInFix(si.prn)) {
+                    if (simgr.isUsedInFix(si.mPrn)) {
                         drawnBmp = mUsedInFixBmp;
                     } else {
                         drawnBmp = mUnusedInFixBmp;
                     }
                 }
                 int bmpHeight = drawnBmp.getHeight();
-                float targX = targPt.x - bmpHeight / 2.0f;
-                float targY = targPt.y - bmpHeight / 2.0f;
-                //Log.d(TAG, "targX:" + targX + " targY:" + targY);
+                float targX = targPt.mCoX - bmpHeight / 2.0f;
+                float targY = targPt.mCoY - bmpHeight / 2.0f;
+                //Xlog.d(TAG, "targX:" + targX + " targY:" + targY);
                 canvas.drawBitmap(drawnBmp, targX, targY, mGraphicPaint);
-                mCircleBorderPaint.setColor(si.color);
-                canvas.drawCircle(targPt.x, targPt.y, bmpHeight / 2.0f - 1.5f, mCircleBorderPaint);
-                canvas.drawText(String.valueOf(si.prn), targX, targY, mTextPaint);
+                mCircleBorderPaint.setColor(si.mColor);
+                canvas.drawCircle(targPt.mCoX, targPt.mCoY, bmpHeight / 2.0f - 1.5f,
+                        mCircleBorderPaint);
+                canvas.drawText(String.valueOf(si.mPrn), targX, targY, mTextPaint);
             }
 
         }

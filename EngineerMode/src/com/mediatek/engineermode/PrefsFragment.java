@@ -137,8 +137,6 @@ public class PrefsFragment extends PreferenceFragment {
             removePreference(screen, "dualtalk_bandmode");
         }
 
-        removePreference(screen, "audio");
-
         // Duplicate with Network Selecting, remove them
         removePreference(screen, "digital_standard");
 
@@ -236,8 +234,6 @@ public class PrefsFragment extends PreferenceFragment {
         if (!ChipSupport.isFeatureSupported(ChipSupport.MTK_BT_SUPPORT)) {
             removePreference(screen, "bluetooth");
         }
-
-        removePreference(screen, "audio");
 
         // wifi is not ready if MTK_WLAN_SUPPORT isn't defined
         if (!ChipSupport.isFeatureSupported(ChipSupport.MTK_WLAN_SUPPORT)) {
@@ -386,7 +382,9 @@ public class PrefsFragment extends PreferenceFragment {
             Log.i("@M_" + TAG, "Not show entry for DEVREG.");
         }
 
-         removePreference(screen, "wfd_settings");
+        if (!FeatureSupport.isSupported(FeatureSupport.FK_WFD_SUPPORT)) {
+            removePreference(screen, "wfd_settings");
+        }
 
         if (!FeatureSupport.isSupported(FeatureSupport.FK_LTE_DC_SUPPORT)) {
             removePreference(screen, "lte_config");

@@ -1,37 +1,49 @@
 package com.mediatek.ygps;
 
-import java.util.HashMap;
-import java.util.ArrayList;
-import android.util.Log;
-import android.os.Handler;
-import android.os.Message;
-
-
 import android.location.Location;
 import android.location.LocationManager;
+//import android.os.Handler;
+//import android.os.Message;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 /**
  * Parser class for parsing NMEA sentences.
  */
 public class NmeaParser {
-    private final static int SV_UPDATE        = 0;
-    private static final String DELIMITER = ",";
-    private final String[] mTalker = {"GP", "GL", "GA", "BD"};
-    private static NmeaParser mNmeaParser = null;
+//    private final static int SV_UPDATE        = 0;
+    private final String[] mTalker = {"$GP", "$GL", "$GA", "$BD"};
+    private static final String TALKER_NOT_SUPPORT = "none";
+    private static NmeaParser sNmeaParser = null;
     private int mSatelliteCount;
     private HashMap<String, ArrayList> mSatelInfoList;
     private HashMap<String, SVExtraInfro> mExtraInfoList;
     private HashMap<String, Location> mLocRecord;
-    private boolean mbUpdated = false;
-    private String mCurrentTalker = "none";
-    private final ArrayList<NmeaUpdateViewListener> mListener = new ArrayList<NmeaUpdateViewListener>();
-    private HashMap<String, ArrayList<Integer>> mUsedFixIdMapList = new HashMap<String, ArrayList<Integer>>();
+    private String mCurrentTalker = TALKER_NOT_SUPPORT;
+    private final ArrayList<NmeaUpdateViewListener> mListener =
+            new ArrayList<NmeaUpdateViewListener>();
+    private HashMap<String, ArrayList<Integer>> mUsedFixIdMapList =
+            new HashMap<String, ArrayList<Integer>>();
+    private int mParseState = STATE_UNINIT;
+    private static final int STATE_UNINIT = -1;
+    private static final int STATE_PARSE_GGA = 1;
+    private static final int STATE_PARSE_GSA = 2;
+    private static final int STATE_PARSE_GSV = 3;
+    private static final int STATE_PARSE_RMC = 4;
+    private static final int STATE_PARSE_OTHERS = 5;
 
+    /**
+     * Get single instance of NmeaParser.
+     * @return A instance of the NmeaParser
+     */
     public static NmeaParser getNMEAParser() {
-        if (mNmeaParser == null) {
-            mNmeaParser = new NmeaParser();
+        if (sNmeaParser == null) {
+            sNmeaParser = new NmeaParser();
         }
-        return mNmeaParser;
+        return sNmeaParser;
     }
 
     private boolean isUsedInFix(int prn) {
@@ -86,13 +98,17 @@ public class NmeaParser {
         }
     }
 
-    /** Get satellite count */
+    /**
+     * Get satellite count.
+     * @return Total number of the satellites
+     */
     public synchronized int getSatelliteCount() {
         return mSatelliteCount;
     }
 
     /**
-     * Get Current All SV infomation.
+     * Get Current All SV information.
+     * @return A list of all satellites
      */
     public ArrayList<SatelliteInfo> getSatelliteList() {
         ArrayList<SatelliteInfo> mList = new ArrayList<SatelliteInfo>();
@@ -111,15 +127,6 @@ public class NmeaParser {
         }
     }
 
-    public synchronized boolean isViewNeedUpdated() {
-        boolean result = mbUpdated;
-        if (mbUpdated) {
-            mbUpdated ^= true;
-        }
-        return result;
-    }
-
-    /** Get satellite */
     private ArrayList<SatelliteInfo> getSatelliteList(String talker) {
         ArrayList<SatelliteInfo> svlist = null;
         if (mSatelInfoList.containsKey(talker)) {
@@ -160,7 +167,7 @@ public class NmeaParser {
     }
 
     private String checkTalker(String record) {
-        String result = "none";
+        String result = TALKER_NOT_SUPPORT;
         for (String s :mTalker) {
             if (record.contains(s)) {
                 result = s;
@@ -186,45 +193,61 @@ public class NmeaParser {
     }
 
     private String removeFirstZero(String record) {
-        String result = record;
         int ind = 0;
-        while (record.charAt(ind++) == '0');
-        if (ind != 0) {
-            result = record.substring(--ind);
+        int size = record.length();
+        for (; ind < size ; ind++) {
+            if (record.charAt(ind) != '0') {
+                break;
+            }
         }
-        //log("ori:"+ record + " res:" + result);
-        return result;
+        return (ind < size) ? record.substring(ind) : "0";
     }
 
-
-    /** Parse GPS position */
+    /**
+     * Parse NMEA logs.
+     * @param record The NMEA log sentence to parse
+     */
     public synchronized void parse(String record) {
+        log("parse:" + record);
         mCurrentTalker = checkTalker(record);
+        /*
+         * only parse all GSV sentences, then notify user
+         */
+        if (mParseState == STATE_PARSE_GSV && !record.contains("GSV")) {
+//            sendMessage(SV_UPDATE);
+            reportSVupdate();
+        }
         if (record.contains("RMC")) {
+
+            mParseState = STATE_PARSE_RMC;
             try {
                 parseRMC(record);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 log("Exception in parseRMC()");
             }
         } else if (record.contains("GSA")) {
+            mParseState = STATE_PARSE_GSA;
             try {
                 parseGSA(record);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 log("Exception in parseGSA()" + e);
             }
         } else if (record.contains("GGA")) {
+            mParseState = STATE_PARSE_GGA;
             try {
                 parseGGA(record);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 log("Exception in parseGGA()" + e);
             }
         } else if (record.contains("GSV")) {
+            mParseState = STATE_PARSE_GSV;
             try {
                 parseGSV(record);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 log("Exception in parseGSV()" + e);
             }
         } else {
+            mParseState = STATE_PARSE_OTHERS;
             //log("undefined format");
         }
 
@@ -233,8 +256,7 @@ public class NmeaParser {
 
 
     /**
-     * <$GPRMC>
-     * Recommended minimum specific GPS/Transit data
+     * <$GPRMC> Recommended minimum specific GPS/Transit data.
      *
      *      eg. $GPRMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,ddmmyy,x.x,a*hh
      *      1    = UTC of position fix
@@ -252,6 +274,7 @@ public class NmeaParser {
      *
      */
     private synchronized void parseRMC(String record) {
+        log("parseRMC:" + record);
 
         String[] values = split(record);
 
@@ -301,7 +324,7 @@ public class NmeaParser {
         if (courseString.length() > 0) {
             try {
                 course = (int) parseDouble(courseString);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 course = 180;
             }
         }
@@ -334,8 +357,7 @@ public class NmeaParser {
     }
 
     /**
-     * <$GPGSA>
-     * GPS DOP and active satellites
+     * <$GPGSA> GPS DOP and active satellites.
      *
      *      eg1. $GPGSA,A,3,,,,,,16,18,,22,24,,,3.6,2.1,2.2*3C
      *      1    = Mode:
@@ -353,6 +375,7 @@ public class NmeaParser {
      * @param record
      */
     private synchronized void parseGSA(String record) {
+        log("parseGSA:" + record);
         String[] values = split(record);
         //String mode=values[1];
         SVExtraInfro mInfo = getTalkerExtra(mCurrentTalker);
@@ -363,9 +386,8 @@ public class NmeaParser {
         clearSatelliteList(mCurrentTalker);
                 return;
             }
-            int[] svid = new int[13];
             mInfo.mfixtype = values[2];
-            ArrayList<SatelliteInfo> SVlist = getSatelliteList(mCurrentTalker);
+            getSatelliteList(mCurrentTalker);
             clearSatelliteList(mCurrentTalker);
             for (int i = 2; i < 15; i++) {
                 int prn = parseInt(values[i]);
@@ -384,8 +406,7 @@ public class NmeaParser {
     }
 
     /**
-     * <$GGA>
-     * Global Positioning System Fix Data
+     * <$GGA> Global Positioning System Fix Data.
      *      eg3. $GPGGA,hhmmss.ss,llll.ll,a,yyyyy.yy,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh
      *      1    = UTC of Position
      *      2    = Latitude
@@ -405,9 +426,11 @@ public class NmeaParser {
      *      15   = Checksum
      */
     private synchronized void parseGGA(String record) {
+        log("parseGGA:" + record);
         String[] values = split(record);
+        clearSatelliteList();
         Location mInfo = getTalkerLocation(mCurrentTalker);
-        long utcTime = (new Double(parseDouble(values[1]))).longValue();
+        long utcTime = (Double.valueOf(parseDouble(values[1]))).longValue();
         double lat = parseDouble(values[2]);
         double longt = parseDouble(values[4]);
         double alti = parseDouble(values[9]);
@@ -427,12 +450,8 @@ public class NmeaParser {
         }
     }
 
-
-
-
     /**
-     * <$GPGSV>
-     * GPS Satellites in view
+     * <$GPGSV>: GPS Satellites in view.
      *
      *      eg:$GPGSV,1,1,13,02,02,213,,03,-3,000,,11,00,121,,14,13,172,05*67
      *      1    = Total number of messages of this type in this cycle, A: clean all SV
@@ -448,11 +467,12 @@ public class NmeaParser {
      *
      */
     private synchronized void parseGSV(String record) {
+        log("parseGSV:" + record);
         String[] values = split(record);
-        ArrayList<SatelliteInfo> SVlist = getSatelliteList(mCurrentTalker);
+        ArrayList<SatelliteInfo> svList = getSatelliteList(mCurrentTalker);
 
-        if (SVlist == null) {
-            log("parseGSV get SVlist Error" + SVlist + " Current Talker:" + mCurrentTalker);
+        if (svList == null) {
+            log("parseGSV get SVlist Error" + svList + " Current Talker:" + mCurrentTalker);
             return;
         }
 
@@ -461,8 +481,8 @@ public class NmeaParser {
 
         if (mTotalNum > 0 && mMsgInd == 1) {
             //clear all SV record
-            SVlist.clear();
-            mSatelInfoList.put(mCurrentTalker, SVlist);
+            svList.clear();
+            mSatelInfoList.put(mCurrentTalker, svList);
         }
 
         int index = 4;
@@ -480,22 +500,22 @@ public class NmeaParser {
             }
 
             if (satelliteNumber > 0) {
-                SatelliteInfo sat = new SatelliteInfo(satelliteNumber, checkTalkerColor(mCurrentTalker));
+                SatelliteInfo sat = new SatelliteInfo(satelliteNumber,
+                        checkTalkerColor(mCurrentTalker));
                 sat.mSnr = satelliteSnr;
                 sat.mElevation = elevation;
                 sat.mAzimuth = azimuth;
                 if (isUsedInFix(satelliteNumber)) {
                     sat.mUsedInFix = true;
                 }
-                SVlist.add(sat);
+                svList.add(sat);
             }
         }
 
         if (values[1].equals(values[2])) {
             //report location update
-            log("message SV_UPDATE : " + mCurrentTalker + " size:" + SVlist.size());
-            mSatelInfoList.put(mCurrentTalker, SVlist);
-            sendMessage(SV_UPDATE);
+            log("mSatelInfoList add svlist : " + mCurrentTalker + " size:" + svList.size());
+            mSatelInfoList.put(mCurrentTalker, svList);
         }
     }
 
@@ -504,80 +524,54 @@ public class NmeaParser {
     }
 
 
-    public String[] split(String str) {
+    private String[] split(String str) {
         String[] result = null;
-        try {
-            String delims = "[,]";
-            result = str.split(delims);
-        } catch (Exception e) {
-            Log.d("nmeaParser", "split:" + e);
-        }
+        String delims = "[,]";
+        result = str.split(delims);
         return result;
     }
 
 
 
-    public float parseFloat(String str) {
+    private float parseFloat(String str) {
         float d = 0;
         if (str.equals("")) {
             return d;
         }
         String mStr = removeFirstZero(str);
-        try
-        {
+        try {
             d = Float.parseFloat(mStr);
-        }
-        catch (Exception e) {
+        } catch (NumberFormatException e) {
             Log.d("nmeaParser", "parseFloat:" + e);
         }
         return d;
     }
 
 
-    public double parseDouble(String str) {
+    private double parseDouble(String str) {
         double d = 0;
         if (str.equals("")) {
             return d;
         }
         String mStr = removeFirstZero(str);
-        try
-        {
+        try {
             d = Double.parseDouble(mStr);
-        }
-        catch (Exception e) {
+        } catch (NumberFormatException e) {
             Log.d("nmeaParser", "parseDouble:" + e);
         }
         return d;
     }
 
-    public int parseInt(String str) {
+    private int parseInt(String str) {
         int d = 0;
         if (str.equals("")) {
             return d;
         }
         String mStr = removeFirstZero(str);
-        try
-        {
+        try {
             d = Integer.valueOf(mStr);
-        }
-        catch (Exception e) {
+        } catch (NumberFormatException  e) {
             Log.d("nmeaParser", "parseDouble:" + e);
-        }
-        return d;
-    }
-
-    public long parseLong(String str) {
-        long d = 0;
-        if (str.equals("")) {
-            return d;
-        }
-        String mStr = removeFirstZero(str);
-        try
-        {
-            d = Long.parseLong(mStr);
-        }
-        catch (Exception e) {
-            Log.d("nmeaParser", "parseLong:" + e);
         }
         return d;
     }
@@ -592,19 +586,27 @@ public class NmeaParser {
         }
     }
 
+    /**
+     * Add listener to update satellites information.
+     * @param l The listener to add to the list
+     */
     public void addSVUpdateListener(NmeaUpdateViewListener l) {
         synchronized (mListener) {
             mListener.add(l);
         }
     }
 
+    /**
+     * Remove listener to update satellites information.
+     * @param l The listener to remove from list
+     */
     public void removeSVUpdateListener(NmeaUpdateViewListener l) {
         synchronized (mListener) {
             mListener.remove(l);
         }
     }
 
-    private void sendMessage(int what) {
+/*    private void sendMessage(int what) {
         Message m = new Message();
         m.what = what;
         mHandler.sendMessage(m);
@@ -612,7 +614,7 @@ public class NmeaParser {
 
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
-            switch(msg.what) {
+            switch (msg.what) {
             case SV_UPDATE: //timer update
                 reportSVupdate();
                 break;
@@ -621,14 +623,25 @@ public class NmeaParser {
                 break;
             }
         }
-    };
+    };*/
 
 
+    /**
+     * Interface for satellites information update notification.
+     *
+     */
     public interface NmeaUpdateViewListener {
+        /**
+         * Callback for satellites information update notification.
+         */
         public void onViewupdateNotify();
     }
 
-    public class SVExtraInfro {
+    /**
+     * Class to hold data for satellites extra information.
+     *
+     */
+    class SVExtraInfro {
 
         public String mPdop = "";
         public String mHdop = "";
@@ -640,7 +653,11 @@ public class NmeaParser {
     }
 
 
-    public class SatelliteInfo {
+    /**
+     * Class to hold data for satellites basic information.
+     *
+     */
+    class SatelliteInfo {
 
         int mPrn;
         float mSnr = 0;

@@ -39,7 +39,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * Copy right information activity
+ * Copy right information activity.
  *
  * @author mtk54046
  */

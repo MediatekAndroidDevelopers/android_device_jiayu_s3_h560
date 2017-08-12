@@ -35,8 +35,6 @@
 
 package com.mediatek.ygps;
 
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -44,9 +42,14 @@ import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 
+import java.util.List;
+
+/**
+ * View for show satellites signal information.
+ *
+ */
 public class SatelSignalChartView extends SatelliteBaseView {
 
-    private static final String TAG = "SatelSignalChartView";
     private static final float PERCENT_80 = 0.8f;
     private static final float PERCENT_75 = 0.75f;
     private static final float PERCENT_50 = 0.5f;
@@ -62,14 +65,30 @@ public class SatelSignalChartView extends SatelliteBaseView {
     private Paint mTextPaint;
     private Paint mBgPaint;
 
+    /**
+     * Constructor function.
+     * @param context Context for view running in
+     */
     public SatelSignalChartView(Context context) {
         this(context, null, 0);
     }
 
+    /**
+     * Constructor function.
+     * @param context Context for view running in
+     * @param attrs The attributes of the XML tag that is inflating the view
+     */
     public SatelSignalChartView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
+    /**
+     * Constructor function.
+     * @param context Context for view running in
+     * @param attrs The attributes of the XML tag that is inflating the view
+     * @param defStyle An attribute in the current theme that contains a reference to
+     *          a style resource that supplies default values for the view
+     */
     public SatelSignalChartView(Context context, AttributeSet attrs,
             int defStyle) {
         super(context, attrs, defStyle);
@@ -129,16 +148,17 @@ public class SatelSignalChartView extends SatelliteBaseView {
             float margin = (bgRectWidth - barWidth) / 2;
             for (int i = 0; i < stInfoList.size(); i++) {
                 SatelliteInfo si = stInfoList.get(i);
-                float barHeight = si.snr * rectRatio;
+                float barHeight = si.mSnr * rectRatio;
                 float left = i * bgRectWidth + margin;
                 float top = baseLineY - barHeight;
                 float center = left + bgRectWidth / 2;
                 canvas.drawRect(left, top, left + barWidth, baseLineY, getSigBarPaint(si, simgr));
-                mRectLinePaint.setColor(si.color);
+                mRectLinePaint.setColor(si.mColor);
                 canvas.drawRect(left, top, left + barWidth, baseLineY, mRectLinePaint);
                 float textOffset = bgRectWidth - barWidth;
-                canvas.drawText(String.valueOf(si.prn), center, baseLineY + textOffset + TEXT_OFFSET, mTextPaint);
-                String snrStr = String.format("%3.1f", si.snr);
+                canvas.drawText(String.valueOf(si.mPrn), center,
+                        baseLineY + textOffset + TEXT_OFFSET, mTextPaint);
+                String snrStr = String.format("%3.1f", si.mSnr);
                 canvas.drawText(snrStr, center, top - textOffset, mTextPaint);
             }
         }
@@ -149,7 +169,7 @@ public class SatelSignalChartView extends SatelliteBaseView {
             mRectPaint.setColor(getResources().getColor(R.color.bar_used));
             mRectPaint.setStyle(Paint.Style.STROKE);
         } else {
-            if (manager.isUsedInFix(info.prn)) {
+            if (manager.isUsedInFix(info.mPrn)) {
                 mRectPaint.setColor(getResources().getColor(R.color.bar_used));
                 mRectPaint.setStyle(Paint.Style.FILL);
             } else {

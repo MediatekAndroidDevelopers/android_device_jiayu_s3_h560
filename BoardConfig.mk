@@ -83,10 +83,16 @@ USE_CAMERA_STUB := true
 # Power and native tap-to-wake
 TARGET_POWERHAL_VARIANT := mtk-xen0n
 
+# Disable memcpy opt (for audio libraries)
+TARGET_CPU_MEMCPY_OPT_DISABLE := true
+
+# Fix video autoscaling on old OMX decoders
+TARGET_OMX_LEGACY_RESCALING:=true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH_MTK := true
-BOARD_BLUETOOTH_DOES_NOT_USE_RFKILL := true
+#BOARD_BLUETOOTH_DOES_NOT_USE_RFKILL := true
+BOARD_BLUETOOTH_BDROID_HCILP_INCLUDED := 0
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 BOARD_MEDIATEK_USES_GPS:=true
 # LightHAL
@@ -101,6 +107,12 @@ PRODUCT_PROPERTY_OVERRIDES += ro.telephony.sim.count=$(SIM_COUNT)
 
 #dt2w
 TARGET_TAP_TO_WAKE_NODE := /sys/devices/bus.2/11007000.I2C0/i2c-0/0-0020/gesture
+
+TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
+
+# Flags
+BOARD_GLOBAL_CFLAGS += -DNO_SECURE_DISCARD
+BOARD_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
 
 # Recovery
 BOARD_HAS_NO_SELECT_BUTTON := true
@@ -121,6 +133,12 @@ endif
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
 
+# Enable Minikin text layout engine (will be the default soon)
+USE_MINIKIN := true
+#MALLOC_IMPL := dlmalloc
+
+# Fonts
+EXTENDED_FONT_FOOTPRINT := true
 #dexpreopt
 WITH_DEXPREOPT := true
 WITH_DEXPREOPT_PIC := true
