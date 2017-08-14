@@ -166,10 +166,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.image-dex2oat-threads=8
 
 
-PRODUCT_PACKAGES += \
-    fs_config_files
-
-
 # Add for ANT+
 ifeq ($(strip $(MTK_ANT_SUPPORT)), yes)
 
