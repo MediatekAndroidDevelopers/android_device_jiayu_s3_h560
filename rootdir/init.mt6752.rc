@@ -9,10 +9,6 @@ on late-fs
     write /sys/block/mmcblk0/queue/read_ahead_kb 2048
     write /sys/block/mmcblk0/queue/nr_requests 256
 
-on early-init
-    # Turn off backlight on blank
-    write /sys/class/leds/lcd-backlight/trigger "backlight"
-
 on init
     export LD_PRELOAD "libxlog.so:libmtk_symbols.so"
 
@@ -28,6 +24,19 @@ on init
     chown root system /dev/kmsg
     chmod 0660 /dev/kmsg
 
+on charger
+    mkdir /dev/block/platform/mtk-msdc.0/by-name 0755 root system
+    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/logo /dev/block/platform/mtk-msdc.0/by-name/logo
+
+    mount ext4 /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/system /system ro wait
+    chmod 0666 /dev/kmsg
+    exec /system/bin/setprop sys.usb.config adb
+    start fuelgauged
+    start kpoc_charger
+    start servicemanager
+
+    # disable USB
+    write /sys/devices/platform/mt_usb/cmode 0
 
 on fs
     mount_all /fstab.mt6752
@@ -775,7 +784,5 @@ service spm_script /system/bin/spm_loader
     user root
     group root 
 
-service charger /sbin/healthd -c
+service kpoc_charger /system/bin/kpoc_charger
     class charger
-    critical
-    seclabel u:r:healthd:s0
