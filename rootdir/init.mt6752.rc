@@ -24,10 +24,9 @@ on init
     mkdir /protect_f 0771 system system
     mkdir /protect_s 0771 system system
     mkdir /persist   0771 system system
-    mkdir /protect_s/properties 0770 system system
+
     chown root system /dev/kmsg
     chmod 0660 /dev/kmsg
-
 
 on fs
     mount_all /fstab.mt6752
@@ -95,7 +94,7 @@ on post-fs-data
     mkdir /data/nvram/APCFG/APRDEB 0770 system camera
 
     restorecon_recursive /data/nvram
-    chown root:net_bt_stack /data/nvram/APCFG/APRDEB/BT_Addr
+
     # rfkill
     chmod 0660 /dev/rfkill
 
@@ -124,7 +123,7 @@ on post-fs-data
 
     # Mali 3D GPU driver
     chmod 666 /dev/mali0
-    
+
     # watch dog kicker
     write /proc/wdk "0 20 30"
 
@@ -334,8 +333,7 @@ on post-fs-data
     chown system system /sys/class/misc/m_glg_misc/glgdelay
     chown system system /sys/class/misc/m_glg_misc/glgbatch
     chown system system /sys/class/misc/m_glg_misc/glgflush
-    
-    
+
     # msensor
     chmod 0444 /sys/bus/platform/drivers/msensor/daemon
     chown system system /sys/bus/platform/drivers/msensor/daemon
@@ -410,21 +408,31 @@ on post-fs-data
     chown system media /dev/uibc
     chmod 0660 /dev/uibc
 
-    # Camera
+    #Camera
+    chmod 0660 /dev/camera-sysram
     chmod 0660 /dev/camera-isp
     chmod 0660 /dev/camera-fdvt
+    chmod 0660 /dev/camera-pipemgr
     chmod 0660 /dev/kd_camera_hw
     chmod 0660 /dev/kd_camera_flashlight
     chmod 0660 /dev/kd_camera_hw_bus2
     chmod 0660 /dev/FM50AF
+    chmod 0660 /dev/DW9714AF
+    chmod 0660 /dev/BU6424AF
+    chmod 0660 /dev/DW9718AF
     chmod 0660 /dev/CAM_CAL_DRV
 
+    chown system camera /dev/camera-sysram
     chown system camera /dev/camera-isp
     chown system camera /dev/camera-fdvt
+    chown system camera /dev/camera-pipemgr
     chown system camera /dev/kd_camera_hw
     chown system camera /dev/kd_camera_flashlight
     chown system camera /dev/kd_camera_hw_bus2
     chown system camera /dev/FM50AF
+    chown system camera /dev/DW9714AF
+    chown system camera /dev/BU6424AF
+    chown system camera /dev/DW9718AF
     chown system camera /dev/CAM_CAL_DRV
 
     # SMI
@@ -484,7 +492,7 @@ on post-fs-data
     # AGPS
     mkdir /data/agps_supl 0771 gps system
 
-    # Thermal	
+    # Thermal
     mkdir /data/.tp/ 0775 system system
 
     chmod 0660 /dev/ttyC2
@@ -672,7 +680,7 @@ service wpa_supplicant /system/bin/wpa_supplicant \
     disabled
     oneshot
 
-# For WiFi High Speed calibration		
+# For WiFi High Speed calibration
 service autokd /system/bin/autokd
     class core
     user system
@@ -753,12 +761,6 @@ service thermal_manager /system/bin/thermal_manager
     group system
     oneshot
 
-service fuelgauged /system/bin/fuelgauged
-    class main
-    user system
-    group system
-    
-    
 service wmt_loader /system/bin/wmt_loader
     class core
     user root
@@ -770,11 +772,7 @@ service 66xx_launcher /system/bin/6620_launcher -m 4 -p /system/etc/firmware/
     group system
     class core
 
-service spm_script /system/bin/spm_loader
-    class core
-    user root
-    group root 
-
+# Charger
 service charger /sbin/healthd -c
     class charger
     critical
