@@ -146,6 +146,12 @@ PRODUCT_PACKAGES += \
     libnl_2 \
     libion
 
+# LiveDisplay
+PRODUCT_PACKAGES += libjni_livedisplay
+
+# USB
+PRODUCT_PACKAGES += com.android.future.usb.accessory
+
 # xlog
 PRODUCT_PACKAGES += \
     libxlog 
