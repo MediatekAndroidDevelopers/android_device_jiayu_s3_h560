@@ -170,6 +170,23 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-threads=6 \
     dalvik.vm.image-dex2oat-threads=8
 
+# Force linking shim
+LINKER_FORCED_SHIM_LIBS := /system/lib/libmedia.so|libshim_snd.so:/system/lib64/libmedia.so|libshim_snd.so:/system/lib/liblog.so|libshim_xlog.so:/system/lib64/liblog.so|libshim_xlog.so:/system/lib/libui.so|libshim_ui.so:/system/lib64/libui.so|libshim_ui.so:/system/lib/libgui.so|libshim_gui.so:/system/lib64/libgui.so|libshim_gui.so:/system/bin/mtk_agpsd|libshim_agps.so
+
+# Basic apps
+PRODUCT_PACKAGES += \
+    Stk \
+    Torch \
+    Snap
+
+# Mtk symbols & shim
+PRODUCT_PACKAGES += \
+    libshim_agps \
+    libshim_asc \
+    libshim_gui \
+    libshim_snd \
+    libshim_ui \
+    libshim_xlog
 
 # Add for ANT+
 ifeq ($(strip $(MTK_ANT_SUPPORT)), yes)
