@@ -2,20 +2,11 @@ import init.mt6752.usb.rc
 import init.modem.rc
 import init.performance.rc
 
-on late-fs
-    # boot time fs tune
-    write /sys/block/mmcblk0/queue/iostats 0
-    write /sys/block/mmcblk0/queue/iosched/slice_idle 0
-    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
-    write /sys/block/mmcblk0/queue/nr_requests 256
-
 on early-init
     # Turn off backlight on blank
     write /sys/class/leds/lcd-backlight/trigger "backlight"
 
 on init
-    export LD_PRELOAD "libxlog.so:libmtk_symbols.so"
-
     # BATTERY proc
     chown shell system /proc/mtk_battery_cmd/current_cmd
     chown shell system /proc/mtk_battery_cmd/discharging_cmd
@@ -90,6 +81,13 @@ on post-fs
     # NFC
     chmod 0660 /dev/mt6605
     chown radio nfc /dev/mt6605
+
+on late-fs
+    # boot time fs tune
+    write /sys/block/mmcblk0/queue/iostats 0
+    write /sys/block/mmcblk0/queue/iosched/slice_idle 0
+    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
+    write /sys/block/mmcblk0/queue/nr_requests 256
 
 on post-fs-data
     mkdir /data/nvram 0771 system camera
@@ -405,7 +403,7 @@ on post-fs-data
     chown bluetooth bluetooth /data/@btmtk/dev_cache
     chown bluetooth bluetooth /dev/hid-keyboard
     chmod 0660 /dev/hid-keyboard
-    # Use uinput's default permission
+    # Use uinputs default permission
     chown system net_bt_admin /dev/uinput
 
     # UIBC

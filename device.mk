@@ -20,8 +20,7 @@ PRODUCT_COPY_FILES += \
    $(LOCAL_KERNEL):kernel
 
 PRODUCT_PACKAGES += \
-   libmtk_symbols \
-   libstlport
+    libstlport
 
 # Camera
 PRODUCT_PACKAGES += \
