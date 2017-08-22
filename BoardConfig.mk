@@ -39,7 +39,6 @@ BOARD_CHARGER_SHOW_PERCENTAGE := true
 BOARD_USES_CYANOGEN_HARDWARE := true
 BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/cmhw
 
->>>>>>> mtk/n-7.1.2
 # Kernel
 TARGET_USES_64_BIT_BINDER := true
 TARGET_IS_64_BIT := true
@@ -73,7 +72,6 @@ TARGET_INCLUDE_UI_SYMBOLS := true
 TARGET_INCLUDE_OMX_SYMBOLS := true
 TARGET_INCLUDE_GPS_SYMBOLS := true
 include vendor/mad/config/symbols.mk
->>>>>>> mtk/n-7.1.2
 
 # Display
 TARGET_SCREEN_HEIGHT := 1920
