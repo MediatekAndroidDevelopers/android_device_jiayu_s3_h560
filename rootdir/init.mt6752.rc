@@ -2,16 +2,11 @@ import init.mt6752.usb.rc
 import init.modem.rc
 import init.performance.rc
 
-on late-fs
-    # boot time fs tune
-    write /sys/block/mmcblk0/queue/iostats 0
-    write /sys/block/mmcblk0/queue/iosched/slice_idle 0
-    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
-    write /sys/block/mmcblk0/queue/nr_requests 256
+on early-init
+    # Turn off backlight on blank
+    write /sys/class/leds/lcd-backlight/trigger "backlight"
 
 on init
-    export LD_PRELOAD "libxlog.so:libmtk_symbols.so"
-
     # BATTERY proc
     chown shell system /proc/mtk_battery_cmd/current_cmd
     chown shell system /proc/mtk_battery_cmd/discharging_cmd
@@ -20,23 +15,9 @@ on init
     mkdir /protect_f 0771 system system
     mkdir /protect_s 0771 system system
     mkdir /persist   0771 system system
-    mkdir /protect_s/properties 0770 system system
+
     chown root system /dev/kmsg
     chmod 0660 /dev/kmsg
-
-on charger
-    mkdir /dev/block/platform/mtk-msdc.0/by-name 0755 root system
-    symlink /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/logo /dev/block/platform/mtk-msdc.0/by-name/logo
-
-    mount ext4 /dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/system /system ro wait
-    chmod 0666 /dev/kmsg
-    exec /system/bin/setprop sys.usb.config adb
-    start fuelgauged
-    start kpoc_charger
-    start servicemanager
-
-    # disable USB
-    write /sys/devices/platform/mt_usb/cmode 0
 
 on fs
     mount_all /fstab.mt6752
@@ -97,6 +78,17 @@ on post-fs
     chown radio system /proc/freqhopping/status
     chown radio system /proc/freqhopping/userdef
 
+    # NFC
+    chmod 0660 /dev/mt6605
+    chown radio nfc /dev/mt6605
+
+on late-fs
+    # boot time fs tune
+    write /sys/block/mmcblk0/queue/iostats 0
+    write /sys/block/mmcblk0/queue/iosched/slice_idle 0
+    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
+    write /sys/block/mmcblk0/queue/nr_requests 256
+
 on post-fs-data
     mkdir /data/nvram 0771 system camera
     mkdir /data/nvram/APCFG 0770 system camera
@@ -104,7 +96,7 @@ on post-fs-data
     mkdir /data/nvram/APCFG/APRDEB 0770 system camera
 
     restorecon_recursive /data/nvram
-    chown root:net_bt_stack /data/nvram/APCFG/APRDEB/BT_Addr
+
     # rfkill
     chmod 0660 /dev/rfkill
 
@@ -133,7 +125,7 @@ on post-fs-data
 
     # Mali 3D GPU driver
     chmod 666 /dev/mali0
-    
+
     # watch dog kicker
     write /proc/wdk "0 20 30"
 
@@ -343,8 +335,7 @@ on post-fs-data
     chown system system /sys/class/misc/m_glg_misc/glgdelay
     chown system system /sys/class/misc/m_glg_misc/glgbatch
     chown system system /sys/class/misc/m_glg_misc/glgflush
-    
-    
+
     # msensor
     chmod 0444 /sys/bus/platform/drivers/msensor/daemon
     chown system system /sys/bus/platform/drivers/msensor/daemon
@@ -412,28 +403,38 @@ on post-fs-data
     chown bluetooth bluetooth /data/@btmtk/dev_cache
     chown bluetooth bluetooth /dev/hid-keyboard
     chmod 0660 /dev/hid-keyboard
-    # Use uinput's default permission
+    # Use uinputs default permission
     chown system net_bt_admin /dev/uinput
 
     # UIBC
     chown system media /dev/uibc
     chmod 0660 /dev/uibc
 
-    # Camera
+    #Camera
+    chmod 0660 /dev/camera-sysram
     chmod 0660 /dev/camera-isp
     chmod 0660 /dev/camera-fdvt
+    chmod 0660 /dev/camera-pipemgr
     chmod 0660 /dev/kd_camera_hw
     chmod 0660 /dev/kd_camera_flashlight
     chmod 0660 /dev/kd_camera_hw_bus2
     chmod 0660 /dev/FM50AF
+    chmod 0660 /dev/DW9714AF
+    chmod 0660 /dev/BU6424AF
+    chmod 0660 /dev/DW9718AF
     chmod 0660 /dev/CAM_CAL_DRV
 
+    chown system camera /dev/camera-sysram
     chown system camera /dev/camera-isp
     chown system camera /dev/camera-fdvt
+    chown system camera /dev/camera-pipemgr
     chown system camera /dev/kd_camera_hw
     chown system camera /dev/kd_camera_flashlight
     chown system camera /dev/kd_camera_hw_bus2
     chown system camera /dev/FM50AF
+    chown system camera /dev/DW9714AF
+    chown system camera /dev/BU6424AF
+    chown system camera /dev/DW9718AF
     chown system camera /dev/CAM_CAL_DRV
 
     # SMI
@@ -493,7 +494,7 @@ on post-fs-data
     # AGPS
     mkdir /data/agps_supl 0771 gps system
 
-    # Thermal	
+    # Thermal
     mkdir /data/.tp/ 0775 system system
 
     chmod 0660 /dev/ttyC2
@@ -681,7 +682,7 @@ service wpa_supplicant /system/bin/wpa_supplicant \
     disabled
     oneshot
 
-# For WiFi High Speed calibration		
+# For WiFi High Speed calibration
 service autokd /system/bin/autokd
     class core
     user system
@@ -762,12 +763,6 @@ service thermal_manager /system/bin/thermal_manager
     group system
     oneshot
 
-service fuelgauged /system/bin/fuelgauged
-    class main
-    user system
-    group system
-    
-    
 service wmt_loader /system/bin/wmt_loader
     class core
     user root
@@ -779,10 +774,8 @@ service 66xx_launcher /system/bin/6620_launcher -m 4 -p /system/etc/firmware/
     group system
     class core
 
-service spm_script /system/bin/spm_loader
-    class core
-    user root
-    group root 
-
-service kpoc_charger /system/bin/kpoc_charger
+# Charger
+service charger /sbin/healthd -c
     class charger
+    critical
+    seclabel u:r:healthd:s0

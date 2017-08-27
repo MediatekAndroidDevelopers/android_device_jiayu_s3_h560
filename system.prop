@@ -71,10 +71,6 @@ ro.mtk_wlan_support=1
 ro.mtk_gps_support=1
 persist.md.perm.checked=1
 persist.debug.xlog.enable=1
-
-# SD
-ro.sys.sdcardfs=false
-
 # other things
 ro.mediatek.chip_ver=S01
 ro.mediatek.version.release=ALPS.N
@@ -85,10 +81,13 @@ persist.mtk.wcn.combo.chipid=-1
 drm.service.enabled=true
 wfd.dummy.enable=1
 persist.sys.display.clearMotion=1
+persist.clearMotion.fblevel.nrm=255
+persist.clearMotion.fblevel.bdr=255
 ro.mtk_clearmotion_support=1
+ro.mtk_slow_motion_support=1
+ro.mtk_16x_slowmotion_support=1
 keyguard.no_require_sim=true
-camera.disable_zsl_mode=1
+ro.mtk_cam_mfb_support=3
+ro.mtk_cam_mav_support=1
+ro.mtk_cam_lomo_support=1
 persist.debug.wfd.enable=1
-ro.ril.disable.power.collapse=1
-pm.sleep_mode=1
-wifi.supplicant_scan_interval=360

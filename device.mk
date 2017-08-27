@@ -20,8 +20,7 @@ PRODUCT_COPY_FILES += \
    $(LOCAL_KERNEL):kernel
 
 PRODUCT_PACKAGES += \
-   libmtk_symbols \
-   libstlport
+    libstlport
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -94,15 +93,10 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
     frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
 
-# Camera
-PRODUCT_PROPERTY_OVERRIDES += \
-    media.stagefright.legacyencoder=true \
-    media.stagefright.less-secure=true
-
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.kernel.android.checkjni=0 \
-    ro.telephony.ril_class=MT6753 \
+    ro.telephony.ril_class=MediaTekRIL \
     ro.telephony.ril.config=fakeiccid \
     ro.com.android.mobiledata=false \
     persist.service.acm.enable=0 \
@@ -152,6 +146,12 @@ PRODUCT_PACKAGES += \
     libnl_2 \
     libion
 
+# LiveDisplay
+PRODUCT_PACKAGES += libjni_livedisplay
+
+# USB
+PRODUCT_PACKAGES += com.android.future.usb.accessory
+
 # xlog
 PRODUCT_PACKAGES += \
     libxlog 
@@ -170,10 +170,23 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-threads=6 \
     dalvik.vm.image-dex2oat-threads=8
 
+# Force linking shim
+LINKER_FORCED_SHIM_LIBS := /system/lib/libmedia.so|libshim_snd.so:/system/lib64/libmedia.so|libshim_snd.so:/system/lib/liblog.so|libshim_xlog.so:/system/lib64/liblog.so|libshim_xlog.so:/system/lib/libui.so|libshim_ui.so:/system/lib64/libui.so|libshim_ui.so:/system/lib/libgui.so|libshim_gui.so:/system/lib64/libgui.so|libshim_gui.so:/system/bin/mtk_agpsd|libshim_agps.so
 
+# Basic apps
 PRODUCT_PACKAGES += \
-    fs_config_files
+    Stk \
+    Torch \
+    Snap
 
+# Mtk symbols & shim
+PRODUCT_PACKAGES += \
+    libshim_agps \
+    libshim_asc \
+    libshim_gui \
+    libshim_snd \
+    libshim_ui \
+    libshim_xlog
 
 # Add for ANT+
 ifeq ($(strip $(MTK_ANT_SUPPORT)), yes)
