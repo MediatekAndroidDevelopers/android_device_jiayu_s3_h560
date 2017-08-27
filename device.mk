@@ -86,6 +86,7 @@ PRODUCT_PACKAGES += \
 # NFC
 PRODUCT_PACKAGES += \
     com.android.nfc_extras \
+    Nfc \
     Tag
 
 PRODUCT_COPY_FILES += \
@@ -96,7 +97,7 @@ PRODUCT_COPY_FILES += \
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.kernel.android.checkjni=0 \
-    ro.telephony.ril_class=MediaTekRIL \
+    ro.telephony.ril_class=MT6755 \
     ro.telephony.ril.config=fakeiccid \
     ro.com.android.mobiledata=false \
     persist.service.acm.enable=0 \
@@ -178,6 +179,10 @@ PRODUCT_PACKAGES += \
     Stk \
     Torch \
     Snap
+
+#opengl
+PRODUCT_PACKAGES += \
+    libGLES_android
 
 # Mtk symbols & shim
 PRODUCT_PACKAGES += \
