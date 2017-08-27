@@ -82,6 +82,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
      libGLES_android
 
+PRODUCT_PACKAGES += \
+     Jelly
+
 # file manager
 PRODUCT_PACKAGES += \
        FileManager
