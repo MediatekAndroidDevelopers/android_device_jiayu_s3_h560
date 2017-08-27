@@ -79,6 +79,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
      MeizuDoze
 
+PRODUCT_PACKAGES += \
+     libGLES_android
+
 # file manager
 PRODUCT_PACKAGES += \
        FileManager
