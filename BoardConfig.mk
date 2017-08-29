@@ -64,6 +64,8 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_HAS_LARGE_FILESYSTEM := true
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
+# Use mke2fs instead of make_ext4fs
+TARGET_USES_MKE2FS := true
 
 # Include needed symbols
 TARGET_INCLUDE_XLOG_SYMBOLS := true
