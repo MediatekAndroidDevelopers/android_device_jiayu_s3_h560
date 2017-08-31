@@ -75,7 +75,7 @@ static int sysfs_write(const char *path, char *s)
 
 static void power_init(struct power_module *module __unused)
 {
-    ALOGI("%s", __func__);
+    ALOGI("MTK power HAL initing.");
 }
 
 static void power_set_interactive(struct power_module *module __unused,
