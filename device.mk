@@ -12,20 +12,25 @@ TARGET_OTA_ASSERT_DEVICE := JY-S3_ADV,h560,s3_h560,32_h560,s3_32_h560,JY-S3_ADV_
 PRODUCT_PACKAGES += \
     libstlport
 
+# Manifest
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/manifest.xml:system/vendor/manifest.xml
+
 # Lights
 PRODUCT_PACKAGES += \
     lights.mt6752
 
 # Audio
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/audio/audio_device.xml:system/etc/audio_device.xml \
-    $(LOCAL_PATH)/configs/audio/audio_policy_configuration.xml:system/etc/audio_policy_configuration.xml \
-    $(LOCAL_PATH)/configs/audio/a2dp_audio_policy_configuration.xml:/system/etc/a2dp_audio_policy_configuration.xml
+    $(LOCAL_PATH)/configs/audio/audio_device.xml:system/vendor/etc/audio_device.xml \
+    $(LOCAL_PATH)/configs/audio/audio_policy_configuration.xml:system/vendor/etc/audio_policy_configuration.xml \
+    $(LOCAL_PATH)/configs/audio/a2dp_audio_policy_configuration.xml:/system/vendor/etc/a2dp_audio_policy_configuration.xml
 
 # Media
 PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
-	$(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
+    $(LOCAL_PATH)/configs/media_codecs.xml:system/vendor/etc/media_codecs.xml \
+    $(LOCAL_PATH)/configs/media_codecs_mediatek_video.xml:system/vendor/etc/media_codecs_mediatek_video.xml \
+    $(LOCAL_PATH)/configs/media_profiles.xml:system/vendor/etc/media_profiles.xml
 
 # Bluetooth
 PRODUCT_PACKAGES += \
@@ -80,6 +85,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PACKAGES += \
     fs_config_files
+
+
+# Seccomp policy
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/seccomp/mediaextractor.policy:system/vendor/etc/seccomp_policy/mediaextractor.policy
 
 # Dalvik/HWUI
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
