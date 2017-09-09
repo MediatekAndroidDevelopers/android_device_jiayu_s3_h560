@@ -116,7 +116,7 @@ on post-fs-data
     chown gps gps /sys/class/gpsdrv/gps/status
 
     # NFC
-    mkdir /data/nfc_socket 0771 nfc system
+    mkdir /data/nfc_socket 0771 nfc radio
 
     # md32 boot
     chown root system /dev/md32
