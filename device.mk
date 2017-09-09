@@ -106,8 +106,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.ril_class=MT6755 \
     ro.telephony.ril.config=fakeiccid \
     ro.com.android.mobiledata=false \
-    persist.service.acm.enable=0 \
-    ro.config.low_ram=false
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	persist.sys.usb.config=mtp
@@ -159,23 +157,6 @@ PRODUCT_PACKAGES += libjni_livedisplay
 # USB
 PRODUCT_PACKAGES += com.android.future.usb.accessory
 
-# xlog
-PRODUCT_PACKAGES += \
-    libxlog 
-
-# IO Scheduler
-PRODUCT_PROPERTY_OVERRIDES += \
-    sys.io.scheduler=zen
-
-# Properties
-	PRODUCT_PROPERTY_OVERRIDES += \
-	    ro.sys.fw.dex2oat_thread_count=4
-
-#Dex2oat Limits
-PRODUCT_PROPERTY_OVERRIDES += \
-    dalvik.vm.boot-dex2oat-threads=8 \
-    dalvik.vm.dex2oat-threads=6 \
-    dalvik.vm.image-dex2oat-threads=8
 
 # Force linking shim
 LINKER_FORCED_SHIM_LIBS := /system/lib/libmedia.so|libshim_snd.so:/system/lib64/libmedia.so|libshim_snd.so:/system/lib/liblog.so|libshim_xlog.so:/system/lib64/liblog.so|libshim_xlog.so:/system/lib/libui.so|libshim_ui.so:/system/lib64/libui.so|libshim_ui.so:/system/lib/libgui.so|libshim_gui.so:/system/lib64/libgui.so|libshim_gui.so:/system/bin/mtk_agpsd|libshim_agps.so
