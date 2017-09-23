@@ -93,8 +93,8 @@ TARGET_SENSORS_DEVICE_API_VERSION := SENSORS_DEVICE_API_VERSION_1_1
 
 # Recovery
 BOARD_HAS_NO_SELECT_BUTTON := true
-TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/recovery.fstab
-BOARD_NO_SECURE_DISCARD := true # secure discard is painfully slow...
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/fstab.mt6752
+
 # TWRP-specific
 ifeq ($(RECOVERY_VARIANT), twrp)
 DEVICE_RESOLUTION := 1080x1920
