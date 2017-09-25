@@ -42,7 +42,7 @@ BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/cmhw
 # Kernel
 TARGET_USES_64_BIT_BINDER := true
 TARGET_IS_64_BIT := true
-BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive androidboot.selinux=disabled
 BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --base 0x40078000 --pagesize 2048 --kernel_offset 0x00008000 --ramdisk_offset 0x03f88000 --second_offset 0x00e88000 --tags_offset 0x0df88000 --board 1450352440
@@ -71,7 +71,6 @@ TARGET_INCLUDE_AUDIO_SYMBOLS := true
 TARGET_INCLUDE_UI_SYMBOLS := true
 TARGET_INCLUDE_OMX_SYMBOLS := true
 TARGET_INCLUDE_GPS_SYMBOLS := true
-include vendor/mad/config/symbols.mk
 
 # Display
 TARGET_SCREEN_HEIGHT := 1920
@@ -83,9 +82,8 @@ TARGET_BOOTANIMATION_TEXTURE_CACHE := true
 
 # Camera
 #BOARD_USES_LEGACY_MTK_AV_BLOB := true
-BOARD_USES_MTK_MEDIA_PROFILES:=true
+#BOARD_USES_MTK_MEDIA_PROFILES:=true
 TARGET_HAS_LEGACY_LP_CAM := true
-TARGET_CAMERASERVICE_CLOSES_NATIVE_HANDLES := true
 USE_CAMERA_STUB := true
 # Power and native tap-to-wake
 TARGET_POWERHAL_VARIANT := mtk-xen0n
@@ -143,7 +141,9 @@ TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
 
 # Enable Minikin text layout engine (will be the default soon)
 USE_MINIKIN := true
-#MALLOC_IMPL := dlmalloc
+
+#Use dlmalloc instead of jemalloc for mallocs
+MALLOC_SVELTE := true
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true

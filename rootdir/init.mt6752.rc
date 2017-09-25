@@ -7,10 +7,11 @@ on early-init
     write /sys/class/leds/lcd-backlight/trigger "backlight"
 
 on init
+    export LD_SHIM_LIBS "/system/lib/libmedia.so|libshim_snd.so:/system/lib64/libmedia.so|libshim_snd.so:/system/lib/liblog.so|libshim_xlog.so:/system/lib64/liblog.so|libshim_xlog.so:/system/lib/libui.so|libshim_ui.so:/system/lib64/libui.so|libshim_ui.so:/system/lib/libgui.so|libshim_gui.so:/system/lib64/libgui.so|libshim_gui.so:/system/bin/mtk_agpsd|libshim_agps.so"
     # BATTERY proc
     chown shell system /proc/mtk_battery_cmd/current_cmd
     chown shell system /proc/mtk_battery_cmd/discharging_cmd
-
+    
     # mount points
     mkdir /protect_f 0771 system system
     mkdir /protect_s 0771 system system
@@ -30,6 +31,8 @@ on post-fs
 
     chown system system /protect_s
     chmod 0770 /protect_s
+    
+    mkdir /protect_s/properties 0770 system system
 
     # Workaround for old nvram blobs
     mkdir /dev/block/platform/mtk-msdc.0/by-name 0755 root system
@@ -114,7 +117,7 @@ on post-fs-data
     chown gps gps /sys/class/gpsdrv/gps/status
 
     # NFC
-    mkdir /data/nfc_socket 0771 nfc system
+    mkdir /data/nfc_socket 0771 nfc radio
 
     # md32 boot
     chown root system /dev/md32

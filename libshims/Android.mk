@@ -13,17 +13,6 @@ LOCAL_MODULE := libshim_agps
 include $(BUILD_SHARED_LIBRARY)
 
 
-## libshim_asc
-include $(CLEAR_VARS)
-
-LOCAL_MULTILIB = 32
-LOCAL_SRC_FILES_32 := mtk_asc.cpp
-
-LOCAL_SHARED_LIBRARIES_32 := libbinder libgui
-LOCAL_MODULE := libshim_asc
-include $(BUILD_SHARED_LIBRARY)
-
-
 ## libshim_ui
 include $(CLEAR_VARS)
 

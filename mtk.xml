@@ -1,55 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-
-<remote name = "uber"
-          revision = "master"
-          fetch = "https://github.com/UBERROMS" />
-
-  <remote name = "bb"
-          revision = "master"
-          fetch = "https://bitbucket.org/" />
-
-  <remote name = "gh"
-          fetch = "https://github.com/" />
-
-  
-
-
- <remove-project name="LineageOS/android_art" />
- <remove-project name="LineageOS/android_frameworks_base" />
-  <remove-project name="LineageOS/android_system_core" />
-  <remove-project name="LineageOS/android_frameworks_opt_telephony" />
+  <remove-project name="system_core" />
   <remove-project name="LineageOS/android_system_netd" />
-  <remove-project name="LineageOS/android_frameworks_native" />
-  <remove-project name="LineageOS/android_frameworks_av" />
-  <remove-project name="LineageOS/android_system_sepolicy" />
+  <remove-project name="frameworks_native" />
+  <remove-project name="android_frameworks_base" />
+  <remove-project name="frameworks_av" />
+  <remove-project name="LineageOS/android_frameworks_opt_telephony" />
   <remove-project name="LineageOS/android_bionic" />
   <remove-project name="LineageOS/android_external_wpa_supplicant_8" />
-  <remove-project name="LineageOS/android_system_bt" />
-  <remove-project name="LineageOS/android_build" />
+ <remove-project name="LineageOS/android_system_bt" />
   <remove-project name="LineageOS/android_hardware_libhardware" />
-  <remove-project name="LineageOS/android_packages_apps_Dialer" />
-  <remove-project name="LineageOS/android_packages_services_Telephony" />
-  <project path="build" name="sandstranger/android_build_mtk" groups="pdk" >
-    <copyfile src="core/root.mk" dest="Makefile" />
-  </project>
+  <remove-project name="android_packages_apps_Dialer" />
+  <remove-project name="android_packages_services_Telephony" />
 
-  <project path="hardware/libhardware" name="sandstranger/android_hardware_libhardware_mtk" groups="pdk" />
-  <project path="packages/apps/Dialer" name="sandstranger/packages_apps_Dialer_mtk" groups="pdk" />
-  <project path="packages/services/Telephony" name="sandstranger/packages_services_Telephony_mtk" groups="pdk" />
-  <project path="art" name="sandstranger/android_art" groups="pdk" />
+
+
+  <project path="hardware/libhardware" name="sandstranger/android_hardware_libhardware_mtk" groups="pdk" revision="cm-14.1" />
+  <project path="system/bt" name="sandstranger/android_system_bt-1" groups="pdk" />
+  <project path="packages/apps/Dialer" name="sandstranger/packages_apps_Dialer_mtk" groups="pdk" revision="nougat" />
+  <project path="packages/services/Telephony" name="sandstranger/packages_services_Telephony_mtk" groups="pdk" revision="nougat" />
+
   <project path="external/wpa_supplicant_8" name="sandstranger/android_external_wpa_supplicant_8-mtk"  />
   <project path="external/stlport" name="LineageOS/android_external_stlport" revision="cm-14.1" />
   <project path="packages/resources/devicesettings" name="LineageOS/android_packages_resources_devicesettings" revision="cm-14.1" />
   <project path="bionic" name="sandstranger/android_bionic_mtk" groups="pdk" />
-  <project path="system/core" name="sandstranger/android_system_core_mtk" groups="pdk" />
-  <project path="system/sepolicy" name="sandstranger/android_system_sepolicy" groups="pdk" />
-  <project path="frameworks/av" name="sandstranger/android_frameworks_av_mtk" groups="pdk" />
-  <project path="frameworks/native" name="sandstranger/android_frameworks_native_mtk" groups="pdk" />
+  <project path="system/core" name="sandstranger/android_system_core_mtk"  groups="pdk" revision="nougat" />
+  <project path="frameworks/av" name="sandstranger/android_frameworks_av_mtk" groups="pdk" revision="nougat"  />
+  <project path="frameworks/base" name="sandstranger/android_frameworks_base" groups="pdk" revision="nougat"  />
   <project path="frameworks/opt/telephony" name="sandstranger/android_frameworks_opt_telephony_mtk" groups="pdk" />
+  <project path="frameworks/native" name="sandstranger/android_frameworks_native_mtk" groups="pdk" revision="nougat"  />
   <project path="system/netd" name="sandstranger/android_system_netd_mtk" groups="pdk" />
-  <project path="frameworks/base" name="sandstranger/android_frameworks_base" groups="pdk" revision="cm-14.1" />
-    <project path="system/bt" name="sandstranger/android_system_bt-1" groups="pdk" />
-
   <!-- vim:set ai et ts=2 sw=2 sts=2 fenc=utf-8: -->
 </manifest>
+
