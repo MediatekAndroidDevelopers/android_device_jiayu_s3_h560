@@ -44,6 +44,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
      libccci_util
 
+
+# mtk graphics blobs
+PRODUCT_PACKAGES += \
+        libgralloc_extra \
+        libgui_ext \
+        libui_ext
+
 # gps
 PRODUCT_COPY_FILES += \
         $(DEVICE_PATH)/configs/gps/gps.conf:system/etc/gps.conf
