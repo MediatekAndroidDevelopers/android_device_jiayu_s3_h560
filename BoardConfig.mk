@@ -147,9 +147,6 @@ MALLOC_SVELTE := true
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
-#dexpreopt
-WITH_DEXPREOPT := true
-WITH_DEXPREOPT_PIC := true
 
 # SELinux
 BOARD_SEPOLICY_DIRS += $(LOCAL_PATH)/sepolicy

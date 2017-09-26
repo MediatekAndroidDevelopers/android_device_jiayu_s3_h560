@@ -53,7 +53,7 @@ PRODUCT_PACKAGES += \
 
 # gps
 PRODUCT_COPY_FILES += \
-        $(DEVICE_PATH)/configs/gps/gps.conf:system/etc/gps.conf
+         $(LOCAL_PATH)/configs/gps/gps.conf:system/etc/gps.conf
 
 # Media
 PRODUCT_COPY_FILES += \
