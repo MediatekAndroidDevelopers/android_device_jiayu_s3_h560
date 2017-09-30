@@ -125,6 +125,9 @@ PRODUCT_PACKAGES += \
     power.default \
     power.mt6752
 
+# Extended Filesystem Support
+TARGET_KERNEL_HAVE_EXFAT := true
+
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     e2fsck \
