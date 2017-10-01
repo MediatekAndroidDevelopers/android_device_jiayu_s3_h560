@@ -13,7 +13,6 @@ ro.mediatek.wlan.wsc=1
 ro.mediatek.wlan.p2p=1
 mediatek.wlan.ctia=0
 
-wifi.tethering.interface=ap0
 wifi.direct.interface=p2p0
 
 # OpenGL
@@ -69,6 +68,19 @@ ro.mtk_wlan_support=1
 ro.mtk_gps_support=1
 persist.md.perm.checked=1
 persist.debug.xlog.enable=1
+ro.mtk_world_phone=1
+ro.mtk_md_world_mode_support=1
+ro.mtk_cta_set=1
+ro.mtk_lte_support=1
+ro.mtk_rild_read_imsi=1
+ro.mtk_protocol1_rat_config=Lf/Lt/W/T/G
+persist.radio.mtk_ps2_rat=G
+ro.boot.opt_using_default=1
+ro.boot.opt_md1_support=5
+ro.boot.opt_c2k_lte_mode=1
+ro.boot.opt_ps1_rat=Lf/Lt/W/T/G
+ro.boot.opt_lte_support=1
+
 # other things
 ro.mediatek.chip_ver=S01
 ro.mediatek.platform=MT6752
