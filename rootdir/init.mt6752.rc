@@ -47,10 +47,10 @@ on late-fs
     write /sys/block/mmcblk0/queue/nr_requests 256
 
 on post-fs-data
-    mkdir /data/nvram 0771 system camera
-    mkdir /data/nvram/APCFG 0770 system camera
-    mkdir /data/nvram/APCFG/APRDCL 0770 system camera
-    mkdir /data/nvram/APCFG/APRDEB 0770 system camera
+    mkdir /data/nvram 0771 root camera
+    mkdir /data/nvram/APCFG 0770 root camera
+    mkdir /data/nvram/APCFG/APRDCL 0770 root camera
+    mkdir /data/nvram/APCFG/APRDEB 0770 root camera
 
     # Set SELinux security contexts on upgrade or policy update.
     restorecon /data/nvram
