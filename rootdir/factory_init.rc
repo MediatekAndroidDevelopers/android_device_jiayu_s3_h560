@@ -527,7 +527,7 @@ service ccci2_rpcd /system/bin/ccci_rpcd 1
     group radio system
     oneshot
 
-service nvram_daemon /system/system/vendor/bin/nvram_daemon
+service nvram_daemon /system/vendor/bin/nvram_daemon
     class main
     user root
     group system
