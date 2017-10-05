@@ -527,7 +527,7 @@ service ccci2_rpcd /system/bin/ccci_rpcd 1
     group radio system
     oneshot
 
-service nvram_daemon /system/bin/nvram_daemon
+service nvram_daemon /vendor/bin/nvram_daemon
     class main
     user root
     group system
@@ -554,7 +554,7 @@ service installd /system/bin/installd
     class main
     socket installd stream 600 system system
     
-service thermal_manager /system/bin/thermal_manager
+service thermal_manager /vendor/bin/thermal_manager
     user root
     oneshot
 
