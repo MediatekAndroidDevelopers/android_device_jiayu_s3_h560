@@ -686,7 +686,7 @@ service wpa_supplicant /system/bin/wpa_supplicant \
     oneshot
 
 # For WiFi High Speed calibration
-service autokd /system/bin/autokd
+service autokd /system/vendor/bin/autokd
     class core
     user system
     group system

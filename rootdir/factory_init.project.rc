@@ -10,12 +10,12 @@ service akmd09911 /system/vendor/bin/akmd09911
     user system
     group system
 
-service orientationd /system/bin/orientationd
+service orientationd /system/vendor/bin/orientationd
     disabled
     user system
     group system input
 
-service geomagneticd /system/bin/geomagneticd
+service geomagneticd /system/vendor/bin/geomagneticd
     disabled
     user system
     group system input
