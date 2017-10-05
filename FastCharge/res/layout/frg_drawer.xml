@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="240dp"
+	android:layout_height="match_parent"
+	android:paddingTop="10dp">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="This set of settings are only for ROMs without init.d support"
+		android:id="@+id/textView4"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Check the box below to enable"
+		android:id="@+id/textView5"/>
+
+	<CheckBox
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Set Values on Boot"
+		android:id="@+id/cbBootToggle"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:text="set the charging current values below:"
+		android:id="@+id/txtLBL1"
+		android:layout_below="@+id/txvStatus"
+		android:layout_alignParentStart="true"
+		android:layout_marginTop="46dp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:text="AC Current (Charger) default = 1000"
+		android:id="@+id/textView2"
+		android:layout_below="@+id/txtLBL1"
+		android:layout_alignParentStart="true"/>
+
+	<EditText
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:inputType="number"
+		android:ems="10"
+		android:id="@+id/etChaB"
+		android:layout_below="@+id/textView2"
+		android:layout_alignParentStart="true"
+		android:text="1000"
+		android:layout_toStartOf="@+id/btnSet"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:text="USB Current default = 500"
+		android:id="@+id/textView3"
+		android:layout_centerVertical="true"
+		android:layout_alignParentStart="true"/>
+
+	<EditText
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:inputType="number"
+		android:ems="10"
+		android:id="@+id/etUSBB"
+		android:layout_alignParentStart="true"
+		android:text="500"
+		android:layout_below="@+id/textView3"
+		android:layout_alignParentLeft="true"
+		android:layout_alignEnd="@+id/etCha"/>
+
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Save Settings"
+		android:id="@+id/btnSaveSettings"
+		android:layout_gravity="center_horizontal"
+		android:onClick="onbtnSaveClick"/>
+
+</LinearLayout>
+

@@ -81,6 +81,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
      MeizuDoze
 
+#FastCharge
+PRODUCT_PACKAGES += \
+       FastCharge
+
 PRODUCT_PACKAGES += \
      libGLES_android
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent">
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:layout_width="wrap_content"
+		android:text="Setting requested changes"
+		android:translationY="250dp"
+		android:translationX="15dp"
+		android:id="@+id/startupTextView1"/>
+
+	<ProgressBar
+		style="?android:attr/progressBarStyleLarge"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_below="@id/startupTextView1"
+		android:translationY="250dp"
+		android:translationX="100dp"/>
+
+</RelativeLayout>
+
