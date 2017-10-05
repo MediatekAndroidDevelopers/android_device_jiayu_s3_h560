@@ -7,7 +7,7 @@ on early-init
     write /sys/class/leds/lcd-backlight/trigger "backlight"
 
 on init
-    export LD_SHIM_LIBS "/system/lib/libmedia.so|libshim_snd.so:/system/lib64/libmedia.so|libshim_snd.so:/system/lib/liblog.so|libshim_xlog.so:/system/lib64/liblog.so|libshim_xlog.so:/system/lib/libui.so|libshim_ui.so:/system/lib64/libui.so|libshim_ui.so:/system/lib/libgui.so|libshim_gui.so:/system/lib64/libgui.so|libshim_gui.so:/vendor/bin/mtk_agpsd|libshim_agps.so"
+    export LD_SHIM_LIBS "/system/lib/libmedia.so|libshim_snd.so:/system/lib64/libmedia.so|libshim_snd.so:/system/lib/liblog.so|libshim_xlog.so:/system/lib64/liblog.so|libshim_xlog.so:/system/lib/libui.so|libshim_ui.so:/system/lib64/libui.so|libshim_ui.so:/system/lib/libgui.so|libshim_gui.so:/system/lib64/libgui.so|libshim_gui.so:/system/vendor/bin/mtk_agpsd|libshim_agps.so"
     # BATTERY proc
     chown shell system /proc/mtk_battery_cmd/current_cmd
     chown shell system /proc/mtk_battery_cmd/discharging_cmd
@@ -634,13 +634,13 @@ service start_modem /system/bin/md_ctrl 1
     oneshot
 
 
-service nvram_daemon /vendor/bin/nvram_daemon
+service nvram_daemon /system/vendor/bin/nvram_daemon
     class main
     user root
     group system
     oneshot
 
-service pq /vendor/bin/pq
+service pq /system/vendor/bin/pq
     class main
     user system
     group system graphics
@@ -696,7 +696,7 @@ service autokd /system/bin/autokd
 #
 
 # GPS
-service agpsd /vendor/bin/mtk_agpsd
+service agpsd /system/vendor/bin/mtk_agpsd
     class main
     socket agpsd stream 660 gps system
     socket agpsd2 stream 660 gps inet
@@ -704,12 +704,12 @@ service agpsd /vendor/bin/mtk_agpsd
     user gps
     group gps radio inet sdcard_r sdcard_rw misc system
 
-service wifi2agps /vendor/bin/wifi2agps
+service wifi2agps /system/vendor/bin/wifi2agps
     class main
     user wifi
     group gps inet
 
-service mnld /vendor/bin/mnld
+service mnld /system/vendor/bin/mnld
     class main
     user gps
     group gps inet misc sdcard_rw sdcard_r media_rw system
@@ -719,11 +719,11 @@ service mnld /vendor/bin/mnld
 #sensor service (begin)
 #
 
-service msensord /vendor/bin/msensord
+service msensord /system/vendor/bin/msensord
     class main
     oneshot
 
-service qmc6983d /system/bin/qmc6983d
+service qmc6983d /system/vendor/bin/qmc6983d
     oneshot
     disabled
     user system
@@ -746,16 +746,16 @@ on property:ro.build.type=user
 on property:ro.build.type=userdebug
     start emsvr_user
 
-service emsvr_user /vendor/bin/em_svr
+service emsvr_user /system/vendor/bin/em_svr
     disabled
     user system
     group system radio diag
 
-service emsvr /vendor/bin/em_svr
+service emsvr /system/vendor/bin/em_svr
     disabled
     user root
 
-service fuelgauged /vendor/bin/fuelgauged
+service fuelgauged /system/vendor/bin/fuelgauged
      class main
      user system
      group system
@@ -765,19 +765,19 @@ service fuelgauged /vendor/bin/fuelgauged
 #
 
 # Thermal
-service thermal_manager /vendor/bin/thermal_manager
+service thermal_manager /system/vendor/bin/thermal_manager
     class main
     user root
     group system
     oneshot
 
-service wmt_loader /vendor/bin/wmt_loader
+service wmt_loader /system/vendor/bin/wmt_loader
     class core
     user root
     group root
     oneshot
 
-service 66xx_launcher /vendor/bin/6620_launcher -m 4 -p /system/etc/firmware/
+service 66xx_launcher /system/vendor/bin/6620_launcher -m 4 -p /system/etc/firmware/
     user system
     group system
     class core

@@ -1,11 +1,11 @@
 mkdir /data/misc/sensors 0664 system system
 
-service msensord /vendor/bin/msensord
+service msensord /system/vendor/bin/msensord
     user system
     group system
     oneshot
 
-service akmd09911 /vendor/bin/akmd09911
+service akmd09911 /system/vendor/bin/akmd09911
     disabled
     user system
     group system
@@ -60,12 +60,12 @@ on boot
 # Connectivity related services (Begin)
 #
 
-service wmt_loader /vendor/bin/wmt_loader
+service wmt_loader /system/vendor/bin/wmt_loader
     user root
     group root
     oneshot
     
-service 66xx_launcher /vendor/bin/6620_launcher -m 4 -p /system/etc/firmware/
+service 66xx_launcher /system/vendor/bin/6620_launcher -m 4 -p /system/etc/firmware/
     user system
     group system
     
