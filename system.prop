@@ -33,8 +33,7 @@ persist.af.audio_patch_fm=1
 qemu.hw.mainkeys=1
 
 # Disable dirty region for Mali
-debug.hwui.render_dirty_regions=false
-
+debug.hwui.profile=true
 # lcd density
 ro.sf.lcd_density=480
 
@@ -60,7 +59,6 @@ ro.mtk_gemini_enhancement=1
 ro.mtk_eap_sim_aka=1
 ro.mtk_flight_mode_power_off_md=1
 ro.mtk_sim_hot_swap=1
-ro.mtk_world_phone=1
 ro.mtk_cta_set=1
 ro.mtk_lte_support=1
 ro.mtk_rild_read_imsi=1
@@ -73,7 +71,6 @@ persist.md.perm.checked=1
 persist.debug.xlog.enable=1
 # other things
 ro.mediatek.chip_ver=S01
-ro.mediatek.version.release=ALPS.N
 ro.mediatek.platform=MT6752
 bgw.current3gband=0
 ro.sf.hwrotation=0
