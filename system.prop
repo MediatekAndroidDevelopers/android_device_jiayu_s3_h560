@@ -75,4 +75,6 @@ ro.mtk_cam_mfb_support=3
 ro.mtk_cam_mav_support=1
 ro.mtk_cam_lomo_support=1
 persist.debug.wfd.enable=1
+persist.mtk.wcn.combo.chipid=0x6630
+
 media.settings.xml=/vendor/etc/media_profiles.xml
