@@ -52,6 +52,8 @@ TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/prebuilt/kernel
 # build old-style zip files (required for ota updater)
 BLOCK_BASED_OTA := false
 
+TARGET_USES_EARLY_SUSPEND := true
+
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 20971520
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 20971520
