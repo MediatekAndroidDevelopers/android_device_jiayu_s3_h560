@@ -12,7 +12,7 @@
 
 #include "meizupshelper.h"
 
-#define MEIZU_PS_CALIBRATION_TRIGGER_PATH "/sys/class/meizu/ps/ps_calibration"
+#define MEIZU_PS_CALIBRATION_TRIGGER_PATH "/sys/bus/platform/drivers/als_ps/ps"
 
 
 int32_t meizu_psh_run_calibration(void)
