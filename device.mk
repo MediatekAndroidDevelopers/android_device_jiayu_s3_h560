@@ -176,6 +176,10 @@ PRODUCT_PACKAGES += \
     Torch \
     Snap
 
+#ps calibration
+PRODUCT_PACKAGES += \
+    meizupshelper
+
 #opengl
 PRODUCT_PACKAGES += \
     libGLES_android

@@ -782,6 +782,13 @@ service 66xx_launcher /system/vendor/bin/6620_launcher -m 4 -p /system/etc/firmw
     group system
     class core
 
+# Proximity sensor calibration
+service ps_calibrate /system/bin/meizupshelper c
+    class main
+    user root
+    group root
+    oneshot
+
 # Charger
 service charger /sbin/healthd -c
     class charger
