@@ -85,6 +85,8 @@ static void power_hint(struct power_module *module, power_hint_t hint,
         case POWER_HINT_SET_PROFILE:
         case POWER_HINT_VIDEO_ENCODE:
         case POWER_HINT_VIDEO_DECODE:
+        case POWER_HINT_SUSTAINED_PERFORMANCE:
+        case POWER_HINT_VR_MODE:
         break;
     default:
         break;
