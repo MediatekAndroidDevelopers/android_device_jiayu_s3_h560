@@ -40,7 +40,6 @@
  <remove-project name="LineageOS/android_frameworks_base" />
   <remove-project name="LineageOS/android_system_core" />
   <remove-project name="LineageOS/android_frameworks_opt_telephony" />
-  <remove-project name="LineageOS/android_system_netd" />
   <remove-project name="LineageOS/android_frameworks_native" />
   <remove-project name="LineageOS/android_frameworks_av" />
   <remove-project name="LineageOS/android_system_sepolicy" />
@@ -69,7 +68,6 @@
   <project path="frameworks/av" name="sandstranger/android_frameworks_av_mtk" groups="pdk" />
   <project path="frameworks/native" name="sandstranger/android_frameworks_native_mtk" groups="pdk" />
   <project path="frameworks/opt/telephony" name="sandstranger/android_frameworks_opt_telephony_mtk" groups="pdk" />
-  <project path="system/netd" name="sandstranger/android_system_netd_mtk" groups="pdk" />
   <project path="frameworks/base" name="sandstranger/android_frameworks_base" groups="pdk" revision="cm-14.1" />
     <project path="system/bt" name="sandstranger/android_system_bt-1" groups="pdk" />
 
