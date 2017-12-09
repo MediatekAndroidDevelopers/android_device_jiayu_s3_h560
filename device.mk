@@ -189,6 +189,9 @@ PRODUCT_PACKAGES += \
     libshim_ui \
     libshim_xlog
 
+# GC tweak
+PRODUCT_TAGS += dalvik.gc.type-precise
+
 # Add for ANT+
 ifeq ($(strip $(MTK_ANT_SUPPORT)), yes)
 
