@@ -36,7 +36,7 @@ debug.hwui.profile=true
 # lcd density
 ro.sf.lcd_density=480
 
-display: Disable EGL buffer_age extension support
+#display: Disable EGL buffer_age extension support
 debug.hwui.use_buffer_age=false
 
 # RIL
