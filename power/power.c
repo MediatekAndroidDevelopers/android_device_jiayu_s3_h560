@@ -141,6 +141,7 @@ static void power_hint(struct power_module *module __unused, power_hint_t hint,
     switch (hint) {
       case POWER_HINT_SET_PROFILE:
 	  set_power_profile(*(int32_t *)data);
+      break;
       case POWER_HINT_LOW_POWER:
             if (data) {
                 power_fwrite(MT_FPS_UPPER_BOUND_PATH, "30");
