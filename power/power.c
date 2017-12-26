@@ -30,7 +30,6 @@
 #include <pthread.h>
 #include <hardware/hardware.h>
 #include <hardware/power.h>
-#include "power-feature.h"
 
 #define LOG_TAG "MTK PowerHAL"
 
@@ -177,8 +176,6 @@ static void set_feature(struct power_module *module __unused,
         return;
     }
 #endif
-
-    set_device_specific_feature(module, feature, state);
 }
 
 static int get_feature(struct power_module *module __unused, feature_t feature)
