@@ -175,7 +175,7 @@ static int power_open(const hw_module_t* module, const char* name,
         if (dev) {
             /* Common hw_device_t fields */
             dev->common.tag = HARDWARE_DEVICE_TAG;
-            dev->common.module_api_version = POWER_MODULE_API_VERSION_0_2;
+            dev->common.module_api_version = POWER_MODULE_API_VERSION_0_3;
             dev->common.hal_api_version = HARDWARE_HAL_API_VERSION;
 
             dev->init = power_init;
@@ -210,5 +210,6 @@ struct power_module HAL_MODULE_INFO_SYM = {
     .init = power_init,
     .setInteractive = power_set_interactive,
     .setFeature = set_feature,
-    .getFeature = get_feature
+    .getFeature = get_feature,
+    .powerHint = power_hint
 };
