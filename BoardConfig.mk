@@ -50,15 +50,15 @@ TARGET_KERNEL_SOURCE := kernel/jiayu/s3_h560
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_CONFIG := h560_defconfig
-TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
+TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-gnu-
+KERNEL_TOOLCHAIN := $(ANDROID_BUILD_TOP)/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu/bin
 MTK_APPENDED_DTB_SUPPORT := yes
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
-
 
 # build old-style zip files (required for ota updater)
 BLOCK_BASED_OTA := false
 
-TARGET_USES_EARLY_SUSPEND := true
+TARGET_USES_EARLY_SUSPEND := false
 
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 20971520
