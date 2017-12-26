@@ -18,12 +18,17 @@ include $(BUILD_SHARED_LIBRARY)
 ## libshim_ui
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := ui/mtk_ui.cpp
+LOCAL_SRC_FILES := \
+    ui/mtk_ui.cpp \
+    ui/GraphicBuffer.cpp
 
-#ui/mtk_gbc1.cpp
-
-LOCAL_SHARED_LIBRARIES := libbinder libui
+LOCAL_SHARED_LIBRARIES := libbinder libui liblog libutils libcutils
 LOCAL_MODULE := libshim_ui
+
+LOCAL_C_INCLUDES := \
+    frameworks/native/include \
+    system/core/libutils
+
 LOCAL_CFLAGS := -O3 -Wno-unused-variable -Wno-unused-parameter
 LOCAL_PROPRIETARY_MODULE := true
 include $(BUILD_SHARED_LIBRARY)
