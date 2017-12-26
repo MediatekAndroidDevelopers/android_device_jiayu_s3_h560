@@ -41,7 +41,13 @@ enum {
     PROFILE_BIAS_POWER, 
 };
 
+#define MT_RUSH_BOOST_PATH "/proc/hps/rush_boost_enabled"
+#define MT_FPS_UPPER_BOUND_PATH "/d/ged/hal/fps_upper_bound"
 #define POWER_NR_OF_SUPPORTED_PROFILES 4
+
+#define POWER_HINT_POWER_SAVING 0x00000101
+#define POWER_HINT_PERFORMANCE_BOOST 0x00000102
+#define POWER_HINT_BALANCE  0x00000103
 
 #define POWER_PROFILE_PROPERTY  "sys.perf.profile"
 #define POWER_SAVE_PROP         "0"
@@ -135,6 +141,25 @@ static void power_hint(struct power_module *module __unused, power_hint_t hint,
     switch (hint) {
       case POWER_HINT_SET_PROFILE:
 	  set_power_profile(*(int32_t *)data);
+      case POWER_HINT_LOW_POWER:
+            if (data) {
+                power_fwrite(MT_FPS_UPPER_BOUND_PATH, "30");
+                power_fwrite(MT_RUSH_BOOST_PATH, "0");
+            } else {
+                power_fwrite(MT_FPS_UPPER_BOUND_PATH, "60");
+                power_fwrite(MT_RUSH_BOOST_PATH, "1");
+            }
+            ALOGI("POWER_HINT_LOW_POWER");
+            break;
+        case POWER_HINT_VSYNC:
+        case POWER_HINT_INTERACTION:
+        case POWER_HINT_CPU_BOOST:
+        case POWER_HINT_LAUNCH:
+        case POWER_HINT_VIDEO_ENCODE:
+        case POWER_HINT_VIDEO_DECODE:
+        case POWER_HINT_SUSTAINED_PERFORMANCE:
+        case POWER_HINT_VR_MODE:
+        break;
       default:
 	  break;
     }
