@@ -53,7 +53,6 @@
 # Anyone can read the logs, but if they're not in the "logs"
 # group, then they'll only see log entries for their UID.
 /dev/xLog                 0600   root       root
-/dev/log/ksystem          0600   root       log
 
 /dev/ccci*                0660   radio      radio
 /dev/ttyC*                0660   radio      radio
@@ -62,15 +61,7 @@
 /sys/kernel/ccci          md2_postfix  0644   radio       radio
 /dev/eemcs*               0660   radio      radio
 /dev/emd*                 0660   radio      radio
-/dev/ccci_pcm_rx          0660   audio      audio
-/dev/ccci_pcm_tx          0660   audio      audio
 /dev/ccci_aud             0660   audio      audio
-/dev/ccci2_aud            0660   audio      audio
-/dev/eemcs_aud            0660   audio      audio
-
-# SGX device node
-/dev/pvrsrvkm             0666   root       root
-/dev/pvr_sync             0666   root       root
 
 /sys/devices/platform/leds-mt65xx/leds/green   delay_on      0664  system   system
 /sys/devices/platform/leds-mt65xx/leds/green   delay_off      0664  system   system
@@ -80,10 +71,6 @@
 # GPIO
 /dev/mtgpio	              0600	 radio	    root
 
-# FOR VIA MODEM
-/dev/ttySDIO*             0660   radio      sdcard_rw
-/dev/ttyRB*               0660   radio      radio
-
 # Mali node
 /dev/mali                 0666   system     graphics
 
@@ -92,14 +79,6 @@
 
 # touch
 /dev/touch                0660   root       system
-/dev/hotknot              0660   root       system
-
-# hang_detect
-/dev/RT_Monitor           0600   system     system
-/dev/kick_powerkey        0600   system     system
-
-# MTK In-House TEE
-/dev/ttyACM0		      0660   radio	    radio
 
 #alarm
 /dev/alarm                0666   system     radio

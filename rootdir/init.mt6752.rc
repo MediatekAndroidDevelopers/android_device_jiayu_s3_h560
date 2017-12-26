@@ -45,17 +45,16 @@ on post-fs
     chmod 0660 /dev/wmtWifi
     chown system system /dev/wmtWifi
 
-    mknod /dev/stpwmt c 190 0
-    mknod /dev/stpgps c 191 0
-    mknod /dev/stpbt c 192 0
-
     # BT
+    mknod /dev/stpbt c 192 0
     chmod 0660 /dev/stpbt
     chown radio bluetooth /dev/stpbt
 
+    mknod /dev/stpwmt c 190 0
     chmod 0660 /dev/stpwmt
     chown system system /dev/stpwmt
 
+    mknod /dev/stpgps c 191 0
     chmod 0660 /dev/wmtdetect
     chown system system /dev/wmtdetect
 
@@ -106,7 +105,6 @@ on post-fs-data
 
     # Radio
     mkdir /dev/radio 0770 radio radio
-    mkdir /data/drm/wv 0770 drm system
 
     # GPS
     mkdir /data/gps_mnl 0771 gps system
@@ -119,13 +117,6 @@ on post-fs-data
 
     # NFC
     mkdir /data/nfc_socket 0771 nfc radio
-
-    # md32 boot
-    chown root system /dev/md32
-    chmod 0440 /dev/md32
-    chown root system /sys/class/misc/md32/md32_mobile_log
-    chmod 0660 /sys/class/misc/md32/md32_mobile_log
-    write /sys/class/misc/md32/md32_boot 1
 
     # Mali 3D GPU driver
     chmod 666 /dev/mali0
@@ -356,7 +347,6 @@ on post-fs-data
     chown radio system /sys/devices/platform/mt-pmic/low_battery_protect_stop
     chown radio system /sys/devices/platform/mt-pmic/low_battery_protect_ut
 
-    mkdir /data/amit 0770 system system
     mkdir /data/misc/sensor 0774 system system
     mkdir /data/misc/akmd 0770 system system
     mkdir /data/misc/s62x 0771 compass compass
@@ -372,25 +362,12 @@ on post-fs-data
     chmod 0660 /sys/devices/platform/mtk_disp_mgr.0/rgb
     chown system system /sys/devices/platform/mtk_disp_mgr.0/rgb
 
-    chmod 0660 /dev/mtkfb_vsync
-    chown system graphics /dev/mtkfb_vsync
-
     chmod 0660 /dev/sw_sync
     chown system graphics /dev/sw_sync
 
     # pmu
-    chown root radio /sys/devices/platform/mt-pmic/pmic_access_bank0
-    chown root radio /sys/devices/platform/mt-pmic/pmic_access_bank1
-    chown root radio /sys/devices/platform/mt6311-user/mt6311_access
     chown root radio /sys/devices/platform/mt-pmic/pmic_access
-    chmod 0664 /sys/devices/platform/mt-pmic/pmic_access_bank0
-    chmod 0664 /sys/devices/platform/mt-pmic/pmic_access_bank1
-    chmod 0664 /sys/devices/platform/mt6311-user/mt6311_access
     chmod 0664 /sys/devices/platform/mt-pmic/pmic_access
-
-    # Android SEC related device nodes
-    chmod 0660 /dev/sec
-    chown root system /dev/sec
 
     # FM Radio device node
     exec /system/xbin/mknod /dev/fm c 230 0
@@ -401,12 +378,6 @@ on post-fs-data
     chmod 0440 /dev/devmap
     chown system camera /dev/devmap
 
-    # bluetooth
-    mkdir /data/@btmtk 0770 bluetooth net_bt
-    chown bluetooth bluetooth /data/@btmtk/host_cache
-    chown bluetooth bluetooth /data/@btmtk/dev_cache
-    chown bluetooth bluetooth /dev/hid-keyboard
-    chmod 0660 /dev/hid-keyboard
     # Use uinputs default permission
     chown system net_bt_admin /dev/uinput
 
@@ -421,7 +392,6 @@ on post-fs-data
     chmod 0660 /dev/camera-pipemgr
     chmod 0660 /dev/kd_camera_hw
     chmod 0660 /dev/kd_camera_flashlight
-    chmod 0660 /dev/kd_camera_hw_bus2
     chmod 0660 /dev/FM50AF
     chmod 0660 /dev/DW9714AF
     chmod 0660 /dev/BU6424AF
@@ -434,7 +404,6 @@ on post-fs-data
     chown system camera /dev/camera-pipemgr
     chown system camera /dev/kd_camera_hw
     chown system camera /dev/kd_camera_flashlight
-    chown system camera /dev/kd_camera_hw_bus2
     chown system camera /dev/FM50AF
     chown system camera /dev/DW9714AF
     chown system camera /dev/BU6424AF

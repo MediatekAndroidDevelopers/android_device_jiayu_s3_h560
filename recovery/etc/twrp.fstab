@@ -2,7 +2,9 @@
 
 /boot			emmc	/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/boot	flags=display="Boot";backup=1;flashimg=1
 /cache			ext4	/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/cache	flags=display="Cache";backup=1
-/lk			emmc	/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/lk	flags=display="Uboot";backup=1;flashimg=1
+/custom			ext4	/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/custom	flags=display="Custom";backup=1
+/data			ext4	/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/userdata	flags=encryptable=/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/metadata;display="Data";backup=1
+/lk			emmc	/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/lk	flags=display="LK";backup=1
 /logo			emmc	/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/logo	flags=display="Logo";backup=1;flashimg=1
 /metadata		emmc	/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/metadata
 /nvram			emmc	/dev/block/platform/mtk-msdc.0/11230000.MSDC0/by-name/nvram	flags=display="Nvram";backup=1
