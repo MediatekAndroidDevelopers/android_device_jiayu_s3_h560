@@ -1,20 +1,5 @@
 LOCAL_PATH := $(call my-dir)
 
-## libshim_agps
-include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := \
-    agps/crypto.c \
-    agps/icu53.c \
-    agps/ssl.c
-
-LOCAL_SHARED_LIBRARIES := liblog libicuuc libssl libcrypto
-LOCAL_MODULE := libshim_agps
-LOCAL_CFLAGS := -O3 -Wno-unused-variable -Wno-unused-parameter
-LOCAL_PROPRIETARY_MODULE := true
-include $(BUILD_SHARED_LIBRARY)
-
-
 ## libshim_ui
 include $(CLEAR_VARS)
 
